@@ -27,9 +27,9 @@ use Locale::gettext;
 use vars qw/ $progname $ourversion $dstrap $extra @aptsources $mirror
  @archives $deb $cachedir $config_str %packages $retval $str $retries
  $dir $include $arch $foreign $suite $url $unpack $sourcedir $msg $etcdir
- @e $sourcesname $libdir $dpkgdir @debootstrap %suites %components
+ @e $sourcesname $libdir $dpkgdir @debootstrap %suites %components $chk
  $component $repo @dirs @touch %sources $section %keys $host $key $value
- $type $file $config $tidy $noauth $keyring %keyrings $deflist
+ $type $file $config $tidy $noauth $keyring %keyrings $deflist $cfgdir
  @extrapkgs @includes %source $setupsh $configsh $omitrequired /;
 
 setlocale(LC_MESSAGES, "");
@@ -93,7 +93,7 @@ foreach my $inc (@includes)
 printf (_g("%s %s using %s\n"), $progname, $ourversion, $file);
 $host = `dpkg-architecture -qDEB_BUILD_ARCH`;
 chomp ($host);
-if (not defined $arch) 
+if ((not defined $arch) or ($arch eq ""))
 {
 	$arch = $host;
 	printf (_g("Defaulting architecture to native: %s\n"),$arch);
@@ -283,19 +283,25 @@ my @s = ();
 $str = "";
 if (not defined $omitrequired)
 {
+	print "Calculating required packages.\n";
 	my $required = &get_required_debs;
 	$str .= join (' ', @$required);
 	chomp($str);
 }
+$str .= " ";
+# instruct apt to get packages from the specified
+# suites (when the package exists in more than one).
 foreach my $sect (sort keys %packages)
 {
 	my @list = split (' ', $sect);
 	foreach my $pkg (@list)
 	{
-		$str .= "$pkg/$suites{$sect} ";
+		next if ($packages{$pkg} =~ /^\s*$/);
+		# remove a duplicate from required list.
+		$str =~ s/$packages{$pkg}//;
+		$str .= "$packages{$pkg}/$suites{$sect} ";
 	}
 }
-#$str .= " " . join (' ', values %packages) . " ";
 chomp($str);
 $str .= " " . join (' ', values %keyrings) . " "; 
 chomp($str);
