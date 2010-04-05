@@ -140,8 +140,9 @@ system ("mkdir -p ${dir}etc/apt/sources.list.d/")
 	if (not -d "${dir}etc/apt/sources.list.d/");
 system ("mkdir -p ${dir}etc/apt/preferences.d/")
 	if (not -d "${dir}etc/apt/preferences.d/");
-system ("mkdir -p ${dir}usr/share/info/dir")
-	if (not -d "${dir}usr/share/info/dir");
+system ("mkdir -p ${dir}usr/share/info/")
+	if (not -d "${dir}usr/share/info/");
+system ("touch ${dir}usr/share/info/dir");
 #system ("mkdir -p ${dir}/usr/share/doc/gcc-4.2-base/")
 #	if (not -d "${dir}/usr/share/doc/gcc-4.2-base/");
 #system ("touch ${dir}/usr/share/doc/gcc-4.2-base/.copyright");
