@@ -1,0 +1,9 @@
+em_multistrap ./usr/sbin/
+multistrap ./usr/sbin/
+doc/multistrap/man/* ./usr/share/man/
+examples/multistrap-example.conf ./usr/share/doc/multistrap/examples/
+examples/sid.conf ./usr/share/multistrap/
+examples/squeeze.conf ./usr/share/multistrap/
+examples/lenny.conf ./usr/share/multistrap/
+check-deps.sh ./usr/share/multistrap/
+bash/multistrap ./etc/bash_completion.d/

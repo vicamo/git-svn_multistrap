@@ -1,0 +1,223 @@
+#  empbuilderlib : shell library to support building chroots for Emdebian.
+#
+#  Copyright (C) 2006-2010  Neil Williams <codehelp@debian.org>
+#  Copyright (C) 2001-2007 Junichi Uekawa
+#
+#  This package is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+# This shell library requires perl and pbuilder (which means bash!) !
+# Draws in POSIX shell functions from emrootfslib to be able to call
+# in functions from first_stage_install within debootstrap. The only
+# reasons to continue putting new functions in here are if:
+#  1. the functions are only useful to create cross-building chroots OR
+#  2. the functions need to call pbuilder code directly.
+# There should be no need to call pbuilder code within scripts that
+# generate a root filesystem.
+
+# Intended solely for use on the build machine. Do not use these functions
+# in second_stage_install !
+
+. /usr/share/emdebian-tools/emrootfslib
+. /usr/lib/pbuilder/pbuilder-modules
+
+WORKPLACE="${WORKDIR}/pbuilder"
+BASETGZ="${WORKDIR}/emdebian.tgz"
+
+#pbuilder base values
+DEBIAN_BUILDARCH=$ARCH
+# cross-building chroot is same arch as host.
+BUILDRESULT="$WORKPLACE/result/"
+# tidy up // to /
+BUILDRESULT=`echo $BUILDRESULT | tr -s \/`
+APTCACHE="$WORKPLACE/aptcache/"
+# tidy up // to /
+APTCACHE=`echo $APTCACHE | tr -s \/`
+AUTO_DEBSIGN=yes
+APTCACHEHARDLINK="no"
+BUILDPLACE="$WORKPLACE/build"
+
+# the default is to add a PID in the buildplace.
+BASEBUILDPLACE="$BUILDPLACE"
+if [ "${PRESERVE_BUILDPLACE}" != "yes" ]; then
+	BUILDPLACE="$BUILDPLACE/$$"
+fi
+
+function extractembuildplace () {
+	# after calling this function, umountproc, and cleanbuildplace
+	# needs to be called. Please trap it.
+	if [ ! \( "${PRESERVE_BUILDPLACE}" = "yes" -a -d "$BUILDPLACE" \) ]; then
+		cleanbuildplace
+		echo "Building the Emdebian build Environment"
+		if ! mkdir -p "$BUILDPLACE"; then
+			echo "E: failed to build the directory to chroot"
+			exit 1
+		fi
+		echo " -> extracting base tarball [${BASETGZ}]"
+		if [ ! -f "$BASETGZ" ]; then
+		    echo "E: failed to find $BASETGZ, have you created your base tarball yet?"
+		    exit 1
+		fi
+		if ! (cd "$BUILDPLACE" && tar xfzp "$BASETGZ"); then
+		    echo "E: failed to extract $BASETGZ to $BUILDPLACE"
+		    exit 1
+		fi
+		echo " -> creating local configuration"
+		if [ $CROSS -a $CROSS != $ARCH ]; then
+			hostname -f > "$BUILDPLACE/etc/mailname"
+		else
+			echo "emdebian-$ARCH" > "$BUILDPLACE/etc/mailname"
+		fi
+		if [ ! -f "$BUILDPLACE/etc/apt/apt.conf.d/10disablerecommends" ]; then
+			disable_apt_recommends
+		fi
+	fi
+	copy_local_configuration
+	mountproc
+	mkdir -p "$BUILDPLACE/tmp/buildd"
+	chmod 1777 "$BUILDPLACE/tmp"
+	if [ "$OVERRIDE_APTLINES" = "yes" ]; then
+		installaptlines
+	fi
+}
+
+function autoclean_aptcache() {
+	if [ -n "$APTCACHE" ]; then
+	echo " -> Cleaning the cached apt archive"
+	chroot $BUILDPLACE /usr/bin/apt-get autoclean || true
+	find "$APTCACHE/" -maxdepth 1 -name \*.deb | \
+	while read A; do
+		if [ ! -f "$BUILDPLACE/var/cache/apt/archives/"$(basename "$A") -a \
+		-f "$A" ]; then
+		echo " -> obsolete cache content "$(basename "$A")" removed"
+		rm -f "$A" || true
+		fi
+	done
+	fi
+}
+
+# intended only for chroots
+function copy_host_configuration () {
+	echo " -> copying local configuration"
+	if [ $CROSS -a $CROSS != $ARCH ]; then
+	    for a in hosts hostname resolv.conf; do
+			sudo rm -f "$BUILDPLACE/etc/$a"
+			if [ ! -f "/etc/$a" ]; then
+			    echo "E: /etc/$a does not exist, your setup is insane. fix it" >&2
+			sudo cp $( readlink -f "/etc/$a" ) "$BUILDPLACE/etc/$a";
+			fi
+		done
+	else
+	# sandboxes need a different hostname
+	mkdir -p "$BUILDPLACE"/etc/
+	cat > "$BUILDPLACE"/etc/hostname << EOF
+emdebian-$ARCH
+EOF
+	fi
+}
+
+function createemchroot()
+{
+	if [ $SUITE == testing ]; then
+		BASETGZ="${WORKDIR}/emdebian-testing.tgz"
+		SUITE=testing
+		. /usr/share/emdebian-tools/embootstrap --arch $ARCH testing
+		echo "Creating an embootstrap testing chroot"
+	else
+		BASETGZ="$WORKDIR/emdebian.tgz"
+		. /usr/share/emdebian-tools/embootstrap --arch $ARCH
+	fi
+}
+
+function checkembuilddep () {
+	# call satisfydepends
+	local BUILDOPT="--binary-all"
+	case "${BINARY_ARCH}" in
+		yes) BUILDOPT="--binary-arch";;
+		*) ;;
+	esac
+	PBUILDERSATISFYDEPENDSCMD=/usr/lib/pbuilder/pbuilder-satisfydepends
+	CONTROL=$BUILDPLACE/trunk/$SVN/debian/control
+	# this version parses debian/control, NOT the .dsc
+	# so that when Emdebian removes dependencies, the chroot does too.
+	echo "Running: $PBUILDERSATISFYDEPENDSCMD --control $CONTROL --chroot $BUILDPLACE ${BUILDOPT}"
+	if "$PBUILDERSATISFYDEPENDSCMD" --control "$CONTROL" --chroot "${BUILDPLACE}" "${BUILDOPT}" ; then
+		echo " -> installed ${HOST_ARCH} dependencies."
+	else
+		echo "E: pbuilder-satisfydepends failed." >&2
+	exit 2
+	fi
+	# install extra packages to the chroot
+	if [ -n "$EXTRAPACKAGES" ]; then
+		if echo "DEBIAN_FRONTEND=noninteractive usr/bin/apt-get -y --force-yes install ${EXTRAPACKAGES}" | chroot $BUILDPLACE /bin/sh; then
+		:
+		else
+		# if apt failed (maybe update needs to be run), save so far and exit cleanly
+			save_aptcache
+			umountproc
+			cleanbuildplace
+			exit 1;
+		fi
+	fi
+}
+
+# get $ARCH .deb and put into /var/cache/apt/archives to
+# allow these to be saved between builds.
+function save_aptcrosscache() {
+	# save the current aptcache archive
+	# it is safe to call this function several times.
+	local doit
+	if [ -n "$APTCACHE" ]; then
+	echo "Copying back the cached apt-cross archive contents"
+	mkdir -p "$APTCACHE" ;
+	if [ "$APTCACHEHARDLINK" = "yes" ]; then
+		doit=ln
+	else
+		doit=cp
+	fi
+	# apt-cross puts the archives in the chroot /
+	find "$BUILDPLACE/" -maxdepth 1 -name \*.deb | \
+		while read A ;do
+		if [ ! -f "$APTCACHE/"$(basename "$A") -a -f "$A" ]; then
+		echo " -> new cache content "$(basename "$A")" added"
+		$doit "$A" "$APTCACHE/" || true
+		fi
+	done
+	fi
+}
+
+function get_aptcross_dir ()
+{
+	if [ -z "$HOME" -o ! -d $HOME ]; then
+		HOME="/tmp";
+	fi
+	path="$HOME/.apt-cross";
+	if [ ! -d $path ]; then
+		mkdir $path;
+	fi
+}
+
+function get_primary ()
+{
+	get_aptcross_dir
+	if [ -f "$path/emsource.conf" ]; then
+		PRIMARY=`grep primary $path/emsource.conf|cut -d: -f2|tr -d ' '`
+	else
+		if [ -f "/etc/emsource.conf" ]; then
+			PRIMARY=`grep primary /etc/emsource.conf|cut -d: -f2|tr -d ' '`
+		else
+			PRIMARY="ftp.uk.debian.org"
+		fi
+	fi
+}

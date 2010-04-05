@@ -1,0 +1,146 @@
+TODO for bootstrap / pbuilder config.
+
+(no particular order)
+
+note: pbuilder bug - default mirror does not include deb-src version.
+	also: gnupg needs the user directory and to be run once for
+	dpkg-source! :-(
+	also need apt-get build-dep if using emchain
+
+copy build log and built files out of jail/ before compressing
+define parameters - inherit from pbuilderrc
+
+These chroots have already been tested and instructions
+exist in the Wiki. http://wiki.debian.org/EmDebian/CrossDebootstrap
+
+dpkg filter to remove unneeded files:
+	1. /var/lib/dpkg/info/*.symbols
+	2. /var/lib/dpkg/available-old
+	3. /var/lib/dpkg/status-old
+modify dpkg to drop /var/log/dpkg.log
+	or simply mount /var/log, /var/cache in RAM.
+
+modify apt to remove unwanted files:
+	/var/cache/apt/(src)?pkgcache.bin
+	always run apt-get clean
+	always drop files in /var/lib/apt/lists/
+
+Split out /usr/share/X11/locale/ (1.3Mb)
+
+Drop /usr/lib/xorg/modules/libscanpci.so (2Mb)
+
+X fails to start without:
+/usr/lib/xorg/modules/libpcidata.so
+(can the file size be reduced?)
+
+Other candidates may be amongst:
+100527	
+47296	/usr
+30674	/usr/lib
+29150	/var
+25092	/var/cache
+25049	/var/cache/apt
+24576	/var/cache/apt/pkgcache.bin
+18138	/lib
+12007	/lib/modules
+12005	/lib/modules/2.6.25.2-pxa270
+11345	/lib/modules/2.6.25.2-pxa270/kernel
+8224	/usr/share
+7378	/usr/bin
+6897	/lib/modules/2.6.25.2-pxa270/kernel/drivers
+5822	/usr/lib/gconv
+3747	/usr/lib/xorg
+3745	/usr/lib/xorg/modules
+3572	/var/lib
+3358	/usr/lib/libgtk-x11-2.0.so.0.1200.3
+2780	/var/lib/dpkg
+2744	/sbin
+2709	/lib/modules/2.6.25.2-pxa270/kernel/fs
+2414	/usr/share/zoneinfo
+2153	/var/lib/dpkg/info
+2046	/lib/modules/2.6.25.2-pxa270/kernel/drivers/usb
+1799	/lib/modules/2.6.25.2-pxa270/kernel/drivers/media
+1733	/usr/share/fonts
+1656	/usr/bin/Xorg
+1490	/tmp
+1430	/usr/share/X11
+1381	/usr/share/X11/locale
+1288	/lib/modules/2.6.25.2-pxa270/kernel/drivers/net
+1179	/usr/lib/libcrypto.so.0.9.8
+1160	/usr/share/fonts/X11
+1150	/lib/libc-2.7.so
+1122	/usr/lib/libxml2.so.2.6.32
+1080	/bin
+955	/lib/modules/2.6.25.2-pxa270/kernel/drivers/usb/serial
+940	/lib/modules/2.6.25.2-pxa270/kernel/drivers/media/dvb
+932	/usr/lib/xorg/modules/libpcidata.so
+926	/usr/lib/libstdc++.so.6.0.10
+913	/lib/modules/2.6.25.2-pxa270/kernel/net
+904	/usr/lib/libX11.so.6.2.0
+869	/usr/share/zoneinfo/right
+846	/lib/modules/2.6.25.2-pxa270/kernel/drivers/media/video
+842	/usr/bin/gpg
+833	/usr/sbin
+821	/usr/lib/libapt-pkg-libc6.6-6.so.4.6.0
+755	/var/lib/apt
+751	/var/lib/apt/lists
+744	/bin/busybox
+742	/tmp/bb-1.11
+740	/tmp/busybox
+740	/tmp/bb-1.11/busybox
+731	/var/lib/apt/lists/buildd.emdebian.org_emdebian_dists_unstable_main_binary-arm_Packages
+711	/usr/lib/libglib-2.0.so.0.1600.5
+685	/lib/modules/2.6.25.2-pxa270/kernel/fs/nls
+666	/lib/modules/2.6.25.2-pxa270/kernel/sound
+662	/usr/share/zoneinfo/posix
+662	/lib/libslang.so.2.1.3
+
+
+
+==============================
+
+Balloon todo list
+-------------------
+
+Add CONFIG_DISPLAY_TOPPOLY in kernel build.
+
+$ grep perl usr/sbin/*
+Binary file usr/sbin/chroot matches
+usr/sbin/cleanup-info:#!/usr/bin/perl --
+usr/sbin/dpkg-divert:#!/usr/bin/perl --
+usr/sbin/dpkg-statoverride:#! /usr/bin/perl
+Binary file usr/sbin/fbset matches
+usr/sbin/install-info:#!/usr/bin/perl --
+usr/sbin/mkboot:    bootpart=$(perl -ne 'print $1 if /^\s*boot\s*=\s*(\S*)/' /etc/lilo.conf)
+usr/sbin/pam_getenv:#!/usr/bin/perl -w
+Binary file usr/sbin/rdate matches
+Binary file usr/sbin/udhcpd matches
+usr/sbin/update-alternatives:#!/usr/bin/perl --
+(debianutils: /usr/sbin/mkboot)
+
+$ grep perl usr/bin/* | grep -v Binary
+usr/bin/chkdupexe:#!/usr/bin/perl -w
+usr/bin/chkdupexe:#  Distribute under gnu copyleft (included in perl package)
+usr/bin/chkdupexe:#     - Made it possible to run with perl -w
+usr/bin/chkdupexe:    die "NUTS! Personaly I think your perl or filesystem is broken.\n".
+(util-linux)
+
+Kernel command line:  noinitrd root=/dev/mtdblock1 init=/linuxrc console=ttyS2,115200  rootfstype=yaffs2 cpufreq=59000-206400 machine_id=00000
+
+balloon3_init_irq: chained handler installed - irq 126 automatically enabled
+
+
+# grep oknodo /etc/init.d/S*
+/etc/init.d/S10udev:    if start-stop-daemon --stop --name udevd --quiet --oknodo --retry 5; then
+/etc/init.d/S10udev:    if start-stop-daemon --stop --name udevd --quiet --oknodo --retry 5; then
+/etc/init.d/S10udev:    if start-stop-daemon --stop --name udevd --quiet --oknodo --retry 5; then
+
+--retry is also not supported.
+
+mkdir /mnt/sda1
+mkdir /mnt/sda2
+
+Add initscripts to get mountpoint for udev.
+
+drop install-info from dpkg
+

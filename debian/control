@@ -1,0 +1,51 @@
+Source: emdebian-rootfs
+Section: utils
+Priority: extra
+Maintainer: Neil Williams <codehelp@debian.org>
+Uploaders: Wookey <wookey@debian.org>
+Build-Depends: cdbs, debhelper (>= 5), po4a (>= 0.37.1), po-debconf
+Build-Depends-Indep: devscripts, docbook-xml, docbook-xsl, gnupg,
+ libxml2-utils, xml-core, xsltproc, intltool
+Standards-Version: 3.8.4
+Homepage: http://www.emdebian.org/
+Vcs-Browser: http://buildd.emdebian.org/svn/browser/current/host/trunk/emdebian-rootfs/trunk/
+Vcs-Svn: http://buildd.emdebian.org/repos/current/host/trunk/emdebian-rootfs/trunk/
+
+Package: emdebian-rootfs
+Architecture: all
+Depends: ${perl:Depends}, ${misc:Depends}, apt, apt-cross (>= 0.5.0),
+ binutils-multiarch, debootstrap (>= 1.0.4), dpkg-cross (>= 2.1.0),
+ devscripts, emdebian-archive-keyring, multistrap, pbuilder, sudo, ucf,
+ libparse-debian-packages-perl
+Replaces: emdebian-tools (<= 1.4.3)
+Recommends: gcc
+Suggests: deb-gview, debian-xcontrol, screen | minicom
+Description: emdebian root filesystem support
+ Scripts for preparing root filesystems of Emdebian for specific
+ machines and variants.
+ .
+ Root filesystem tarballs created with emsandbox need minimal
+ configuration on the embedded device before the first boot.
+ .
+ Supports customisation of package selection and of files created
+ within the root filesystem.
+
+Package: multistrap
+Section: admin
+Architecture: all
+Depends: ${perl:Depends}, ${misc:Depends}, apt, realpath,
+ libconfig-auto-perl, libparse-debian-packages-perl
+Replaces: emdebian-rootfs (<= 1.6.0)
+Description: multiple repository bootstrap based on apt
+ A debootstrap replacement with multiple repository support,
+ using apt to handle all dependency issues and conflicts.
+ .
+ Multistrap includes support for foreign architecture multistraps
+ that need  only minimal configuration on the final device. Also
+ supports cleaning  up the generated bootstrap filesystem to 
+ remove downloaded packages and hooks to modify the files in
+ the bootstrap filesystem after the packages have been unpacked
+ but before being configured.
+ .
+ Unlike debootstrap, multistrap relies on working versions of
+ dpkg and apt outside the final filesystem.

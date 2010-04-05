@@ -1,0 +1,85 @@
+#  emdebian secondstage support (Default busybox, dpkg and apt version)
+#
+#  Copyright (C) 2007-2008  Neil Williams <codehelp@debian.org>
+#
+#  This package is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+mirror_style release
+download_style apt
+
+work_out_debs () {
+	required="busybox dpkg libstdc++6 libgcc1 libc6 cdebconf
+	debconf-shell libdebian-installer4 zlib1g libnewt0.52
+	libslang2 base-passwd"
+
+	base="apt gpgv libncurses5 libreadline5 readline-common
+	debianutils makedev whiptail gnupg udev base-files
+	debian-archive-keyring dhcp3-client
+	util-linux module-init-tools initscripts"
+}
+
+first_stage_install () {
+	PRESERVE_BUILDPLACE="yes"
+	. /usr/share/emdebian-tools/emrootfslib
+	extract $required
+	make_dpkg_dirs
+	prepare_proc
+	prepare_var
+	info INSTCORE " -> Preparing basic defaults for $BUILDPLACE/etc"
+	basic_etc_fstab
+	basic_group_setup
+	basic_passwd_setup
+	basic_shadow_setup
+	basic_etc_profile
+	shell_update_rcd
+	set_approx_time
+	set_cdebconf_default
+	provide_empty_install_info
+	provide_var_lib_x11
+	info INSTCORE " -> Setting up dpkg in $BUILDPLACE"
+	x_feign_install dpkg
+	info INSTCORE " -> Unpacking packages in $BUILDPLACE"
+	unpack_debootstrap
+	info INSTCORE " -> Adapting configuration for Emdebian"
+	busybox_symlinks
+	disable_updatercd
+	disable_invokercd
+	disable_apt_recommends
+	busybox_inittab
+	busybox_rcS
+	setup_devices
+	info INSTCORE " -> First stage install complete in $BUILDPLACE"
+}
+
+second_stage_install () {
+	if [ -f /datestring ]; then
+		TIME=`cat /datestring`
+		echo "Setting approximate time of $TIME"
+		date -s $TIME
+	fi
+	info INSTCORE "Running ldconfig..."
+	in_target /sbin/ldconfig
+	in_target depmod
+	info INSTCORE "Setting cdebconf environment"
+	export DEBCONF_USE_CDEBCONF=true
+	DEBIAN_FRONTEND=noninteractive
+	DEBCONF_NONINTERACTIVE_SEEN=true
+	export DEBIAN_FRONTEND DEBCONF_NONINTERACTIVE_SEEN
+	# bug: See #451130
+	in_target /usr/lib/cdebconf/debconf-loadtemplate /usr/share/debconf/demo /usr/share/debconf/demo.templates
+	info INSTCORE "Configuring in $BUILDPLACE"
+	in_target dpkg --configure -a
+	info BASESUCCESS "Emdebian base system installed successfully."
+}

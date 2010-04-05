@@ -1,0 +1,721 @@
+#  emrootfslib : shell library to support root filesystems for Emdebian.
+#
+#  This file is POSIX shell, compatible with debootstrap.
+#  Do not include or reference pbuilder functions or bash code here.
+#
+#  Copyright (C) 2006-2010  Neil Williams <codehelp@debian.org>
+#
+#  This package is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+# This shell library requires perl !
+
+# Intended solely for use on the build machine. Do not use these functions
+# in second_stage_install !
+
+OURVERSION=`dpkg-query -W -f='${Version}' emdebian-rootfs`
+
+get_aptcross_dir ()
+{
+	if [ -z "$HOME" -o ! -d "$HOME" ]; then
+		HOME="/tmp";
+	fi
+	path="$HOME/.apt-cross";
+	if [ ! -d "$path" ]; then
+		mkdir $path;
+	fi
+}
+
+get_default_arch ()
+{
+if [ -f "/etc/dpkg-cross/cross-compile" ]; then
+	ARCH=`grep default_arch /etc/dpkg-cross/cross-compile|grep -v '^#'|cut -d'=' -f2`
+fi
+if [ -z "$ARCH" ]; then
+	ARCH="None"
+fi
+}
+
+get_work_dir ()
+{
+	get_aptcross_dir
+	if [ -f "$path/emsource.conf" ]; then
+		WORKDIR=`grep workingdir $path/emsource.conf|cut -d: -f2|tr -d ' '`
+	else
+		if [ -f "/etc/emsource.conf" ]; then
+			WORKDIR=`grep workingdir /etc/emsource.conf|cut -d: -f2|tr -d ' '`
+		else
+			WORKDIR="/tmp"
+		fi
+	fi
+}
+
+get_work_dir
+get_default_arch
+
+WORKPLACE="${WORKDIR}/pbuilder"
+BASETGZ="${WORKDIR}/emdebian.tgz"
+
+#pbuilder base values
+DEBIAN_BUILDARCH=$ARCH
+# cross-building chroot is same arch as host.
+BUILDRESULT="$WORKPLACE/result/"
+# tidy up // to /
+BUILDRESULT=`echo $BUILDRESULT | tr -s \/`
+APTCACHE="$WORKPLACE/aptcache/"
+# tidy up // to /
+APTCACHE=`echo $APTCACHE | tr -s \/`
+AUTO_DEBSIGN=yes
+APTCACHEHARDLINK="no"
+BUILDPLACE="$WORKPLACE/build"
+
+# the default is to add a PID in the buildplace.
+BASEBUILDPLACE="$BUILDPLACE"
+if [ "${PRESERVE_BUILDPLACE}" != "yes" ]; then
+    BUILDPLACE="$BUILDPLACE/$$"
+fi
+
+checkarch ()
+{
+	ARCH=$ARCH perl -e 'use Debian::DpkgCross; $arch = $ENV{ARCH}; $arch=~s/ //g; \
+		die "Unsupported architecture: $arch Use --arch\n" if (not defined (&check_arch($arch)));'
+}
+
+create_emdebiantgz() {
+	(
+	if ! cd "$BUILDPLACE"; then
+		echo "Error: unexpected error in chdir to $BUILDPLACE" >&2
+		exit 1;
+	fi
+	while test -f "${BASETGZ}.tmp"; do
+		echo "  -> Someone else has lock over ${BASETGZ}.tmp, waiting"
+		sleep 10s
+	done
+	echo " -> creating base tarball [${BASETGZ}]"
+	if ! sudo tar cfz "${BASETGZ}.tmp" * ; then
+		echo " -> failed building base tarball"
+		rm -f "${BASETGZ}.tmp"
+		exit 1;
+	fi
+	mv "${BASETGZ}.tmp" "${BASETGZ}"
+    )
+}
+
+check_dirs()
+{
+	if [ ! -d $BUILDPLACE ] ; then
+		mkdir -p $BUILDPLACE
+	fi
+	if [ ! -d $BUILDRESULT ] ; then
+		mkdir -p $BUILDRESULT
+	fi
+	if [ ! -d $APTCACHE ] ; then
+		mkdir -p $APTCACHE
+	fi
+}
+
+disable_apt_recommends () {
+	if [ -d "$BUILDPLACE/etc/apt/apt.conf.d/" ]; then
+		if [ ! -f "$BUILDPLACE/etc/apt/apt.conf.d/10disablerecommends" ]; then
+			echo "  -> disabling Apt::Install-Recommends"
+			cat > $BUILDPLACE/etc/apt/apt.conf.d/10disablerecommends << 'EOF'
+APT
+{
+  Install-Recommends "false"
+};
+EOF
+		fi
+	fi
+}
+
+disable_apt_pdiffs () {
+	if [ -d "$BUILDPLACE/etc/apt/apt.conf.d/" ]; then
+		if [ ! -f "$BUILDPLACE/etc/apt/apt.conf.d/12disablepdiffs" ]; then
+			echo "  -> disabling Apt::Acquire::PDiffs"
+			cat > $BUILDPLACE/etc/apt/apt.conf.d/12disablepdiffs << 'EOF'
+APT
+{
+  Acquire::PDiffs "false";
+};
+EOF
+		fi
+	fi
+}
+
+apt_autoremove_always () {
+	if [ -d "$BUILDPLACE/etc/apt/apt.conf.d/" ]; then
+		if [ ! -f "$BUILDPLACE/etc/apt/apt.conf.d/11always_autoremove" ]; then
+			echo "  -> enabling Apt::AutomaticRemove"
+			cat > $BUILDPLACE/etc/apt/apt.conf.d/11always_autoremove << 'EOF'
+APT
+{
+  AutomaticRemove "true"
+};
+EOF
+		fi
+	fi
+}
+
+unpack_debootstrap () {
+	info INSTCORE "Starting unpacking in $BUILDPLACE"
+	for deb in `ls $BUILDPLACE/var/cache/apt/archives/*.deb`; do
+		ver=`dpkg -f $deb Version`
+		pkg=`dpkg -f $deb Package`
+		info INSTCORE "Unpacking $pkg ($ver) ...."
+		dpkg -x $deb $BUILDPLACE/
+		# get the package listing with reduced parsing complexity
+		mkdir $BUILDPLACE/listing
+		ar -p $deb data.tar.gz > $BUILDPLACE/listing/data.tar.gz
+		tar -tzf $BUILDPLACE/listing/data.tar.gz | sed -e 's/^\.//' | sed -e 's/^\/$/\/\./' | sed -e 's/\/$//' > $BUILDPLACE/var/lib/dpkg/info/${pkg}.list
+		rm -rf $BUILDPLACE/listing
+		rm -rf $BUILDPLACE/tmp/*
+		dpkg -e $deb $BUILDPLACE/tmp/
+		for maint in `ls $BUILDPLACE/tmp/`; do
+			mv $BUILDPLACE/tmp/$maint $BUILDPLACE/var/lib/dpkg/info/$pkg.$maint
+			if [ $maint = "control" ]; then
+				grep -v "^$" $BUILDPLACE/var/lib/dpkg/info/$pkg.$maint >> $BUILDPLACE/var/lib/dpkg/available
+				grep -v "^$" $BUILDPLACE/var/lib/dpkg/info/$pkg.$maint >> $BUILDPLACE/var/lib/dpkg/status
+				echo "" >> $BUILDPLACE/var/lib/dpkg/available
+				echo "Status: install ok unpacked" >> $BUILDPLACE/var/lib/dpkg/status
+				rm $BUILDPLACE/var/lib/dpkg/info/$pkg.$maint
+			fi
+			# need a dpkg filter to make this stick
+			if [ $maint = "symbols" ]; then
+				rm $BUILDPLACE/var/lib/dpkg/info/$pkg.symbols
+			fi
+		done
+		if [ -f $BUILDPLACE/var/lib/dpkg/info/$pkg.conffiles ]; then
+			echo "Conffiles:" >> $BUILDPLACE/var/lib/dpkg/status
+			info INSTCORE "Processing $pkg.conffiles"
+			for line in `cat $BUILDPLACE/var/lib/dpkg/info/$pkg.conffiles`; do
+				md5=`md5sum $BUILDPLACE/$line | cut -d" " -f1`
+				echo " $line $md5" >> $BUILDPLACE/var/lib/dpkg/status
+			done
+		fi
+		echo "" >> $BUILDPLACE/var/lib/dpkg/status
+	done
+	if [ ! -e "$BUILDPLACE/etc/localtime" ]; then
+		ln -sf /usr/share/zoneinfo/UTC "$BUILDPLACE/etc/localtime"
+	fi
+	info INSTCORE "Removing archives..."
+	rm -f $BUILDPLACE/var/cache/apt/archives/*.deb
+	# (skip stages in emsecondstage)
+	touch $BUILDPLACE/debootstrap/unpacked
+}
+
+busybox_symlinks ()
+{
+	# busybox symlinks are best managed in postinst so that dpkg
+	# does not complain when they are replaced by Debian packages.
+	# this allows more applets to be supported by default.
+	if [ -f $BUILDPLACE/usr/share/busybox/busybox.links ]; then
+		cd $BUILDPLACE
+		# setup busybox
+		cp usr/share/busybox/busybox.links .
+		cp usr/share/busybox/install.sh .
+		# link in the rest of its applets from OUTSIDE the chroot
+		info INSTCORE "Symlinking the busybox applets..."
+		sh ./install.sh $BUILDPLACE/ --symlinks
+		rm $BUILDPLACE/install.sh
+		rm $BUILDPLACE/busybox.links
+	else
+		info INSTCORE "busybox configuration not required"
+	fi
+}
+
+disable_invokercd ()
+{
+	# invoke-rc.d is usually shell but is being looked at in Debian.
+	if [ ! -f $BUILDPLACE/usr/sbin/invoke-rc.d ]; then
+		echo '#!/bin/sh' > $BUILDPLACE/usr/sbin/invoke-rc.d
+		echo 'exec /etc/init.d/$1 $2' > $BUILDPLACE/usr/sbin/invoke-rc.d
+		echo '' >> $BUILDPLACE/usr/sbin/invoke-rc.d
+		chmod 755 $BUILDPLACE/usr/sbin/invoke-rc.d
+	fi
+}
+
+disable_updatercd ()
+{
+	# a better fix for /usr/sbin/update-rc.d is available via sysv-rc
+	if [ ! -f $BUILDPLACE/usr/sbin/update-rc.d ]; then
+		echo "#!/bin/sh" > $BUILDPLACE/usr/sbin/update-rc.d
+		echo "" >> $BUILDPLACE/usr/sbin/update-rc.d
+		chmod 755 $BUILDPLACE/usr/sbin/update-rc.d
+	fi
+	RC=`head $BUILDPLACE/usr/sbin/update-rc.d | grep /usr/bin/perl || true`
+	if [ "$RC" != "" ]; then
+		info INSTCORE "Replacing perl update-rc.d"
+		echo "#!/bin/sh" > $BUILDPLACE/usr/sbin/update-rc.d
+		echo "" >> $BUILDPLACE/usr/sbin/update-rc.d
+		chmod 755 $BUILDPLACE/usr/sbin/update-rc.d
+	fi
+}
+
+extra_etc_rcd ()
+{
+	if [ ! -d $BUILDPLACE/etc/rcS.d ]; then
+		mkdir $BUILDPLACE/etc/rcS.d
+	fi
+	if [ ! -d $BUILDPLACE/etc/rc0.d ]; then
+		mkdir $BUILDPLACE/etc/rc0.d
+	fi
+	if [ ! -d $BUILDPLACE/etc/rc1.d ]; then
+		mkdir $BUILDPLACE/etc/rc1.d
+	fi
+	if [ ! -d $BUILDPLACE/etc/rc6.d ]; then
+		mkdir $BUILDPLACE/etc/rc6.d
+	fi
+}
+
+provide_var_lib_x11 ()
+{
+	if [ ! -d $BUILDPLACE/var/lib/x11 ]; then
+		mkdir -p $BUILDPLACE/var/lib/x11
+	fi
+}
+
+basic_group_setup () {
+	if [ ! -f $BUILDPLACE/etc/group ]; then
+		echo \
+"root:x:0:
+daemon:x:1:
+bin:x:2:
+sys:x:3:
+adm:x:4:
+tty:x:5:
+disk:x:6:
+lp:x:7:
+mail:x:8:
+news:x:9:
+uucp:x:10:
+man:x:12:
+proxy:x:13:
+kmem:x:15:
+audio:x:29:
+utmp:x:43:
+video:x:44:
+" > $BUILDPLACE/etc/group
+	fi
+}
+
+basic_passwd_setup () {
+	if [ ! -f $BUILDPLACE/etc/passwd ]; then
+		echo \
+"root:x:0:0:root:/root:/bin/sh
+daemon:x:1:1:daemon:/usr/sbin:/bin/sh
+bin:x:2:2:bin:/bin:/bin/sh
+sys:x:3:3:sys:/dev:/bin/sh
+sync:x:4:65534:sync:/bin:/bin/sync
+games:x:5:60:games:/usr/games:/bin/sh
+man:x:6:12:man:/var/cache/man:/bin/sh
+lp:x:7:7:lp:/var/spool/lpd:/bin/sh
+mail:x:8:8:mail:/var/mail:/bin/sh
+news:x:9:9:news:/var/spool/news:/bin/sh
+uucp:x:10:10:uucp:/var/spool/uucp:/bin/sh
+proxy:x:13:13:proxy:/bin:/bin/sh
+www-data:x:33:33:www-data:/var/www:/bin/sh
+backup:x:34:34:backup:/var/backups:/bin/sh
+list:x:38:38:Mailing List Manager:/var/list:/bin/sh
+irc:x:39:39:ircd:/var/run/ircd:/bin/sh
+gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/bin/sh
+nobody:x:65534:65534:nobody:/nonexistent:/bin/sh
+" > $BUILDPLACE/etc/passwd
+	fi
+}
+
+# need /etc/shadow too
+basic_shadow_setup () {
+	if [ ! -f $BUILDPLACE/etc/shadow ]; then
+		echo \
+"root:$1$Vu4M34LT$0L2BfH9nXbSG1zQWxUH8M1:0::::::
+daemon:*:13896:0:99999:7:::
+bin:*:0:0:99999:7:::
+sys:*:0:0:99999:7:::
+sync:*:0:0:99999:7:::
+games:*:0:0:99999:7:::
+man:*:0:0:99999:7:::
+lp:*:0:0:99999:7:::
+mail:*:0:0:99999:7:::
+news:*:0:0:99999:7:::
+uucp:*:0:0:99999:7:::
+proxy:*:0:0:99999:7:::
+www-data:*:0:0:99999:7:::
+backup:*:0:0:99999:7:::
+list:*:0:0:99999:7:::
+irc:*:0:0:99999:7:::
+gnats:*:0:0:99999:7:::
+nobody:*:0:0:99999:7:::" > $BUILDPLACE/etc/shadow
+	fi
+}
+
+provide_empty_adduser ()
+{
+	if [ ! -f $BUILDPLACE/usr/sbin/adduser ]; then
+	echo \
+'#!/bin/sh
+
+' > $BUILDPLACE/usr/sbin/adduser
+	chmod 755 $BUILDPLACE/usr/sbin/adduser
+	fi
+	if [ ! -f $BUILDPLACE/usr/sbin/deluser ]; then
+	echo \
+'#!/bin/sh
+
+' > $BUILDPLACE/usr/sbin/deluser
+	chmod 755 $BUILDPLACE/usr/sbin/deluser
+	fi
+}
+
+provide_empty_addgroup ()
+{
+	if [ ! -f $BUILDPLACE/usr/sbin/addgroup ]; then
+	echo \
+'#!/bin/sh
+
+' > $BUILDPLACE/usr/sbin/addgroup
+	chmod 755 $BUILDPLACE/usr/sbin/addgroup
+	fi
+	if [ ! -f $BUILDPLACE/usr/sbin/delgroup ]; then
+	echo \
+'#!/bin/sh
+
+' > $BUILDPLACE/usr/sbin/delgroup
+	chmod 755 $BUILDPLACE/usr/sbin/delgroup
+	fi
+}
+
+provide_empty_dpkg_divert ()
+{
+	if [ ! -f $BUILDPLACE/usr/bin/dpkg-divert ]; then
+	echo \
+'#!/bin/sh
+
+' > $BUILDPLACE/usr/bin/dpkg-divert
+	chmod 755 $BUILDPLACE/usr/bin/dpkg-divert
+	fi
+}
+
+provide_empty_install_info () {
+	if [ ! -f $BUILDPLACE/usr/sbin/install-info ]; then
+	echo \
+'#!/bin/sh
+exec /etc/init.d/$1 $2
+' > $BUILDPLACE/usr/sbin/install-info
+	chmod 755 $BUILDPLACE/usr/sbin/install-info
+	fi
+}
+
+set_approx_time () {
+	if [ -d $BUILDPLACE/bin ]; then
+		DATE=`date`
+		ZERO=`date -d@0`
+		# if we have a usable date, store it.
+		if [ "$DATE" != "$ZERO" ]; then
+			APPROX=`stat -c%Y $BUILDPLACE/bin/`
+			STR=`date -d@$APPROX +%m%d%H%M%Y`
+			info INSTCORE "Storing approximate time '$STR' in './datestring'"
+			echo "$STR" > $BUILDPLACE/datestring
+		fi
+	fi
+}
+
+basic_etc_fstab () {
+	if [ ! -f "$BUILDPLACE/etc/fstab" ]; then
+		cat > $BUILDPLACE/etc/fstab << 'EOF'
+# /etc/fstab: static file system information.
+#
+# <file system> <mount point>   <type>   <options>       <dump>  <pass>
+proc            /proc           proc     defaults        0       0
+sysfs           /sys            sysfs    defaults        0       0
+devpts          /dev/pts        devpts   mode=0620,gid=5 0       0
+usbdevfs        /proc/bus/usb   usbdevfs noauto          0       0
+EOF
+		chown 0.0 "$BUILDPLACE/etc/fstab"; 
+		chmod 0644 "$BUILDPLACE/etc/fstab"
+	fi
+}
+
+make_dpkg_dirs () {
+	mkdir -p "$BUILDPLACE/var/lib/dpkg"
+	: >"$BUILDPLACE/var/lib/dpkg/status"
+	echo >"$BUILDPLACE/var/lib/dpkg/available"
+	echo -n >"$BUILDPLACE/var/lib/dpkg/diversions"
+}
+
+x_feign_install () {
+	local pkg="$1"
+	local deb="$(debfor $pkg)"
+	local ver="$(
+		ar -p "$BUILDPLACE/$deb" control.tar.gz | zcat |
+			tar -O -xf - control ./control 2>/dev/null |
+			sed -ne 's/^Version: *//Ip' | head -n 1
+		)"
+	mkdir -p "$BUILDPLACE/var/lib/dpkg/info"
+	echo \
+"Package: $pkg
+Version: $ver
+Status: install ok installed
+
+" >> "$BUILDPLACE/var/lib/dpkg/status"
+	touch "$BUILDPLACE/var/lib/dpkg/info/${pkg}.list"
+}
+
+prepare_proc () {
+	if [ ! -d $BUILDPLACE/proc ]; then
+		mkdir -p $BUILDPLACE/proc
+	fi
+	if [ ! -d $BUILDPLACE/sys ]; then
+		mkdir -p $BUILDPLACE/sys
+	fi
+}
+
+prepare_var () {
+	if [ ! -d $BUILDPLACE/var/log ]; then
+		mkdir -p $BUILDPLACE/var/log
+	fi
+	if [ ! -d $BUILDPLACE/var/spool ]; then
+		mkdir -p $BUILDPLACE/var/spool
+	fi
+}
+
+busybox_inittab () {
+	if [ ! -e "$BUILDPLACE/etc/inittab" ]; then
+		info INSTCORE "Adding default busybox inittab"
+		cat > $BUILDPLACE/etc/inittab << 'EOF'
+# /etc/inittab
+#
+# Copyright (C) 2001 Erik Andersen <andersen@codepoet.org>
+#
+# Note: BusyBox init doesn't support runlevels.
+
+# Startup the system
+null::sysinit:/bin/mount -o remount,rw /
+null::sysinit:/bin/mount -t proc proc /proc
+null::sysinit:/bin/mount -t sysfs sysfs /sys
+null::sysinit:/bin/mount -t devpts devpts /dev/pts
+null::sysinit:/bin/mount -a
+null::sysinit:/bin/hostname -F /etc/hostname
+null::sysinit:/sbin/ifconfig lo 127.0.0.1 up
+null::sysinit:/sbin/route add -net 127.0.0.0 netmask 255.0.0.0 lo
+# now run any rc scripts and then login
+::sysinit:/etc/init.d/rcS
+
+# Set up a couple of getty's
+tty1::respawn:/sbin/getty 38400 tty1
+tty2::respawn:/sbin/getty 38400 tty2
+
+# Put a getty on the serial port
+#ttyS0::respawn:/sbin/getty -L ttyS0 115200 vt100
+ttyS2::respawn:/sbin/getty -L ttyS2 115200 vt100
+
+# Logging junk
+null::sysinit:/bin/touch /var/log/messages
+null::respawn:/sbin/syslogd -n -m 0
+null::respawn:/sbin/klogd -n
+tty3::respawn:/usr/bin/tail -f /var/log/messages
+
+# Stuff to do for the 3-finger salute
+::ctrlaltdel:/sbin/reboot
+
+# Stuff to do before rebooting
+null::shutdown:/usr/bin/killall klogd
+null::shutdown:/usr/bin/killall syslogd
+null::shutdown:/bin/umount -a -r
+null::shutdown:/sbin/swapoff -a
+
+EOF
+	fi
+}
+
+busybox_rcS () {
+	if [ ! -d "$BUILDPLACE/etc/default" ]; then
+		mkdir -p $BUILDPLACE/etc/default
+	fi
+	if [ ! -d "$BUILDPLACE/etc/rc.d" ]; then
+		mkdir -p $BUILDPLACE/etc/rc.d
+	fi
+	if [ ! -f "$BUILDPLACE/etc/default/rcS" ]; then
+		echo "#!/bin/sh" > $BUILDPLACE/etc/default/rcS
+		echo >> $BUILDPLACE/etc/default/rcS
+		chown 0.0 "$BUILDPLACE/etc/default/rcS"
+		chmod 644 "$BUILDPLACE/etc/default/rcS"
+	fi
+	# derived from the buildroot version.
+	if [ ! -e "$BUILDPLACE/etc/init.d/rcS" ]; then
+		info INSTCORE "Adding default busybox rcS"
+		cat  > $BUILDPLACE/etc/init.d/rcS << 'EOF'
+#!/bin/sh
+set -e
+# Start all init scripts in /etc/rc.d/
+#
+if [ ! -z "$SPAWNED" ]; then
+	/bin/login
+fi
+SPAWNED="$SPAWNED ."
+export SPAWNED=\$SPAWNED
+for i in /etc/rc.d/S??* ;do
+	# Ignore dangling symlinks (if any).
+	[ ! -f "$i" ] && continue
+	case "$i" in
+	*.sh)
+		# Source shell script for speed.
+		(
+		trap - INT QUIT TSTP
+		set start
+		. $i
+		)
+		;;
+	*)
+		# No sh extension, so fork subprocess.
+		$i start
+		;;
+	esac
+done
+EOF
+	chown 0.0 "$BUILDPLACE/etc/init.d/rcS"
+	chmod 0755 "$BUILDPLACE/etc/init.d/rcS"
+	fi
+}
+
+# call repeatedly to create init symlinks.
+# arg1 is the file in $BUILDPLACE/etc/init.d/
+# arg2 is the number for the link in the init sequence
+# where 'foo 20' runs after 'bar 10' etc.
+symlink_rcS () {
+	local file="$1"
+	local num="$2"
+	linkname="S$num$file"
+	if [ ! -d "$BUILDPLACE/etc/rc.d/" ]; then
+		mkdir $BUILDPLACE/etc/rc.d
+	fi
+	if [ -f $BUILDPLACE/etc/init.d/$file ]; then
+		ln -sf ../init.d/$file $BUILDPLACE/etc/rc.d/$linkname
+	fi
+}
+
+symlink_rcK () {
+	local file="$1"
+	local num="$2"
+	linkname="K$num$file"
+	if [ ! -d "$BUILDPLACE/etc/rc.d/" ]; then
+		mkdir $BUILDPLACE/etc/rc.d
+	fi
+	if [ -f $BUILDPLACE/etc/init.d/$file ]; then
+		ln -sf ../init.d/$file $BUILDPLACE/etc/rc.d/$linkname
+	fi
+}
+
+basic_etc_profile () {
+	if [ ! -e "$BUILDPLACE/etc/profile" ]; then
+		info INSTCORE "Adding a basic /etc/profile file"
+		cat  > $BUILDPLACE/etc/profile << 'EOF'
+if [ "`id -u`" -eq 0 ]; then
+  PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games/"
+else
+  PATH="/usr/local/bin:/usr/bin:/bin:/usr/games"
+fi
+
+if [ "$PS1" ]; then
+    if [ "`id -u`" -eq 0 ]; then
+      PS1='# '
+    else
+      PS1='$ '
+    fi
+fi
+
+export PATH
+export DISPLAY=:0
+umask 022
+
+EOF
+	fi
+}
+
+set_cdebconf_default () {
+	info INSTCORE "Setting cdebconf as default."
+	echo "export DEBCONF_USE_CDEBCONF=true" >> $BUILDPLACE/etc/profile
+}
+
+set_tslib_pointercal () {
+	info INSTCORE "Setting location of tslib calibration file."
+	echo "export TSLIB_CALIBFILE=/etc/pointercal" >> $BUILDPLACE/etc/profile
+}
+
+# this function is coded to match the sample_xorg_conf
+# some devices might use /dev/input/event1 or event2
+set_tslib_tsdevice () {
+	info INSTCORE "Setting location of tslib touchscreen device."
+	echo "export TSLIB_TSDEVICE=/dev/input/event0" >> $BUILDPLACE/etc/profile
+}
+
+sample_xorg_conf () {
+	if [ ! -e "$BUILDPLACE/etc/X11/xorg.conf" ]; then
+		info INSTCORE "Adding sample xorg.conf"
+		cat > $BUILDPLACE/etc/X11/xorg.conf << 'EOF'
+# You probably want to change at least some of these
+# lines and provide it via machine:variant customisations.
+# This one comes from balloon3-config.
+Section "Files"
+        FontPath        "/usr/share/fonts/truetype/ttf-bitstream-vera/"
+EndSection
+
+Section "InputDevice"
+        Identifier      "Generic Keyboard"
+        Driver          "kbd"
+EndSection
+
+# /dev/input/event0 is kernel-module specific.
+# You may need to change this.
+Section "InputDevice"
+        Identifier "Touchscreen"
+        Driver "tslib"
+        Option "ScreenNumber"  "0"
+        Option "Width"         "0"
+        Option "Height"        "0"
+        Option "Rotate"        "NONE"
+        Option "TslibDevice"   "/dev/input/event0"
+EndSection
+
+Section "Device"
+        Identifier      "Generic Video Card"
+        Driver          "fbdev"
+        Option          "UseFBDev"              "true"
+EndSection
+
+Section "Monitor"
+        Identifier      "Configured Monitor"
+EndSection
+
+Section "ServerLayout"
+        Identifier      "Default Layout"
+        Screen          "Default Screen"
+        InputDevice     "Touchscreen"
+EndSection
+
+Section "Screen"
+       Identifier      "Default Screen"
+       Monitor         "Configured Monitor"
+EndSection
+
+EOF
+	fi
+}
+
+shell_update_rcd () {
+	if [ ! -e "$BUILDPLACE/usr/sbin/update-rc.d" ]; then
+		info INSTCORE "Adding a /usr/sbin/update-rc.d shell script"
+		cp /usr/share/emdebian-tools/update-rc.d $BUILDPLACE/usr/sbin/
+		chmod 0755 $BUILDPLACE/usr/sbin/update-rc.d
+	fi
+}

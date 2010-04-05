@@ -1,0 +1,115 @@
+			Emdebian Bootstrapping
+			======================
+
+Cross-building can get very confusing at times. The confusion only increases 
+when dealing with a chroot. This document tries to cover some of the reasons, 
+some of the problems and tries to provide some clarity, at least as far as how 
+chroots can be used in Emdebian.
+
+There are multiple ways that Emdebian can relate to bootstrapping and chroots. 
+The most common method of using a chroot within Debian is pbuilder and the 
+pdebuild wrapper and this is the primary inspiration for using chroots in 
+Emdebian. Other methods revolve around QEMU or scratchbox and whilst this code 
+may be able to support such uses later, there are key differences in how and 
+why this method is separate.
+
+EMDEBIAN PBUILDER CHROOT MODEL
+==============================
+
+The Debian pbuilder package exists to ensure package dependencies are complete 
+and to provide an environment to automate package building on all supported 
+Debian architectures without cluttering the build machine with every library 
+and dev package in the entire archive. This is particularly useful when 
+building GUI packages that can have two dozen dependencies or more. In 
+Emdebian, this separation between the build system packages and the chroot 
+packages becomes even more useful because cross-building often involves not 
+only installing the library and -dev package for the build architecture (e.g. 
+i386/amd64) but also building and installing the same library and -dev package 
+(with dependencies) in the TARGET architecture, e.g. arm, with apt-cross and 
+dpkg-cross. The chaos that could result from trying to upgrade the packages on 
+an Emdebian buildd system with a duplicate set of cross dependencies is truly 
+scary.
+
+In the pbuilder model, an Emdebian chroot is the SAME architecture as the 
+buildd - i386 on i386 etc. This mimics how emdebian-tools normally work. 
+Packages are then downloaded, patched and cross-built for the target 
+architecture, just as outside the chroot. This model, the pbuilder model of an 
+emdebian chroot, concentrates on dependencies rather than the actual 
+cross-building process. Inside such a chroot, cache files are used as normal to 
+avoid having to run the cross-compiled code during the build.
+
+The Emdebian chroot is similar in size to a normal Debian pbuilder chroot,
+mainly because it is a full build environment, not an installation environment.
+
+This directory contains my experiments with debootstrap, using this pbuilder 
+model, trying to make a complete Emdebian cross-building environment that can 
+be compressed to a base.tgz. Changes to the chroot can be discarded, just as 
+with pbuilder, allowing dependencies to be tested. The main benefit is that 
+packages can be built without having to install long chains of cross 
+dependencies via apt-cross or dpkg-cross on the main system. To me, it's the 
+only way to cross-build GUI suites like GPE against a background of changing 
+dependencies.
+
+In the pbuilder model, Emdebian builds a chroot for the build architecture 
+(amd64/i386 etc.) - except that it will run emdebian-tools instead of pbuilder 
+to create the arm binaries (or whichever architecture is the dpkg-cross 
+default). I expect the same code to work for arm chroots on amd64 etc, but 
+mechanisms already exist for those so it's not the priority. 
+
+In order to make best use of the existing pbuilder code, these are shell scripts
+whereas the rest of emdebian-tools uses perl.
+
+DEPENDENCIES
+------------
+
+To emdebianise and cross-build packages, the chroot needs to install 
+emdebian-tools. This brings in the majority of dependencies to support building 
+Debian and Emdebian packages. This (current sample) code uses part of the
+pbuilder source so that the eventual chroots behave as similarly as possible to
+pbuilder and pdebuild in Debian. Therefore, the emdebian pbuilder chroot is NOT
+designed or intended to be installed on any embedded device - it is intended for
+cross-building packages for Emdebian only. See the SLIND installer for more
+information or the emsandbox script in emdebian-tools.
+
+empdebuild depends on pbuilder and installing emdebian-tools within a chroot 
+causes pbuilder to be installed inside the chroot. Whilst empdebuild and emsandbox
+could be split out into a separate package to prevent pbuilder being needed inside
+the chroot, there are corner cases where this can be useful providing sufficient
+care is taken.
+
+DIFFERENCES TO PBUILDER
+-----------------------
+
+1. emdebian-tools handles the 'installaptlines' subroutine.
+2. emdebian-tools dependencies handle the installation of build-essential dpkg-dev 
+	and apt that pbuilder normally does separately.
+3. emdebian-tools handles the BUILDPLACE via debconf.
+4. Other embootstrap options are hardcoded - BUILDRESULT is placed in BUILDPLACE,
+	APTCACHE also and APTCACHEHARDLINK is set to yes.
+5. emdebian-tools provides the emdebianised source package and patches.
+
+EMDEBIAN NATIVE CHROOT MODEL
+============================
+
+The same code should also be able to create a native chroot so that the 
+cross-built packages can be installed alongside each other for more testing. 
+These chroots have already been tested and instructions exist in the Wiki: 
+http://wiki.debian.org/EmDebian/CrossDebootstrap
+
+Trying to cross-build inside scratchbox limits you to where scratchbox will 
+install which is only certain architectures. emdebian-tools is about 
+cross-building Debian packages using normal Debian tools on a normal Debian 
+system. Emdebian and emdebian-tools are designed to make building inside 
+scratchbox redundant because it simply isn't sufficiently flexible. A 
+scratchbox2 has been mooted but nothing has happened yet.
+
+Cross-build using normal tools (maybe using the chroot as above) and then test 
+either on a native device or via scratchbox if you really have to.
+
+An Emdebian native chroot would be an arm chroot running on an amd64 system - 
+indeed it would need to support creation of a chroot *for* any supported Debian 
+architecture and be able to create and run that chroot *on* any supported 
+Debian architecture.
+
+This is only the first draft - if there are areas that need further clarification
+or updating, please email the debian-embedded mailing list.

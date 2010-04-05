@@ -1,0 +1,93 @@
+#  bash completion support
+#
+#  Copyright (C) 2008 Neil Williams <codehelp@debian.org>
+#
+#  This package is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+_get_dpkg_cross_list()
+{
+	grep Choices: /var/lib/dpkg/info/dpkg-cross.templates \
+		| cut -d':' -f2 | sed -e 's/None, //' | sed -e 's/,//g'
+}
+
+_get_machine_name()
+{
+	WORK=`cat /etc/emsandbox.conf | grep workingdir | sed -e 's/workingdir: \(.*\)/\1\/machine/'`
+	ls $WORK
+}
+
+_get_variant_name()
+{
+	WORK=`cat /etc/emsandbox.conf | grep workingdir | sed -e 's/workingdir: \(.*\)/\1\/machine/'`
+	ls -1 $WORK/*
+}
+
+# rootfs cannot not support stable until Lenny is released.
+_supported_suites()
+{
+	echo unstable testing sid lenny
+}
+
+_emsandbox()
+{
+	local cur prev opts cmds help machine arch quiet
+	COMPREPLY=()
+	cur="${COMP_WORDS[COMP_CWORD]}"
+	prev="${COMP_WORDS[COMP_CWORD-1]}"
+	help="-h -? --help --version "
+	cmds="create --create "
+	arch="-a --arch "
+	opts="-s --script -S --suite"
+	machine="-m --machine -v --variant --machine-path "
+	case "$prev" in
+			-@(a|-arch))
+			COMPREPLY=( $( _get_dpkg_cross_list $cur ) )
+			;;
+			-@(m|-machine))
+			COMPREPLY=( $( _get_machine_name $cur ) )
+			;;
+			-@(V|-variant))
+			COMPREPLY=( $( _get_variant_name $cur ) )
+			;;
+			-@(S|-suite))
+			COMPREPLY=( $( _supported_suites $cur ) )
+			;;
+			*)
+		COMPREPLY=( $(compgen -W "${arch}${help}${opts}${machine}${cmds}" -- ${cur}) )
+		;;
+	esac
+}
+complete -F _emsandbox -o default emsandbox
+
+_em_multistrap()
+{
+	local cur prev opts cmds help machine arch quiet
+	COMPREPLY=()
+	cur="${COMP_WORDS[COMP_CWORD]}"
+	prev="${COMP_WORDS[COMP_CWORD-1]}"
+	help="-h -? --help --version "
+	arch="-a --arch "
+	opts="-f --file"
+	machine=""
+	case "$prev" in
+			-@(a|-arch))
+			COMPREPLY=( $( _get_dpkg_cross_list $cur ) )
+			;;
+			*)
+		COMPREPLY=( $(compgen -W "${arch}${help}${opts}${machine}${cmds}" -- ${cur}) )
+		;;
+	esac
+}
+complete -F _em_multistrap -o default em_multistrap

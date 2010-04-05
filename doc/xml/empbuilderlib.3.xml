@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<refentry id="empbuilderlib">
+  <refentryinfo>
+    <productname>empbuilderlib</productname>
+    <productnumber/>
+  </refentryinfo>
+  <refmeta>
+    <refentrytitle>empbuilderlib</refentrytitle>
+    <manvolnum>3</manvolnum>
+    <refmiscinfo class="source">EMDEBIAN-ROOTFS</refmiscinfo>
+    <refmiscinfo class="manual">EMDEBIAN-ROOTFS</refmiscinfo>
+  </refmeta>
+  <refnamediv id="name">
+    <refname>empbuilderlib</refname>
+    <refpurpose>Common functions for Emdebian chroots</refpurpose>
+  </refnamediv>
+  <refsect1 id="description">
+    <title>DESCRIPTION</title>
+    <para><emphasis>empbuilderlib</emphasis> is intended solely for use on
+     the build machine. Do not use these functions in second_stage_install !
+     <emphasis>empbuilderlib</emphasis> requires <emphasis role="bold">perl</emphasis>!
+     </para>
+    <para><emphasis>empbuilderlib</emphasis> is a shell library which 
+     requires perl and pbuilder (which means bash!). 
+     <emphasis>empbuilderlib</emphasis> draws in POSIX shell functions 
+     from emrootfslib to be able to call in functions from 
+     first_stage_install within debootstrap. The only reasons to continue
+     putting new functions in here are if:</para>
+    <orderedlist>
+      <listitem>
+        <para>The functions are only useful to create cross-building chroots OR</para>
+      </listitem>
+      <listitem>
+        <para>the functions need to call pbuilder code directly and are not
+       necessary within first_stage_install.
+       </para>
+      </listitem>
+    </orderedlist>
+    <para>There should be no need to call pbuilder code within scripts that
+     generate a root filesystem.</para>
+  </refsect1>
+  <refsect1 id="autoclean_aptcache">
+    <title>autoclean_aptcache</title>
+    <para>Same as the pbuilder option but run by default in <command>empdebuild</command>
+    to remove obsolete .deb archives from the apt cache directories used by
+    <command>empdebuild</command>.
+    </para>
+  </refsect1>
+  <refsect1 id="copy_host_configuration">
+    <title>copy_host_configuration</title>
+    <para>Copy hosts, hostname and resolv.conf from the system /etc/
+    directory and adapts /etc/hostname to use a different
+    name (emdebian-$ARCH).
+    </para>
+  </refsect1>
+  <refsect1 id="extractembuildplace">
+    <title>extractembuildplace</title>
+    <para>Modified version of the equivalent function in pbuilder-modules
+    to extract the compressed chroot (used by empdebuild).</para>
+  </refsect1>
+  <refsect1>
+    <title>Author</title>
+    <para><emphasis>empbuilderlib</emphasis> was written
+      by Neil Williams <email>codehelp@debian.org</email>.
+    </para>
+    <para>This manual page was written by Neil Williams
+      <email>codehelp@debian.org</email>
+    </para>
+  </refsect1>
+  <refsect1 id="seealso">
+    <title>SEE ALSO</title>
+    <para>See also <filename>apt-cross</filename> (1),
+        <filename>dpkg-cross</filename> (1), <emphasis>emdebian-tools</emphasis> (1),
+        <filename>emrootfslib</filename> (3).
+        </para>
+  </refsect1>
+</refentry>

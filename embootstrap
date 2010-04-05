@@ -1,0 +1,389 @@
+#!/bin/bash
+set -e
+
+#  embootstrap -- create a bootstrap for emdebian builds
+#
+#  Note that this script controls tarballs for empdebuild and emsandbox
+#  pass --cross to set an emsandbox tarball.
+#
+#  Copyright (C) 2007-2010  Neil Williams <codehelp@debian.org>
+#
+#  This package is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+CWD=`pwd`
+
+# test for sudo
+# make sure sudo is in use.
+# bash cannot seem to do this when set -e is enabled
+# because grep returns non-zero on a non-match
+# so I use perl. :-)
+ISROOT=`perl -e '$e=\`printenv\`; ($e =~ /\nUSER=root\n/) ? print "yes" : print "no";'`
+if [ $ISROOT == "no" ] ; then
+	echo "embootstrap needs to be run under sudo or as root."
+	exit 2
+fi
+
+. /usr/lib/pbuilder/pbuilder-modules
+. /usr/lib/pbuilder/pbuilder-buildpackage-funcs
+. /usr/share/emdebian-tools/empbuilderlib
+
+# move to our own function file later.
+
+# Need support for create (this script), update (unpack base.tgz) and login
+# (sudo chroot /bin/sh) as well as the final empdebuild (emsource,emdebuild)
+# in a separate script.
+
+# Currently, this script needs user intervention to build the chroot:
+# emsetup asks for confirmation and apt-get install wants GnuPG verification.
+
+# This script will concentrate only on creating and updating the chroot.
+# Parameters.
+# WORK=location of this script.
+# MIRROR=the Debian primary mirror that will replace the default debootstrap mirror
+# (ftp.debian.org is not a primary and only supports 2 architectures).
+# TODO: needs command line options to set the rest of these parameters.
+
+# Note --oknodo will cause failures, see #426877
+
+WORK=$CWD
+
+get_work_dir
+BUILDPLACE=$WORKDIR
+WORKDIR=`echo ${WORKDIR}/ | tr -s \/`
+echo "Using '$WORKDIR' as the Emdebian working directory."
+BASETGZ="$BUILDPLACE/emdebian.tgz"
+BASETGZ=`echo $BASETGZ | tr -s \/`
+BUILDPLACE="$BUILDPLACE/pbuilder"
+# tidy up // to /
+BUILDPLACE=`echo $BUILDPLACE | tr -s \/`
+MIRROR=
+# don't die if the user has set 'None' for the dpkg-cross default.
+get_default_arch
+
+BUILDPLACE="${WORKDIR}pbuilder/build"
+if [ -d $BUILDPLACE ]; then
+	rm -rf $BUILDPLACE/*
+fi
+if [ ! -d $BUILDPLACE ]; then
+	mkdir -p $BUILDPLACE
+fi
+BASETGZ="${WORKDIR}emdebian.tgz"
+SUITE=unstable
+CROSS=x
+MACHINE=x
+VARIANT=x
+MACHINEPATH="${WORKDIR}machine/"
+USEDEVPTS="yes"
+USEPROC="yes"
+
+while [ -n "$1" ]; do
+case "$1" in
+	-a|--arch)
+		shift
+		ARCH=$1
+		# chomp the argument to --arch
+		shift
+	;;
+	--testing|testing)
+		shift;
+		BASETGZ="${WORKDIR}emdebian-testing.tgz"
+		SUITE=testing
+		echo "Creating an embootstrap testing chroot"
+	;;
+	# only for emsandbox support, empdebuild does not pass -S
+	-S|--suite)
+		shift
+		SUITE=$1
+		shift
+	;;
+	--cross|cross)
+		shift;
+		BASETGZ="${WORKDIR}emdebian-$ARCH.tgz"
+		CROSS=$ARCH
+		echo "Creating an embootstrap $ARCH chroot"
+	;;
+	--script)
+		shift
+		CMD_SCRIPT=$1
+		if [ ! -f $CMD_SCRIPT ]; then
+			echo "Cannot find suite script '$CMD_SCRIPT'."
+			exit;
+		fi
+		echo "Using $CMD_SCRIPT"
+		shift
+	;;
+	--machine-path)
+		shift
+		MACHINEPATH="$1/"
+		MACHINEPATH=`echo $MACHINEPATH | tr -s \/`
+		shift
+	;;
+	--machine)
+		shift
+		MACHINE=$1
+		VARIANT=default
+		if [ ! -d "${MACHINEPATH}$MACHINE" ]; then
+			echo "Cannot find machine directory: '${MACHINEPATH}$MACHINE'."
+			exit 4
+		fi
+		shift
+	;;
+	--variant)
+		shift
+		VARIANT=$1
+		if [ ! $MACHINE ]; then
+			echo "Variant specified without a machine."
+			exit 3
+		fi
+		if [ ! -d "${MACHINEPATH}$MACHINE/$VARIANT" ]; then
+			echo "Cannot find variant directory: '${MACHINEPATH}$MACHINE/$VARIANT'."
+			exit 3
+		fi
+		shift
+	;;
+	*)
+		echo "Unrecognised option: $1"
+	exit;
+	;;
+esac
+done
+
+if [ "$ARCH" = "None.\n" ]; then
+	echo $ARCH
+	echo Use the --arch option or dpkg-reconfigure dpkg-cross
+	exit 2
+fi
+
+# include packages.conf if --machine used.
+if [ "$MACHINE" != "x" -a "$VARIANT" != "x" -a $CROSS -a $CROSS = $ARCH ]; then
+	# sets INCLUDE, SCRIPT, MIRROR etc.
+	FILE="${MACHINEPATH}$MACHINE/$VARIANT/packages.conf"
+	if [ -f $FILE ]; then
+		. $FILE
+	else
+		echo "ERROR: Cannot find machine support: $FILE"
+		exit 1
+	fi
+	echo "Using $MACHINE:$VARIANT"
+	if [ $TARBALL_NAME ]; then
+		echo "  -> creating ${WORKDIR}/${TARBALL_NAME}"
+		BASETGZ="${WORKDIR}/${TARBALL_NAME}"
+	fi
+fi
+
+checkarch
+HOST_ARCH=`dpkg-architecture -qDEB_HOST_ARCH`
+
+# let the command line override the packages.conf
+if [ ! $SCRIPT ]; then
+	SCRIPT=$CMD_SCRIPT
+fi
+
+# if neither command line nor packages.conf have a script set, use default.
+if [ ! $SCRIPT ]; then
+	SCRIPT="/usr/share/emdebian-tools/emdebian.crossd"
+fi
+
+if [ $CROSS -a $CROSS = $ARCH ]; then
+	echo "Building $ARCH chroot on $HOST_ARCH to install $ARCH packages."
+else
+	echo "Building $HOST_ARCH chroot on $HOST_ARCH to cross-build $ARCH packages."
+fi
+if [ -f ${BASETGZ} ]; then
+	echo "${BASETGZ} already exists! Aborting . . ."
+	exit 1;
+fi
+echo "Checking for a user writeable tree in $BUILDPLACE"
+check_dirs
+echo " -> running debootstrap"
+export LANG=C
+export LC_ALL=C
+# debootstrap 1.0.7 has moved
+WORK="/usr/share/debootstrap/"
+# handle old versions of debootstrap so that we can migrate into testing.
+if [ -f "/usr/lib/debootstrap/functions" ]; then
+	WORK="/usr/lib/debootstrap/";
+fi
+FOREIGN=
+INC=
+if [ $CROSS -a $CROSS = $ARCH ]; then
+	echo "  -> cross detected, using foreign."
+	FOREIGN="--foreign"
+	if [ ! $MIRROR ]; then
+		MIRROR="http://www.emdebian.org/crush/"
+	fi
+	if [ ! $PROXY ]; then
+		PROXY="http://www.emdebian.org/crush/"
+	fi
+	if [ $INCLUDE ]; then
+		INC="--include=$INCLUDE"
+	fi
+	# if SUITE is empty in packages.conf, reset the default
+	if [ ! $SUITE ]; then
+		SUITE=unstable
+	fi
+	BUILDD=$SCRIPT
+	if [ ! -f ${WORKDIR}/stamp-debootstrap ]; then
+		echo "DEBOOTSTRAP_DIR=$WORK debootstrap $INC --verbose $FOREIGN --arch ${ARCH} $SUITE $BUILDPLACE $PROXY $BUILDD"
+		DEBOOTSTRAP_DIR=$WORK debootstrap ${INC} --verbose $FOREIGN --arch ${ARCH} $SUITE $BUILDPLACE $PROXY $BUILDD
+		echo " -> debootstrap stage complete"
+		echo " -> Checking for machine:variant hooks"
+		# hooks
+		if [ $INC ]; then
+			echo "${INC}" >> $BUILDPLACE/debootstrap/machineincludes
+		fi
+		if [ -f ${MACHINEPATH}/$MACHINE/$VARIANT/setup.sh ]; then
+			if [ ! -z "$EXTRA" ]; then
+				if [ -e $EXTRA ]; then
+					cp $EXTRA $BUILDPLACE/
+				fi
+			fi
+			echo " -> Running $MACHINE/$VARIANT/setup.sh $BUILDPLACE $ARCH"
+			sh ${MACHINEPATH}/$MACHINE/$VARIANT/setup.sh $BUILDPLACE $ARCH
+		fi
+		if [ -f ${MACHINEPATH}/$MACHINE/$VARIANT/config.sh ]; then
+			echo " -> Copying config.sh for $MACHINE:$VARIANT into tarball"
+			mkdir -p $BUILDPLACE/machine/
+			cp ${MACHINEPATH}/$MACHINE/$VARIANT/config.sh $BUILDPLACE/machine/
+		fi
+		touch ${WORKDIR}/stamp-debootstrap
+	fi # end of $CROSS
+else # else if not $CROSS
+	# TODO this should be configurable - emdebian-tools will add a primary later.
+	# copy or use the ~/.apt-cross/sources.foo. files.
+	if [ ! $MIRROR ]; then
+		get_primary
+		if [ ! -z "$PRIMARY" ]; then
+			MIRROR="http://${PRIMARY}/debian"
+		fi
+	fi
+	if [ ! $MIRROR ]; then
+		MIRROR="http://ftp.fr.debian.org/debian/"
+	fi
+	BUILDD=/usr/share/emdebian-tools/emdebian.buildd
+	if [ ! -f ${WORKDIR}/stamp-debootstrap ]; then
+		echo "DEBOOTSTRAP_DIR=$WORK debootstrap --verbose $SUITE $BUILDPLACE $MIRROR $BUILDD"
+		DEBOOTSTRAP_DIR=$WORK debootstrap --verbose $SUITE $BUILDPLACE $MIRROR $BUILDD
+		touch ${WORKDIR}/stamp-debootstrap
+	fi
+fi
+mkdir -p "$BUILDPLACE/tmp/buildd"
+
+copy_host_configuration
+
+# emdebian-tools will be reconfigured later.
+# ensure src is available if not emsandbox
+echo "  -> Installing apt-lines for $MIRROR"
+mkdir -p "$BUILDPLACE/etc/apt/sources.list.d/"
+rm -f "$BUILDPLACE"/etc/apt/sources.list
+if [ $CROSS -a $CROSS = $ARCH ]; then
+	cat >> "$BUILDPLACE"/etc/apt/sources.list.d/emdebian.sources.list << EOF
+#emdebian target repository : default source list
+# created by emsandbox
+deb $MIRROR $SUITE main
+#deb-src $MIRROR $SUITE main
+EOF
+else
+	cat >> "$BUILDPLACE"/etc/apt/sources.list << EOF
+deb $MIRROR $SUITE main
+deb-src $MIRROR $SUITE main
+EOF
+fi
+
+if [ $CROSS -a $CROSS = $ARCH ]; then
+	# copy our secure apt key into the chroot for apt-key
+	cp /usr/share/emdebian-tools/emdebian-archive-keyring.gpg $BUILDPLACE/
+	# copy in our install helper
+	cp /usr/share/emdebian-tools/emsecondstage $BUILDPLACE/
+	# only executable by root to allow debootstrap to work properly.
+	chmod 744 $BUILDPLACE/emsecondstage
+	rm -f $BUILDPLACE/debootstrap/debootstrap.log
+	# empty if using unpack but should still exist.
+	save_aptcache
+else
+	echo "Refreshing the base.tgz "
+	echo " -> upgrading packages"
+	mountproc
+	chroot $BUILDPLACE /usr/bin/apt-get update
+	recover_aptcache
+	chroot $BUILDPLACE /usr/bin/apt-get -y --force-yes dist-upgrade
+	echo " -> adding the Emdebian repository key"
+	chroot $BUILDPLACE mkdir -p /home/$SUDO_USER/.gnupg
+	chroot $BUILDPLACE mkdir -p /home/$SUDO_USER/.dpkg-cross
+	if [ -f /home/$SUDO_USER/.devscripts ]; then
+		cp /home/$SUDO_USER/.devscripts $BUILDPLACE/home/$SUDO_USER/.devscripts
+	fi
+	cp /usr/share/emdebian-tools/emdebian-archive-keyring.gpg $BUILDPLACE/
+	chroot $BUILDPLACE apt-key add emdebian-archive-keyring.gpg
+	if [ -f emdebian-archive-keyring.gpg ]; then
+		rm emdebian-archive-keyring.gpg
+	fi
+	echo "   -> updating /etc/hosts"
+	cp /etc/hosts $BUILDPLACE/etc/hosts
+	# emdebian.buildd installs emdebian-tools which sets up apt for the emdebian repository
+	echo "   -> updating the apt cache"
+	chroot "$BUILDPLACE" /usr/bin/apt-get update
+	# upgrade emdebian-tools and apt-cross before running emsetup
+	echo "   -> upgrading emdebian-tools and apt-cross"
+	chroot "$BUILDPLACE" /usr/bin/apt-get -y --force-yes dist-upgrade
+	echo "   -> updating apt-cross cache"
+	DPKG_CROSS="/home/$SUDO_USER/.dpkg-cross"
+	if [ ! -f $DPKG_CROSS/apt.conf-${SUITE} ]; then
+		chroot $BUILDPLACE /usr/bin/apt-cross -a $ARCH -S $SUITE -u
+	else
+		echo "     -> copying existing apt-cross cache"
+		cp $DPKG_CROSS/apt.conf-$SUITE $BUILDPLACE/$DPKG_CROSS/
+		cp $DPKG_CROSS/sources.$SUITE $BUILDPLACE/$DPKG_CROSS/
+		cp $DPKG_CROSS/status-$SUITE $BUILDPLACE/$DPKG_CROSS/
+		cp -r $DPKG_CROSS/$SUITE $BUILDPLACE/$DPKG_CROSS/
+	fi
+	echo "   -> running emsetup"
+	if chroot "$BUILDPLACE" /usr/bin/emsetup -v -a $ARCH --yes; then
+		:
+		else
+			echo "  -> emsetup failed"
+			if [ "${LOGIN_AFTER_FAIL}" = "yes" ]; then
+				echo "   -> Logging into the chroot"
+				echo "   -> Build directory: /trunk/$SVN"
+				echobacktime
+				chroot $BUILDPLACE /bin/sh
+				save_aptcache
+				echo "  -> emsetup failed"
+				chroot $BUILDPLACE /usr/bin/apt-get clean
+				umountproc
+				create_emdebiantgz
+				cleanbuildplace
+				rm ${WORKDIR}/stamp-debootstrap
+				exit 1;
+			fi
+			save_aptcache
+			umountproc
+			chroot $BUILDPLACE /usr/bin/apt-get clean
+			create_emdebiantgz
+			cleanbuildplace
+			rm ${WORKDIR}/stamp-debootstrap
+			echobacktime
+			echo "  -> emsetup failed: exiting with an error!"
+			echo " Try --login-after-fail"
+			exit 1;
+		fi
+	umountproc
+	save_aptcache
+	chroot $BUILDPLACE /usr/bin/apt-get clean
+fi
+
+create_emdebiantgz
+cleanbuildplace
+rm ${WORKDIR}/stamp-debootstrap

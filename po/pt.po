@@ -1,0 +1,370 @@
+# Portuguese translation for the emdebian multistrap package.
+# Copyright (C) 2009 The multistrap authors.
+# This file is distributed under the same license as the multistrap package
+# Pedro Ribeiro <p.m42.ribeiro@gmail.com>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: emdebian-rootfs_2.0.5\n"
+"Report-Msgid-Bugs-To: multistrap@packages.debian.org\n"
+"POT-Creation-Date: 2010-04-01 07:32+0100\n"
+"PO-Revision-Date: 2010-03-06 23:50+0000\n"
+"Last-Translator: Pedro Ribeiro <p.m42.ribeiro@gmail.com>\n"
+"Language-Team: Portuguese <traduz@debianpt.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../em_multistrap:73
+msgid "Unknown option"
+msgstr "Opção desconhecida"
+
+#: ../em_multistrap:76
+#, perl-format
+msgid "Need a configuration file - use %s -f\n"
+msgstr "É necessário um ficheiro de configuração - use %s -f\n"
+
+#. Translators: fields are: programname, versionstring, configfile.
+#: ../em_multistrap:129
+#, perl-format
+msgid "%s %s using %s\n"
+msgstr "%s %s a usar %s\n"
+
+#: ../em_multistrap:135 ../em_multistrap:139
+#, perl-format
+msgid "Defaulting architecture to native: %s\n"
+msgstr "A usar a arquitectura nativa padrão: %s\n"
+
+#: ../em_multistrap:143
+#, perl-format
+msgid "Using foreign architecture: %s\n"
+msgstr "A usar arquitectura estrangeira: %s\n"
+
+#: ../em_multistrap:149
+#, perl-format
+msgid ""
+"No sources defined for a foreign multistrap.\n"
+"\tUsing your existing apt sources. To use different sources,\n"
+"\tlist them with aptsources= in '%s'."
+msgstr ""
+"Sem fontes definidas para multistrap estrangeiro.\n"
+"\tA usar as fontes apt existentes. Para usar fontes diferentes,\n"
+"\te listá-las com aptsources= em '%s'."
+
+#. Translators: fields are: programname, architecture, host architecture.
+#: ../em_multistrap:157
+#, perl-format
+msgid "%s building %s multistrap on '%s'\n"
+msgstr "%s a criar multistrap para %s em '%s'\n"
+
+#: ../em_multistrap:179
+#, perl-format
+msgid "Unable to create directory '%s'\n"
+msgstr ""
+
+#: ../em_multistrap:215
+msgid "INF: ./lib64 -> /lib symbolic link reset to ./lib.\n"
+msgstr "INF: link simbólico ./lib64 -> /lib reposto para ./lib.\n"
+
+#: ../em_multistrap:225
+msgid "INF: Setting ./lib64 -> ./lib symbolic link.\n"
+msgstr "INF: A definir link simbólico ./lib64 -> ./lib.\n"
+
+#: ../em_multistrap:258 ../em_multistrap:265
+msgid "Cannot open sources list"
+msgstr "Impossível abrir lista de fontes"
+
+#: ../em_multistrap:289
+#, perl-format
+msgid "I: Installing %s\n"
+msgstr "I: A instalar %s\n"
+
+#: ../em_multistrap:306
+#, perl-format
+msgid "Getting package lists: apt-get %s update\n"
+msgstr "A obter listas de pacotes: apt-get %s update\n"
+
+#: ../em_multistrap:308
+#, perl-format
+msgid "apt update failed. Exit value: %d\n"
+msgstr "apt update falhou. Valor de saída: %d\n"
+
+#: ../em_multistrap:326
+#, perl-format
+msgid "apt download failed. Exit value: %d\n"
+msgstr "apt download falhou. Valor de saída: %d\n"
+
+#: ../em_multistrap:338
+msgid "ERR: ./lib64 -> /lib symbolic link reset to ./lib after unpacking.\n"
+msgstr ""
+"ERRO: link simbólico ./lib64 -> /lib reposto para ./lib após "
+"desempacotamento.\n"
+
+#: ../em_multistrap:339
+#, perl-format
+msgid "ERR: Some files may have been unpacked outside %s!\n"
+msgstr "ERRO: Alguns ficheiros podem ter sido desempacotados fora de %s!\n"
+
+#: ../em_multistrap:343
+#, perl-format
+msgid ""
+"\n"
+"Multistrap system installed successfully in %s.\n"
+"\n"
+msgstr ""
+"\n"
+"Sistema multistrap instalado com sucesso em %s.\n"
+"\n"
+
+#: ../em_multistrap:376 ../em_multistrap:427 ../em_multistrap:590
+msgid "Cannot read apt archives directory.\n"
+msgstr "Impossível ler o directório de arquivos apt.\n"
+
+#: ../em_multistrap:393
+msgid "I: Calculating obsolete packages\n"
+msgstr "I: A calcular pacotes obsoletos\n"
+
+#: ../em_multistrap:410 ../em_multistrap:416
+#, perl-format
+msgid "I: Removing %s\n"
+msgstr "I: A remover %s\n"
+
+#: ../em_multistrap:434
+#, perl-format
+msgid "Using directory %s for unpacking operations\n"
+msgstr ""
+
+#: ../em_multistrap:437
+#, perl-format
+msgid "I: Extracting %s...\n"
+msgstr "I: A extrair %s...\n"
+
+#: ../em_multistrap:450
+#, perl-format
+msgid ""
+"dpkg -X failed with error code %s\n"
+"Skipping...\n"
+msgstr ""
+
+#: ../em_multistrap:490
+#, perl-format
+msgid " -> Processing conffiles for %s\n"
+msgstr " -> A processar ficheiros de configuração para %s\n"
+
+#: ../em_multistrap:511
+#, perl-format
+msgid "ERR: lib64 -> ./lib symbolic link clobbered by %s\n"
+msgstr "ERRO: link simbólico lib64 -> ./lib ocultado por %s\n"
+
+#: ../em_multistrap:514
+msgid "INF: lib64 -> /lib symbolic link reset to ./lib.\n"
+msgstr "INF: link simbólico lib64 -> /lib reposto para ./lib.\n"
+
+#: ../em_multistrap:521
+msgid "I: Unpacking complete.\n"
+msgstr "I: Desempacotamento completo.\n"
+
+#: ../em_multistrap:536
+msgid "ERR: ./bin/sh symbolic link does not exist.\n"
+msgstr "ERRO: link simbólico ./bin/sh não existe.\n"
+
+#: ../em_multistrap:539
+msgid "INF: Setting ./bin/sh -> ./bin/dash\n"
+msgstr "INF: A definir link simbólico ./bin/sh -> ./bin/dash\n"
+
+#: ../em_multistrap:546
+msgid "INF: ./bin/dash not found. Setting ./bin/sh -> ./bin/bash\n"
+msgstr "INF: ./bin/dash não foi encontrado. A definir ./bin/sh -> ./bin/bash\n"
+
+#: ../em_multistrap:565
+msgid "I: Tidying up apt cache and list data.\n"
+msgstr "I: A arrumar dados de lista e de apt cache.\n"
+
+#: ../em_multistrap:569
+msgid "Cannot read apt lists directory.\n"
+msgstr "Impossível ler directório de listas apt.\n"
+
+#: ../em_multistrap:578
+msgid "Cannot read apt cache directory.\n"
+msgstr "Impossível ler directório/ de apt cache.\n"
+
+# msgid "Cannot read apt archives directory.\n"
+# msgstr "Impossível ler directório/ de arquivos apt.\n"
+#: ../em_multistrap:608
+msgid "I: Native mode - configuring unpacked packages . . .\n"
+msgstr "I: Modo nativo - a configurar pacotes desempacotados . . .\n"
+
+#: ../em_multistrap:615
+#, perl-format
+msgid ""
+"I: dpkg configuration settings:\n"
+"\t%s\n"
+msgstr ""
+"I: opções de configuração do dpkg:\n"
+"\t%s\n"
+
+#: ../em_multistrap:630
+#, perl-format
+msgid "Cannot open %s directory. %s\n"
+msgstr "Impossível abrir o directório %s. %s\n"
+
+#: ../em_multistrap:663
+#, perl-format
+msgid "cannot open apt sources list. %s"
+msgstr "impossível abrir lista de fontes. %s"
+
+#: ../em_multistrap:669
+#, perl-format
+msgid "cannot open apt sources.list directory %s\n"
+msgstr "impossível abrir directório de apt sources.list %s\n"
+
+#: ../em_multistrap:674
+#, perl-format
+msgid "cannot open /etc/apt/sources.list.d/%s %s"
+msgstr "impossível abrir /etc/apt/sources.list.d/%s %s"
+
+#: ../em_multistrap:686
+#, perl-format
+msgid ""
+"\n"
+"%s version %s\n"
+"\n"
+"Usage:\n"
+" %s [-a ARCH] [-d DIR] -f CONFIG_FILE\n"
+" %s -?|-h|--help|--version\n"
+"\n"
+"Command:\n"
+" -f|--file CONFIG_FILE:  path the the multistrap configuration file.\n"
+"\n"
+"Options:\n"
+" -a|--arch ARCHITECTURE: override the configuration file architecture.\n"
+" -d|--dir PATH:          override the configuration file directory.\n"
+"    --no-auth:           do not use Secure Apt for any repositories\n"
+"    --tidy-up:           remove apt cache data and downloaded archives.\n"
+" -?|-h|--help:           print this usage message and exit\n"
+" --version:              print this usage message and exit\n"
+"\n"
+"%s extends debootstrap to provide support for multiple\n"
+"repositories, using a configuration file to specify the relevant suites,\n"
+"architecture, extra packages and the mirror to use for each repository.\n"
+"\n"
+"Example configuration:\n"
+"[General]\n"
+"arch=armel\n"
+"directory=/opt/multistrap/\n"
+"# same as --tidy-up option if set to true\n"
+"cleanup=true\n"
+"# same as --no-auth option if set to true\n"
+"# keyring packages listed in each debootstrap will\n"
+"# still be installed.\n"
+"noauth=false\n"
+"# extract all downloaded archives (default is true)\n"
+"unpack=true\n"
+"# aptsources is a list of sections to be used for downloading packages\n"
+"# and lists and placed in the /etc/apt/sources.list.d/multistrap.sources."
+"list\n"
+"# of the target. Order is not important\n"
+"aptsources=Grip Updates\n"
+"# the order of sections is not important.\n"
+"# the debootstrap option determines which repository\n"
+"# is used to calculate the list of Priority: required packages.\n"
+"debootstrap=Debian\n"
+"\n"
+"[Debian]\n"
+"packages=\n"
+"source=http://ftp.uk.debian.org/debian\n"
+"keyring=debian-archive-keyring\n"
+"suite=lenny\n"
+"\n"
+"This will result in a completely normal debootstrap of Debian lenny from\n"
+"the specified mirror, for armel in /opt/multistrap/.\n"
+"\n"
+"'Architecture' and 'directory' can be overridden on the command line.\n"
+"\n"
+"Specify a package to extend the debootstap to include that package and\n"
+"all dependencies. Dependencies will be calculated by apt so as to use\n"
+"only the most recent suitable version from all configured repositories.\n"
+"\n"
+"General settings:\n"
+"\n"
+"'directory' specifies the top level directory where the debootstrap\n"
+"will be created - it is not packed into a .tgz once complete.\n"
+"\n"
+msgstr ""
+"\n"
+"%s versão %s\n"
+"\n"
+"Uso:\n"
+" %s [-a ARQUITECTURA] [-d DIRECTÓRIO] -f FICHEIRO_DE_CONFIGURAÇÃO\n"
+" %s -?|-h|--help|--version\n"
+"\n"
+"Comando:\n"
+" -f|--file FICHEIRO_DE_CONFIGURAÇÃO:  caminho do ficheiro de configuração do "
+"multistrap.\n"
+"\n"
+"Opções:\n"
+" -a|--arch ARQUITECTURA: substitui a arquitectura do ficheiro de "
+"configuração.\n"
+" -d|--dir CAMINHO:          substitui o directório do ficheiro de "
+"configuração.\n"
+"    --no-auth:           não usa Secure Apt para nenhum repositório\n"
+"    --tidy-up:           remove dados do apt cache e arquivos "
+"descarregados.\n"
+" -?|-h|--help:           mostra esta mensagem de utilização e sai\n"
+" --version:              mostra esta mensagem de utilização e sai\n"
+"\n"
+"%s aumenta o debootstrap para fornecer suporte a múltiplos repositórios, \n"
+"através de um ficheiro de configuração para indicar as suites relevantes,\n"
+"arquitectura, pacotes extra e o mirror a usar para cada repositório.\n"
+"\n"
+"Configuração de exemplo:\n"
+"[General]\n"
+"arch=armel\n"
+"directory=/opt/multistrap/\n"
+"# se definido para true, o mesmo que definir a opção --tidy-up\n"
+"cleanup=true\n"
+"# se definido para true, o mesmo que definir a opção --no-auth\n"
+"# pacotes keyring referidos em cada debootstrap serão,\n"
+"# ainda assim, instalados.\n"
+"noauth=false\n"
+"# extrai todos os arquivos descarregados (pré-definido para true)\n"
+"unpack=true\n"
+"# aptsources é uma lista de secções a usar para descarregar pacotes\n"
+"# e listas e colocada em /etc/apt/sources.list.d/multistrap.sources.list\n"
+"# no destino. A ordem não é importante\n"
+"aptsources=Grip Updates\n"
+"# a ordem das secções não é importante.\n"
+"# a opção debootstrap determina que repositório\n"
+"# é usado para calcular a lista de pacotes com Priority: required.\n"
+"debootstrap=Debian\n"
+"\n"
+"[Debian]\n"
+"packages=\n"
+"source=http://ftp.uk.debian.org/debian\n"
+"keyring=debian-archive-keyring\n"
+"suite=lenny\n"
+"\n"
+"Isto resultará num debootstrap completamente normal do Debian lenny, a "
+"partir\n"
+"do mirror indicado, para armel, em /opt/multistrap/.\n"
+"\n"
+"'Architecture' e 'directory' podem ser substituídos na linha de comandos.\n"
+"\n"
+"Indique um pacote para aumentar o debootstap para incluir esse pacote e\n"
+"todas as dependências. As dependências serão calculadas pelo apt de modo a "
+"usar\n"
+"apenas a versão mais recente de todos os repositórios configurados.\n"
+"\n"
+"Opções Gerais:\n"
+"\n"
+"'directory' indica o directório de topo onde o debootstrap\n"
+"será criado - não será empacotado num .tgz após ficar completo.\n"
+"\n"
+
+#: ../em_multistrap:750
+msgid "failed to write usage:"
+msgstr "falhou a escrita do modo de utilização:"
+
+#, fuzzy
+#~ msgid "Using shortcut file: %s\n"
+#~ msgstr "A usar arquitectura estrangeira: %s\n"

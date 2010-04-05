@@ -1,0 +1,368 @@
+# Vietnamese translation for the Multistrap messages in emdebian-rootfs.
+# Copyright © 2010 Free Software Foundation, Inc.
+# Clytie Siddall <clytie@riverland.net.au>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: emdebian-rootfs 2.0.5\n"
+"Report-Msgid-Bugs-To: multistrap@packages.debian.org\n"
+"POT-Creation-Date: 2010-04-01 07:32+0100\n"
+"PO-Revision-Date: 2010-04-01 16:04+0930\n"
+"Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
+"Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: LocFactoryEditor 1.8\n"
+
+#: ../em_multistrap:73
+msgid "Unknown option"
+msgstr "Không rõ tuỳ chọn"
+
+#: ../em_multistrap:76
+#, perl-format
+msgid "Need a configuration file - use %s -f\n"
+msgstr "Yêu cầu một tập tin cấu hình: dùng « %s -f »\n"
+
+#. Translators: fields are: programname, versionstring, configfile.
+#: ../em_multistrap:129
+#, perl-format
+msgid "%s %s using %s\n"
+msgstr "%s %s dùng %s\n"
+
+#: ../em_multistrap:135 ../em_multistrap:139
+#, perl-format
+msgid "Defaulting architecture to native: %s\n"
+msgstr "Mặc định là sử dụng kiến trúc sở hữu : %s\n"
+
+#: ../em_multistrap:143
+#, perl-format
+msgid "Using foreign architecture: %s\n"
+msgstr "Dùng kiến trúc ngoài: %s\n"
+
+#: ../em_multistrap:149
+#, fuzzy, perl-format
+msgid ""
+"No sources defined for a foreign multistrap.\n"
+"\tUsing your existing apt sources. To use different sources,\n"
+"\tlist them with aptsources= in '%s'."
+msgstr ""
+"Chưa xác định nguồn cho một multistrap lạ\n"
+"\tĐang sử dụng các nguồn apt đã có.\n"
+"\tĐể sử dụng nguồn khác, thêm vào « %s »\n"
+"\tdùng cú pháp « aptsources= »."
+
+#. Translators: fields are: programname, architecture, host architecture.
+#: ../em_multistrap:157
+#, perl-format
+msgid "%s building %s multistrap on '%s'\n"
+msgstr "%s đang xây dựng multistrap %s trên « %s »\n"
+
+#: ../em_multistrap:179
+#, perl-format
+msgid "Unable to create directory '%s'\n"
+msgstr ""
+
+#: ../em_multistrap:215
+msgid "INF: ./lib64 -> /lib symbolic link reset to ./lib.\n"
+msgstr ""
+"INF: ./lib64 -> liên kết tượng trưng « /lib » được đặt lại thành « ./lib ».\n"
+
+#: ../em_multistrap:225
+msgid "INF: Setting ./lib64 -> ./lib symbolic link.\n"
+msgstr "TIN: Đang đặt liên kết tượng trưng « ./lib64 » -> « ./lib ».\n"
+
+#: ../em_multistrap:258 ../em_multistrap:265
+msgid "Cannot open sources list"
+msgstr "Không mở được danh sách nguồn"
+
+#: ../em_multistrap:289
+#, perl-format
+msgid "I: Installing %s\n"
+msgstr "TIN: Đang cài đặt %s\n"
+
+# « apt-get » và « update » thuộc về một câu lệnh nghĩa chữ
+#: ../em_multistrap:306
+#, perl-format
+msgid "Getting package lists: apt-get %s update\n"
+msgstr "Đang lấy các danh sách gói: apt-get %s update\n"
+
+#: ../em_multistrap:308
+#, perl-format
+msgid "apt update failed. Exit value: %d\n"
+msgstr "Tiến trình « apt update » (cập nhật) bị lỗi. Giá trị thoát: %d\n"
+
+#: ../em_multistrap:326
+#, perl-format
+msgid "apt download failed. Exit value: %d\n"
+msgstr "Tiến trình « apt download » (tải về) bị lỗi. Giá trị thoát: %d\n"
+
+#: ../em_multistrap:338
+msgid "ERR: ./lib64 -> /lib symbolic link reset to ./lib after unpacking.\n"
+msgstr ""
+"LỖI: Liên kết tượng trưng « ./lib64 » -> « /lib » bị đặt lại thành « ./lib » "
+"sau khi mở gói.\n"
+
+#: ../em_multistrap:339
+#, perl-format
+msgid "ERR: Some files may have been unpacked outside %s!\n"
+msgstr "LỖI: Một số tập tin nào đó có thể bị mở gói bên ngoài %s !\n"
+
+#: ../em_multistrap:343
+#, perl-format
+msgid ""
+"\n"
+"Multistrap system installed successfully in %s.\n"
+"\n"
+msgstr ""
+"\n"
+"Hệ thống multistrap đã được cài đặt vào %s.\n"
+"\n"
+
+#: ../em_multistrap:376 ../em_multistrap:427 ../em_multistrap:590
+msgid "Cannot read apt archives directory.\n"
+msgstr "Không đọc được thư mục kho lưu apt.\n"
+
+# msgid "Cannot read apt archives directory.\n"
+# msgstr "Không đọc được thư mục kho lưu apt.\n"
+#: ../em_multistrap:393
+msgid "I: Calculating obsolete packages\n"
+msgstr "TIN: Đang tính các gói cũ\n"
+
+#: ../em_multistrap:410 ../em_multistrap:416
+#, perl-format
+msgid "I: Removing %s\n"
+msgstr "TIN: Đang gỡ bỏ %s\n"
+
+#: ../em_multistrap:434
+#, perl-format
+msgid "Using directory %s for unpacking operations\n"
+msgstr ""
+
+#: ../em_multistrap:437
+#, perl-format
+msgid "I: Extracting %s...\n"
+msgstr "TIN: Đang giải nén %s...\n"
+
+#: ../em_multistrap:450
+#, perl-format
+msgid ""
+"dpkg -X failed with error code %s\n"
+"Skipping...\n"
+msgstr ""
+
+#: ../em_multistrap:490
+#, perl-format
+msgid " -> Processing conffiles for %s\n"
+msgstr " -> Đang xử lý các tập tin cấu hình cho %s\n"
+
+#: ../em_multistrap:511
+#, perl-format
+msgid "ERR: lib64 -> ./lib symbolic link clobbered by %s\n"
+msgstr "LỖI: Liên kết tượng trưng « /lib64 » -> « ./lib » bị ghi đè bởi %s\n"
+
+#: ../em_multistrap:514
+msgid "INF: lib64 -> /lib symbolic link reset to ./lib.\n"
+msgstr ""
+"TIN: Liên kết tượng trưng « /lib64 » -> « /lib » được đặt lại thành « ./lib ».\n"
+
+#: ../em_multistrap:521
+msgid "I: Unpacking complete.\n"
+msgstr "TIN: Hoàn tất mở gói.\n"
+
+#: ../em_multistrap:536
+#, fuzzy
+msgid "ERR: ./bin/sh symbolic link does not exist.\n"
+msgstr "LỖI: Liên kết tượng trưng « /lib64 » -> « ./lib » bị ghi đè bởi %s\n"
+
+#: ../em_multistrap:539
+#, fuzzy
+msgid "INF: Setting ./bin/sh -> ./bin/dash\n"
+msgstr "TIN: Đang đặt liên kết tượng trưng « ./lib64 » -> « ./lib ».\n"
+
+#: ../em_multistrap:546
+msgid "INF: ./bin/dash not found. Setting ./bin/sh -> ./bin/bash\n"
+msgstr ""
+
+#: ../em_multistrap:565
+msgid "I: Tidying up apt cache and list data.\n"
+msgstr "TIN: Đang làm sạch vùng nhớ tạm và dữ liệu danh sách của apt.\n"
+
+#: ../em_multistrap:569
+msgid "Cannot read apt lists directory.\n"
+msgstr "Không đọc được thư mục danh sách apt.\n"
+
+#: ../em_multistrap:578
+msgid "Cannot read apt cache directory.\n"
+msgstr "Không đọc được thư mục nhớ tạm apt.\n"
+
+#: ../em_multistrap:608
+msgid "I: Native mode - configuring unpacked packages . . .\n"
+msgstr "TIN: Chế độ sở hữu — cấu hình các gói chưa mở . . .\n"
+
+#: ../em_multistrap:615
+#, perl-format
+msgid ""
+"I: dpkg configuration settings:\n"
+"\t%s\n"
+msgstr ""
+"TIN: Thiết lập cấu hình dpkg:\n"
+"\t%s\n"
+
+#: ../em_multistrap:630
+#, perl-format
+msgid "Cannot open %s directory. %s\n"
+msgstr "Không mở được thư mục %s. %s\n"
+
+#: ../em_multistrap:663
+#, perl-format
+msgid "cannot open apt sources list. %s"
+msgstr "không mở được danh sách nguồn apt. %s"
+
+#: ../em_multistrap:669
+#, perl-format
+msgid "cannot open apt sources.list directory %s\n"
+msgstr "không mở được thư mục danh sách nguồn « apt sources.list » %s\n"
+
+#: ../em_multistrap:674
+#, perl-format
+msgid "cannot open /etc/apt/sources.list.d/%s %s"
+msgstr "không mở được /etc/apt/sources.list.d/%s %s"
+
+#: ../em_multistrap:686
+#, fuzzy, perl-format
+msgid ""
+"\n"
+"%s version %s\n"
+"\n"
+"Usage:\n"
+" %s [-a ARCH] [-d DIR] -f CONFIG_FILE\n"
+" %s -?|-h|--help|--version\n"
+"\n"
+"Command:\n"
+" -f|--file CONFIG_FILE:  path the the multistrap configuration file.\n"
+"\n"
+"Options:\n"
+" -a|--arch ARCHITECTURE: override the configuration file architecture.\n"
+" -d|--dir PATH:          override the configuration file directory.\n"
+"    --no-auth:           do not use Secure Apt for any repositories\n"
+"    --tidy-up:           remove apt cache data and downloaded archives.\n"
+" -?|-h|--help:           print this usage message and exit\n"
+" --version:              print this usage message and exit\n"
+"\n"
+"%s extends debootstrap to provide support for multiple\n"
+"repositories, using a configuration file to specify the relevant suites,\n"
+"architecture, extra packages and the mirror to use for each repository.\n"
+"\n"
+"Example configuration:\n"
+"[General]\n"
+"arch=armel\n"
+"directory=/opt/multistrap/\n"
+"# same as --tidy-up option if set to true\n"
+"cleanup=true\n"
+"# same as --no-auth option if set to true\n"
+"# keyring packages listed in each debootstrap will\n"
+"# still be installed.\n"
+"noauth=false\n"
+"# extract all downloaded archives (default is true)\n"
+"unpack=true\n"
+"# aptsources is a list of sections to be used for downloading packages\n"
+"# and lists and placed in the /etc/apt/sources.list.d/multistrap.sources."
+"list\n"
+"# of the target. Order is not important\n"
+"aptsources=Grip Updates\n"
+"# the order of sections is not important.\n"
+"# the debootstrap option determines which repository\n"
+"# is used to calculate the list of Priority: required packages.\n"
+"debootstrap=Debian\n"
+"\n"
+"[Debian]\n"
+"packages=\n"
+"source=http://ftp.uk.debian.org/debian\n"
+"keyring=debian-archive-keyring\n"
+"suite=lenny\n"
+"\n"
+"This will result in a completely normal debootstrap of Debian lenny from\n"
+"the specified mirror, for armel in /opt/multistrap/.\n"
+"\n"
+"'Architecture' and 'directory' can be overridden on the command line.\n"
+"\n"
+"Specify a package to extend the debootstap to include that package and\n"
+"all dependencies. Dependencies will be calculated by apt so as to use\n"
+"only the most recent suitable version from all configured repositories.\n"
+"\n"
+"General settings:\n"
+"\n"
+"'directory' specifies the top level directory where the debootstrap\n"
+"will be created - it is not packed into a .tgz once complete.\n"
+"\n"
+msgstr ""
+"\n"
+"%s phiên bản %s\n"
+"\n"
+"Sử dụng:\n"
+" %s [-a KIẾN_TRÚC] [-d THƯ_MỤC] -f TỆP_CẤU_HÌNH\n"
+" %s -?|-h|--help|--version\n"
+"\n"
+"Lệnh:\n"
+" -f|--file TỆP_CẤU_HÌNH:  path the the multistrap configuration file.\n"
+"\n"
+"Tuỳ chọn:\n"
+" -a|--arch KIẾN_TRÚC: có quyền cao hơn kiến trúc trong tập tin cấu hình.\n"
+" -d|--dir ĐƯỜNG_DẪN:          có quyền cao hơn thư mục tập tin cấu hình.\n"
+"    --no-auth:           đừng dùng Secure Apt (Apt Bảo Mật) cho bất cứ kho "
+"lưu nào\n"
+"    --tidy-up:           gỡ bỏ dữ liệu nhớ tạm apt và các kho lưu đã tải "
+"về.\n"
+" -?|-h|--help:          hiển thị trợ giúp này, sau đó thoát\n"
+" --version:              hiển thị thông tin về phiên bản, sau đó thoát\n"
+"\n"
+"%s mở rộng debootstrap để cung cấp hỗ trợ đa kho lưu,\n"
+"dùng một tập tin cấu hình để ghi rõ những bộ ứng dụng, kiến trúc,\n"
+"và gói bổ sung mà thích hợp, và máy nhân bản cần dùng cho mỗi kho lưu.\n"
+"\n"
+"Cấu hình mẫu:\n"
+"[Chung]\n"
+"arch=armel\n"
+"directory=/opt/multistrap/\n"
+"# bằng tuỳ chọn « --tidy-up » nếu đặt thành đúng (true)\n"
+"cleanup=true\n"
+"# bằng tuỳ chọn « --no-auth » nếu đặt thành đúng (true)\n"
+"# Các gói vòng khoá được liệt kê trong mỗi deboostrap\n"
+"# vẫn còn được cài đặt.\n"
+"noauth=false\n"
+"# trích ra mọi kho lưu đã tải về (mặc định là đúng)\n"
+"unpack=true\n"
+"# Thứ tự phần cũng không quan trọng.\n"
+"# Tuỳ chọn debootstrap quyết định kho lưu nào được dùng\n"
+"# để tính danh sách các gói có mức ưu tiên « Yêu cầu »\n"
+"debootstrap=Debian\n"
+"\n"
+"[Debian]\n"
+"packages=\n"
+"source=http://ftp.uk.debian.org/debian\n"
+"keyring=debian-archive-keyring\n"
+"suite=lenny\n"
+"\n"
+"Cấu hình này có kết quả là một debootstrap Debian lenny\n"
+"hoàn toàn thông thường từ máy nhân bản đưa ra,\n"
+"cho armel trong « /opt/multistrap/ ».\n"
+"\n"
+"'Architecture' (kiến trúc) và 'directory' (thư mục)\n"
+"cũng có thể được ghi đè trên dòng lệnh.\n"
+"\n"
+"Ghi rõ một gói nào đó để mở rộng deboostrap để bao gồm gói đó\n"
+"và tất cả các quan hệ phụ thuộc. Quan hệ phụ thuộc được apt tính\n"
+"để sử dụng chỉ phiên bản thích hợp mới nhất từ tất cả các kho lưu\n"
+"được cấu hình.\n"
+"\n"
+"Thiết lập chung:\n"
+"\n"
+"'directory' thì ghi rõ thư mục cấp đầu trong đó debootstrap được tạo.\n"
+"Nó không phải được đóng gói thành một .tgz một khi hoàn tất.\n"
+"\n"
+
+#: ../em_multistrap:750
+msgid "failed to write usage:"
+msgstr "lỗi ghi cách sử dụng:"

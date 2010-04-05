@@ -1,0 +1,172 @@
+#!/bin/bash
+set -e
+#  emsandbox : emdebian roots creation.
+#
+#  Copyright (C) 2006-2008  Neil Williams <codehelp@debian.org>
+#
+#  This package is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+# the name is not finalised
+PROG=emsandbox
+
+function usagehelp () {
+    # print out help message
+    cat <<EOF
+$PROG - cross-built chroot Emdebian rootfs builder
+version $OURVERSION
+
+Syntax: sudo $PROG [OPTIONS] [COMMAND]
+
+Commands:
+-?|-h|--help|--version:  print this help message and exit
+--create|create:         create a cross-built base tarball for ARCH
+
+Options:
+-a|--arch:               Override the default cross-build architecture (from dpkg-cross).
+-s|--script FILENAME:    Override the default package set and second-stage install.
+-S|--suite NAME:         Override the default suite [unstable]
+-m|--machine NAME:       Specify a machine name for customisation hooks
+-v|--variant NAME:       Specify a machine variant name for customisation hooks
+   --machine-path PATH:  Specify a path to replace the $WORK/machine default
+
+Although based on debootstrap, $PROG cannot support the full range of
+debootstrap commands or options.
+
+Some customised $PROG scripts are provided with emdebian-tools. The
+default uses the standard Emdebian 'busybox' package with 'dpkg' and 'apt'.
+Replacement scripts need to be full debootstrap suite shell scripts that specify
+how to complete the first and second stage installations. If the script uses
+'busybox', the second-stage install function must be compatible with the
+shell applet in busybox - avoid bashisms!
+
+Overriding the default suite also configures the root filesystem to look
+for updates within the specified suite.
+
+EOF
+}
+
+. /usr/share/emdebian-tools/empbuilderlib
+
+SUITE=unstable
+PACKAGE=
+EXTRA_BASE=""
+EXTRA_REQ=""
+MACHINE=
+VARIANT=
+FILENAME=
+
+get_work_dir
+get_default_arch
+
+check_sudo()
+{
+	# test for sudo - normally empdebuild is installed in /usr/sbin so this
+	# test is really only for SVN users.
+	# make sure sudo is in use.
+	# bash cannot seem to do this when set -e is enabled
+	# because grep returns non-zero on a non-match
+	# so I use perl. :-)
+	ISROOT=`perl -e '$e=\`printenv\`; ($e =~ /\nUSER=root\n/) ? print "yes" : print "no";'`
+	if [ $ISROOT == "no" ] ; then
+		echo "$PROG needs to be run under sudo or as root."
+		exit 2
+	fi
+}
+
+while [ -n "$1" ]; do
+case "$1" in
+	--help|-h|-\?|--version)
+		usagehelp
+		exit;
+	;;
+	-a|--arch)
+		shift
+		ARCH=$1
+		# chomp the argument to --arch
+		shift
+	;;
+	--create|create)
+		shift;
+	;;
+	-s|--script)
+		shift
+		FILENAME=$1
+		shift
+	;;
+	-S|--suite)
+		shift
+		SUITE=$1
+		shift
+	;;
+	-m|--machine)
+		shift
+		MACHINE=$1
+		shift
+	;;
+	-v|--variant)
+		shift
+		VARIANT=$1
+		shift
+	;;
+	--machine-path)
+		shift
+		MACHINEPATH=$1
+		shift
+	;;
+	*)
+		echo "Unrecognised option: $1"
+		echo
+		usagehelp
+		exit;
+	;;
+esac
+done
+
+if [ $INCLUDE ]; then
+	INCLUDE="--include=$1"
+fi
+
+if [ $MACHINEPATH ]; then
+	CUSTOM="--machine-path $MACHINEPATH"
+fi
+
+if [ $MACHINE ]; then
+	CUSTOM+=" --machine $MACHINE"
+fi
+
+if [ $VARIANT ]; then
+	CUSTOM+=" --variant $VARIANT"
+fi
+
+if [ "$ARCH" = "None." ]; then
+	echo Error: No default architecture has been set.
+	echo Use the --arch option or \'sudo dpkg-reconfigure dpkg-cross\'
+	exit
+fi
+
+checkarch
+check_sudo
+CROSS=$ARCH
+if [ "x$SUITE" != "xunstable" ]; then
+	CUSTOM+=" --suite $SUITE"
+fi
+BASETGZ="${WORKDIR}/emdebian-$ARCH.tgz"
+if [ $FILENAME ]; then
+	BASETGZ="${WORKDIR}/$FILENAME"
+	/usr/share/emdebian-tools/embootstrap --arch $ARCH --cross --script $FILENAME $CUSTOM $INCLUDE
+	echo " -> embootstrap complete"
+else
+	/usr/share/emdebian-tools/embootstrap --arch $ARCH --cross $CUSTOM
+fi

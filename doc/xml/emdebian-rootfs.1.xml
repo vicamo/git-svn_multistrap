@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY emsandbox SYSTEM "emsandbox.1.xml">
+<!ENTITY empbuilderlib SYSTEM "empbuilderlib.3.xml">
+<!ENTITY emrootfslib SYSTEM "emrootfslib.3.xml">
+]>
+<book label="Index" status="1.8.0">
+  <bookinfo>
+    <title>emdebian-rootfs</title>
+    <date>Sun 11 Jan 2009 19:55:45 GMT</date>
+    <releaseinfo>Release: 1.8.0</releaseinfo>
+    <orgname>Emdebian</orgname>
+    <author>
+      <firstname>Neil</firstname>
+      <surname>Williams</surname>
+      <personblurb>
+        <para>Debian and Emdebian developer.</para>
+      </personblurb>
+    </author>
+    <legalnotice id="GPL">
+      <title>The GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007</title>
+      <para>This documentation is part of emdebian-tools.</para>
+      <para>emdebian-tools is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 3 of the License, or
+    (at your option) any later version.</para>
+      <para>This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.</para>
+      <para>You should have received a copy of the GNU General Public License
+    along with this program.  If not, see
+    <ulink url="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</ulink>.
+    </para>
+      <note>
+        <para>In Debian you can find a copy of the GNU General
+        Public Licence in <filename>/usr/share/common-licenses/GPL-3</filename></para>
+      </note>
+    </legalnotice>
+  </bookinfo>
+  <preface id="preface">
+    <title>Emdebian Tools Reference</title>
+    <formalpara>
+      <title>Purpose</title>
+      <para>This documentation consists primarily of the manpages for <emphasis>emdebian-tools</emphasis>
+        but also contains useful references and links to further reading on a variety of topics related
+        to Emdebian and cross building. It is intended to be read alongside the
+        <ulink url="http://www.emdebian.org/">Emdebian website</ulink> and
+        <ulink url="http://wiki.debian.org/Embedded_Debian">Emdebian Wiki</ulink>.
+        </para>
+    </formalpara>
+    <para>Some scripts embed the manpage content in the perl script as pod content. These manpages
+    are listed separately in the HTML versions.
+    </para>
+  </preface>
+  <chapter label="1" id="manpages"><title>Emdebian Tools manpages</title>
+    &emsandbox;
+    &empbuilderlib;
+    &emrootfslib;
+  </chapter>
+  <chapter label="2" id="others">
+    <title>Other manpages and external links</title>
+    <para>These manpages are generated from perl instead of XML and are not currently listed
+    in the main table of contents. The HTML version is hosted separately:
+    </para>
+    <refsect1 id="compare">
+      <title>Debian::Packages::Compare</title>
+      <para><ulink url="DebianPackagesCompare.html">Debian::Packages::Compare</ulink>
+       manpage.</para>
+    </refsect1>
+    <refsect1 id="dh_gentdeb">
+      <title>dh_gentdeb</title>
+      <para><ulink url="dh_gentdeb.html">dh_gentdeb</ulink> manpage.</para>
+    </refsect1>
+    <refsect1 id="dpkg-gentdeb">
+      <title>dpkg-gentdeb</title>
+      <para><ulink url="dpkg-gentdeb.html">dpkg-gentdeb</ulink> manpage.</para>
+    </refsect1>
+    <refsect1 id="emtargetcmp">
+      <title>emtargetcmp</title>
+      <para><ulink url="emtargetcmp.html">emtargetcmp</ulink> manpage</para>
+    </refsect1>
+    <refsect1 id="emprunecross">
+      <title>emprunecross</title>
+      <para><ulink url="emprunecross.html">emprunecross</ulink> manpage</para>
+    </refsect1>
+    <refsect1 id="module">
+      <title>Emdebian::Tools</title>
+      <para><ulink url="EmdebianTools.html">Emdebian::Tools</ulink> function
+    reference.
+    </para>
+    </refsect1>
+    <refsect1 id="eminstalltdeb">
+      <title>em_installtdeb</title>
+      <para><ulink url="em_installtdeb.html">em_installtdeb</ulink> manpage</para>
+    </refsect1>
+    <refsect1 id="emrecent">
+      <title>emrecent</title>
+      <para><ulink url="emrecent.html">emrecent</ulink> manpage</para>
+    </refsect1>
+    <refsect1 id="emgrip">
+      <title>emgrip</title>
+      <para><ulink url="emgrip.html">emgrip</ulink> manpage</para>
+    </refsect1>
+    <refsect1 id="em_autogrip">
+      <title>em_autogrip</title>
+      <para><ulink url="em_autogrip.html">em_autogrip</ulink> manpage</para>
+    </refsect1>
+    <refsect1 id="emdebcheck">
+      <title>emdebcheck</title>
+      <para><ulink url="emdebcheck.html">emdebcheck</ulink> manpage</para>
+    </refsect1>
+    <refsect1 id="emcache">
+      <title>emcache</title>
+      <para><ulink url="emcache.html">emcache</ulink> manpage</para>
+    </refsect1>
+    <refsect1 id="emdepends">
+      <title>emdepends</title>
+      <para><ulink url="emdepends.html">emdepends</ulink> manpage</para>
+    </refsect1>
+    <refsect1 id="splitout_tdeb">
+      <title>splitout_tdeb</title>
+      <para><ulink url="splitout_tdeb.html">dplitout_tdeb</ulink> manpage.</para>
+    </refsect1>
+    <refsect1>
+      <title>WWW references</title>
+      <itemizedlist>
+        <listitem>
+          <para>
+            <ulink url="http://www.emdebian.org/">Emdebian.org website</ulink>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <ulink url="http://www.linux.codehelp.co.uk/emdebian/depends.html">Emdebian dependency maps</ulink>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <ulink url="http://www.linux.codehelp.co.uk/emdebian/">Emdebian presentation</ulink>
+          </para>
+        </listitem>
+      </itemizedlist>
+    </refsect1>
+  </chapter>
+</book>

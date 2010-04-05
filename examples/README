@@ -1,0 +1,12 @@
+					MACHINE:VARIANT README
+					======================
+
+
+The example files exist so that you can copy the files into the
+right place in your machine:variant hierarchy.
+
+$WORK/machine/$machine_name/default/packages.conf
+$WORK/machine/$machine_name/default/config.sh
+$WORK/machine/$machine_name/default/setup.sh
+
+http://www.emdebian.org/emdebian/customisation.html

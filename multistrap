@@ -1,0 +1,10 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+# Eventually, this will replace the em_ one or call em_ with
+# --arch and take over native duties.
+
+my $str = join(" ", @ARGV);
+system ("/usr/sbin/em_multistrap $str");
