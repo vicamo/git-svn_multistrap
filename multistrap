@@ -1,10 +1,1102 @@
 #!/usr/bin/perl
 
+# Copyright (C) 2009, 2010  Neil Williams <codehelp@debian.org>
+#
+# This package is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 use strict;
 use warnings;
+use IO::File;
+use Config::Auto;
+use File::Basename;
+use Parse::Debian::Packages;
+use POSIX qw(locale_h);
+use Locale::gettext;
 
-# Eventually, this will replace the em_ one or call em_ with
-# --arch and take over native duties.
+use vars qw/ $progname $ourversion $dstrap $extra @aptsources $mirror
+ @archives $deb $cachedir $config_str %packages $retval $str $retries
+ $dir $include $arch $foreign $suite $url $unpack $sourcedir $msg $etcdir
+ @e $sourcesname $libdir $dpkgdir @debootstrap %suites %components
+ $component $repo @dirs @touch %sources $section %keys $host $key $value
+ $type $file $config $tidy $noauth $keyring %keyrings $deflist
+ @extrapkgs @includes %source $setupsh $configsh $omitrequired /;
 
-my $str = join(" ", @ARGV);
-system ("/usr/sbin/em_multistrap $str");
+setlocale(LC_MESSAGES, "");
+textdomain("multistrap");
+$progname = basename($0);
+$ourversion = &our_version();
+$unpack = "true";
+
+while( @ARGV ) {
+	$_= shift( @ARGV );
+	last if m/^--$/;
+	if (!/^-/) {
+		unshift(@ARGV,$_);
+		last;
+	}
+	elsif (/^(-\?|-h|--help|--version)$/) {
+	&usageversion();
+		exit( 0 );
+	}
+	elsif (/^(-f|--file)$/) {
+		$file = shift(@ARGV);
+	}
+	elsif (/^(-a|--arch)$/) {
+		$arch = shift(@ARGV);
+	}
+	elsif (/^(-d|--dir)$/) {
+		$dir = shift(@ARGV);
+		$dir .= ($dir =~ m:/$:) ? '' : "/";
+	}
+	elsif (/^(--tidy-up)$/) {
+		$tidy++;
+	}
+	elsif (/^(--source-dir)$/) {
+		$sourcedir = shift (@ARGV);
+		$sourcedir .= ($sourcedir =~ m:/$:) ? '' : "/";
+		$sourcedir = (-d $sourcedir) ? $sourcedir : undef;
+	}
+	elsif (/^(--no-auth)$/) {
+		$noauth++;
+	}
+	else {
+		die "$progname: "._g("Unknown option")." $_.\n";
+	}
+}
+$msg = sprintf (_g("Need a configuration file - use %s -f\n"), $progname);
+die ($msg)
+	if (not defined $file);
+
+$cfgdir=dirname($file);
+cascade($file);
+foreach my $inc (@includes)
+{
+	$chk = `realpath $cfgdir/$inc 2>/dev/null`;
+	next if ($chk =~ /^\n?$/);
+	chomp ($chk);
+	printf (_g("%s %s using %s\n"), $progname, $ourversion, $chk);
+	cascade($chk);
+}
+
+# Translators: fields are: programname, versionstring, configfile.
+printf (_g("%s %s using %s\n"), $progname, $ourversion, $file);
+$host = `dpkg-architecture -qDEB_BUILD_ARCH`;
+chomp ($host);
+if (not defined $arch) 
+{
+	$arch = $host;
+	printf (_g("Defaulting architecture to native: %s\n"),$arch);
+}
+elsif ($arch eq $host)
+{
+	printf (_g("Defaulting architecture to native: %s\n"),$arch);
+}
+else
+{
+	printf (_g("Using foreign architecture: %s\n"), $arch);
+}
+$foreign++ if ($host ne $arch);
+
+unless (keys %sources and @aptsources)
+{
+	my $msg = sprintf(_g("No sources defined for a foreign multistrap.
+	Using your existing apt sources. To use different sources,
+	list them with aptsources= in '%s'."), $file);
+	warn ("$progname: $msg\n");
+	$deflist = prepare_sources_list();
+}
+
+# Translators: fields are: programname, architecture, host architecture.
+printf (_g("%s building %s multistrap on '%s'\n"), $progname, $arch, $host);
+$cachedir = "var/cache/apt/"; # archives
+$libdir = "var/lib/apt/";     # lists
+$etcdir = "etc/apt/";         # sources
+$dpkgdir = "var/lib/dpkg/";   # state
+
+if (not -d "$dir")
+{
+	my $ret = mkdir ("$dir");
+	die ("Unable to create directory '$dir' $!\n")
+		if ($ret == 0);
+}
+$dir = `realpath $dir`;
+chomp ($dir);
+$dir .= ($dir =~ m:/$:) ? '' : "/";
+system ("mkdir -p ${dir}${cachedir}") if (not -d "${dir}${cachedir}");
+system ("mkdir -p ${dir}${libdir}") if (not -d "${dir}${libdir}");
+system ("mkdir -p ${dir}${dpkgdir}") if (not -d "${dir}${dpkgdir}");
+system ("mkdir -p ${dir}etc/apt/sources.list.d/")
+	if (not -d "${dir}etc/apt/sources.list.d/");
+system ("mkdir -p ${dir}etc/apt/preferences.d/")
+	if (not -d "${dir}etc/apt/preferences.d/");
+system ("mkdir -p ${dir}usr/share/info/dir")
+	if (not -d "${dir}usr/share/info/dir");
+#system ("mkdir -p ${dir}/usr/share/doc/gcc-4.2-base/")
+#	if (not -d "${dir}/usr/share/doc/gcc-4.2-base/");
+#system ("touch ${dir}/usr/share/doc/gcc-4.2-base/.copyright");
+#system ("touch ${dir}/usr/share/doc/gcc-4.2-base/#changelog.Debian.gz");
+my $msg = sprintf(_g("Unable to create directory '%s'\n"), "${dir}etc/apt/preferences.d/");
+die ($msg)
+	if (not -d "${dir}etc/apt/preferences.d/");
+
+@dirs = qw/ alternatives info parts updates/;
+@touch = qw/ diversions statoverride status lock/;
+foreach my $dpkgd (@dirs) {
+	if (not -d "${dir}${dpkgdir}$dpkgd") {
+		mkdir "${dir}${dpkgdir}$dpkgd";
+	}
+}
+foreach my $file (@touch) {
+	utime(time, time, "${dir}${dpkgdir}/$file") or (
+		open(F, ">${dir}${dpkgdir}/$file") && close F );
+}
+utime(time, time, "${dir}etc/shells") or 
+	(open(F, ">${dir}etc/shells") && close F );
+
+if (not -d "${dir}etc/network") {
+	mkdir "${dir}etc/network";
+}
+
+if (not -d "${dir}dev") {
+	mkdir "${dir}dev";
+}
+
+# prevent the absolute symlink in libc6 from allowing
+# writes outside the multistrap root dir. See: #553599
+if (-l "${dir}lib64" ) {
+	my $r = readlink "${dir}lib64";
+	if ($r =~ m:^/:)
+	{
+		my $old = `pwd`;
+		chomp ($old);
+		unlink "${dir}lib64";
+		chdir ("$dir");
+		print _g("INF: ./lib64 -> /lib symbolic link reset to ./lib.\n");
+		symlink "./lib", "lib64";
+		chdir ("${old}");
+	}
+}
+else
+{
+		my $old = `pwd`;
+		chomp ($old);
+		chdir ("$dir");
+		print _g("INF: Setting ./lib64 -> ./lib symbolic link.\n");
+		symlink "./lib", "lib64";
+		chdir ("${old}");
+}
+
+unlink ("${dir}etc/apt/sources.list.d/multistrap.sources.list")
+	if (-f "${dir}etc/apt/sources.list.d/multistrap.sources.list");
+unlink ("${dir}etc/apt/sources.list")
+	if (-f "${dir}etc/apt/sources.list");
+
+foreach $repo (sort keys %suites)
+{
+	if (not -e "${dir}${cachedir}") {
+		mkdir "${dir}${cachedir}";
+	}
+	if (not -e "$dir/${libdir}lists") {
+		mkdir "$dir/${libdir}lists";
+	}
+	if (not -e "$dir/${libdir}lists/partial") {
+		mkdir "$dir/${libdir}lists/partial";
+	}
+	if (not -e "$dir/${cachedir}archives") {
+		mkdir "$dir/${cachedir}archives";
+	}
+	if (not -e "$dir/${cachedir}archives/partial") {
+		mkdir "$dir/${cachedir}archives/partial";
+	}
+}
+foreach my $aptsrc (@aptsources)
+{
+	if (defined $deflist)
+	{
+		open (SOURCES, ">>${dir}etc/apt/sources.list.d/multistrap.sources.list") 
+			or die _g("Cannot open sources list"). $!;
+		print SOURCES $deflist;
+		close SOURCES;
+	}
+	elsif (-d "${dir}etc/apt/")
+	{
+		open (SOURCES, ">>${dir}etc/apt/sources.list.d/multistrap.sources.list") 
+			or die _g("Cannot open sources list"). $!;
+		$mirror = $sources{$aptsrc};
+		$suite = $suites{$aptsrc};
+		$component = (defined $components{$aptsrc}) ? $components{$aptsrc} : "main";
+		print SOURCES<<END;
+deb $mirror $suite $component
+deb-src $mirror $suite $component
+END
+		close SOURCES;
+	}
+}
+my $k;
+foreach my $pkg (values %keyrings)
+{
+	next if (not defined $pkg);
+	next if ("" eq "$pkg");
+	my $status = `LC_ALL=C dpkg -s $pkg`;
+	next if $status =~ /Status: install ok installed/;
+	$k .= "$pkg ";
+}
+if (defined $k)
+{
+	my $e=`LC_ALL=C printenv`;
+	my $str = ($e =~ /\nUSER=root\n/) ? "" : "sudo ";
+	$str = (-f "/usr/bin/sudo") ? "$str" : "";
+	printf (_g("I: Installing %s\n"), $k);
+	system ("$str apt-get install $k");
+}
+
+$config_str = '';
+$config_str .= " -o Apt::Architecture=$arch";
+$config_str .= " -o Apt::Get::AllowUnauthenticated=true"
+	if (defined $noauth);
+$config_str .= " -o Apt::Get::Download-Only=true";
+$config_str .= " -o Apt::Install-Recommends=false";
+$config_str .= " -o Dir=$dir";
+$config_str .= " -o Dir::Etc=${dir}${etcdir}";
+$sourcesname = "sources.list.d/multistrap.sources.list";
+$config_str .= " -o Dir::Etc::SourceList=${dir}${etcdir}$sourcesname";
+$config_str .= " -o Dir::State=${dir}${libdir}";
+$config_str .= " -o Dir::State::Status=${dir}${dpkgdir}status";
+$config_str .= " -o Dir::Cache=${dir}${cachedir}";
+printf (_g("Getting package lists: apt-get %s update\n"), $config_str);
+$retval = system ("apt-get $config_str update");
+die (sprintf (_g("apt update failed. Exit value: %d\n"), ($retval/256)))
+	if ($retval != 0);
+my @s = ();
+$str = "";
+if (not defined $omitrequired)
+{
+	my $required = &get_required_debs;
+	$str .= join (' ', @$required);
+	chomp($str);
+}
+foreach my $sect (sort keys %packages)
+{
+	my @list = split (' ', $sect);
+	foreach my $pkg (@list)
+	{
+		$str .= "$pkg/$suites{$sect} ";
+	}
+}
+#$str .= " " . join (' ', values %packages) . " ";
+chomp($str);
+$str .= " " . join (' ', values %keyrings) . " "; 
+chomp($str);
+my %uniq=();
+@s = split (' ', $str);
+foreach my $a (@s)
+{
+	$uniq{$a}++;
+}
+$str = join (' ', sort keys %uniq);
+print "apt-get -y $config_str install $str\n";
+$retval = system ("apt-get -y $config_str install $str");
+die (sprintf (_g("apt download failed. Exit value: %d\n"),($retval/256)))
+	if ($retval != 0);
+
+&force_unpack if ($unpack eq "true");
+system ("touch ${dir}${libdir}lists/lock");
+&native if (not defined ($foreign));
+&add_extra_packages;
+(not defined $tidy) ? system ("apt-get $config_str update") : &tidy_apt;
+if (-l "${dir}lib64" ) {
+	my $r = readlink "${dir}lib64";
+	if ($r =~ m:^/:)
+	{
+		print _g("ERR: ./lib64 -> /lib symbolic link reset to ./lib after unpacking.\n");
+		printf (_g("ERR: Some files may have been unpacked outside %s!\n"), $dir);
+	}
+	else
+	{
+		printf (_g("\nMultistrap system installed successfully in %s.\n\n"), $dir);
+	}
+}
+unlink ("${dir}etc/apt/sources.list.d/multistrap.sources.list")
+	if (-f "${dir}etc/apt/sources.list.d/multistrap.sources.list");
+foreach my $aptsrc (@aptsources)
+{
+	if (defined $deflist)
+	{
+		open (SOURCES, ">>${dir}etc/apt/sources.list.d/multistrap.sources.list") 
+			or die _g("Cannot open sources list"). $!;
+		print SOURCES $deflist;
+		close SOURCES;
+	}
+	elsif (-d "${dir}etc/apt/")
+	{
+		open (SOURCES, ">>${dir}etc/apt/sources.list.d/multistrap.sources.list") 
+			or die _g("Cannot open sources list"). $!;
+		$mirror = $sources{$aptsrc};
+		$suite = $suites{$aptsrc};
+		$component = (defined $components{$aptsrc}) ? $components{$aptsrc} : "main";
+		print SOURCES<<END;
+deb $mirror $suite $component
+deb-src $mirror $suite $component
+END
+		close SOURCES;
+	}
+}
+
+exit 0;
+
+sub our_version {
+	my $query = `dpkg-query -W -f='\${Version}' multistrap`;
+	(defined $query) ? return $query : return "0.0.9";
+}
+
+sub add_extra_packages
+{
+	$str = join (' ', @extrapkgs);
+	if (@extrapkgs)
+	{
+		print "apt-get -y $config_str install $str\n";
+		$retval = system ("apt-get -y $config_str install $str");
+		&force_unpack (@extrapkgs) if ($unpack eq "true");
+		system ("touch ${dir}${libdir}lists/lock");
+		&native if (not defined ($foreign));
+	}
+}
+
+sub force_unpack
+{
+	my (@limits) = @_;
+	my %unpack=();
+	my %filter = ();
+	opendir (DEBS, "${dir}${cachedir}archives/")
+		or die (_g("Cannot read apt archives directory.\n"));
+	@archives=grep(/.*\.deb$/, readdir DEBS);
+	closedir (DEBS);
+	if (@limits)
+	{
+		foreach my $l (@limits)
+		{
+			foreach my $file (@archives)
+			{
+				if ($file =~ m:$l:)
+				{
+					$filter{$l} = "$file";
+				}
+			}
+		}
+		@archives = sort values %filter;
+	}
+	print _g("I: Calculating obsolete packages\n");
+	foreach $deb (sort @archives)
+	{
+		my $version = `LC_ALL=C dpkg -f ${dir}${cachedir}archives/$deb Version`;
+		my $package = `LC_ALL=C dpkg -f ${dir}${cachedir}archives/$deb Package`;
+		chomp ($version);
+		chomp ($package);
+		if (exists $unpack{$package})
+		{
+			my $test=system("dpkg --compare-versions $unpack{$package} '<<' $version");
+			$test /= 256;
+			# unlink version in $unpack if 0
+			# unlink $deb (current one) if 1
+			if ($test == 0)
+			{
+				my $old = $deb;
+				$old =~ s/$version/$unpack{$package}/;
+				printf (_g("I: Removing %s\n"), $old);
+				unlink "${dir}${cachedir}archives/$old";
+				next;
+			}
+			else
+			{
+				printf (_g("I: Removing %s\n"), $deb);
+				unlink "${dir}${cachedir}archives/$deb";
+			}
+		}
+		$unpack{$package}=$version;
+	}
+	if (not @limits)
+	{
+		open (LOCK, ">${dir}${libdir}lists/lock");
+		close (LOCK);
+		opendir (DEBS, "${dir}${cachedir}archives/")
+			or die (_g("Cannot read apt archives directory.\n"));
+		@archives=grep(/.*\.deb$/, readdir DEBS);
+		closedir (DEBS);
+	}
+	my $old = `pwd`;
+	chomp ($old);
+	chdir ("${dir}");
+	printf (_g("Using directory %s for unpacking operations\n"), ${dir});
+	foreach $deb (sort @archives)
+	{
+		printf (_g("I: Extracting %s...\n"), $deb);
+		my $ver=`LC_ALL=C dpkg -f ./${cachedir}archives/$deb Version`;
+		my $pkg=`LC_ALL=C dpkg -f ./${cachedir}archives/$deb Package`;
+		chomp ($ver);
+		chomp ($pkg);
+		mkdir ("./tmp");
+		my $tmpdir = `mktemp -p ./tmp -d -t multistrap.XXXXXX`;
+		chomp ($tmpdir);
+		my $datatar = `LC_ALL=C dpkg -X ./${cachedir}archives/$deb ${dir}`;
+		my $exit = `echo $?`;
+		chomp ($exit);
+		if ($exit ne "0")
+		{
+			printf(_g("dpkg -X failed with error code %s\nSkipping...\n"), $exit);
+			next;
+		}
+		my @lines = split("\n", $datatar);
+		open (LIST, ">>./${dpkgdir}info/${pkg}.list");
+		foreach my $l (@lines)
+		{
+			chomp ($l);
+			$l =~ s:^\.::;
+			$l =~ s:^/$:/\.:;
+			$l =~ s:/$::;
+			print LIST "$l\n";
+		}
+		close (LIST);
+		system ("dpkg -e ./${cachedir}archives/$deb ${tmpdir}/");
+		opendir (MAINT, "./${tmpdir}");
+		my @maint=grep(!m:\.\.?:, readdir (MAINT));
+		closedir (MAINT);
+		open (AVAIL, ">>./${dpkgdir}available");
+		open (STATUS, ">>./${dpkgdir}status");
+		foreach my $mscript (@maint)
+		{
+			rename "./${tmpdir}/$mscript", "./${dpkgdir}info/$pkg.$mscript";
+			if ( $mscript eq "control" )
+			{
+				open (MSCRIPT, "./${dpkgdir}info/$pkg.$mscript");
+				my @scr=<MSCRIPT>;
+				close (MSCRIPT);
+				my @avail = grep(!/^$/, @scr);
+				print AVAIL @avail;
+				print STATUS @avail;
+				print AVAIL "\n";
+				print STATUS "Status: install ok unpacked\n";
+				unlink ("./${dpkgdir}info/$mscript");
+			}
+		}
+		close (AVAIL);
+		if ( -f "./${dpkgdir}info/$pkg.conffiles")
+		{
+			print STATUS "Conffiles:\n";
+			printf (_g(" -> Processing conffiles for %s\n"), $pkg);
+			open (CONF, "./${dpkgdir}info/$pkg.conffiles");
+			my @lines=<CONF>;
+			close (CONF);
+			foreach my $line (@lines)
+			{
+				chomp ($line);
+				my $md5=`LC_ALL=C md5sum ./$line | cut -d" " -f1`;
+				chomp ($md5);
+				print STATUS " $line $md5\n";
+			}
+		}
+		print STATUS "\n";
+		close (STATUS);
+		system ("rm -rf ./${tmpdir}");
+		if (-l "${dir}lib64" ) {
+			my $r = readlink "${dir}lib64";
+			if ($r =~ m:^/:)
+			{
+				my $old = `pwd`;
+				chomp ($old);
+				printf (_g("ERR: lib64 -> ./lib symbolic link clobbered by %s\n"), $pkg);
+				unlink "${dir}lib64";
+				chdir ("$dir");
+				print _g("INF: lib64 -> /lib symbolic link reset to ./lib.\n");
+				symlink "./lib", "lib64";
+				chdir ("${old}");
+			}
+		}
+	}
+	chdir ("$old");
+	print _g("I: Unpacking complete.\n");
+}
+
+sub check_bin_sh
+{
+	$dir = shift;
+	my $old = `pwd`;
+	chomp ($old);
+	# dash refuses to configure if no existing shell is found.
+	# (always expects a diversion to already exist).
+	# (works OK in subsequent upgrades.) #546528
+	unlink ("$dir/var/lib/dpkg/info/dash.postinst");
+	# now ensure that a usable shell is available as /bin/sh
+	if (not -l "$dir/bin/sh")
+	{
+		print (_g("ERR: ./bin/sh symbolic link does not exist.\n"));
+		if (-f "$dir/bin/dash")
+		{
+			print (_g("INF: Setting ./bin/sh -> ./bin/dash\n"));
+			chdir ("$dir/bin");
+			symlink ("dash", "sh");
+			chdir ("$old");
+		}
+		elsif (-f "$dir/bin/bash")
+		{
+			print (_g("INF: ./bin/dash not found. Setting ./bin/sh -> ./bin/bash\n"));
+			chdir ("$dir/bin");
+			symlink ("bash", "sh");
+			chdir ("$old");
+		}
+	}
+	if (-l "$dir/bin/sh")
+	{
+		print ("${dir}bin/sh found OK:\n");
+		system ("(cd $dir ; ls -lh bin/sh)");
+	}
+	else
+	{
+		die ("No shell.");
+	}
+}
+
+sub tidy_apt
+{
+	print _g("I: Tidying up apt cache and list data.\n");
+	unlink ("${dir}etc/apt/sources.list")
+		if (-f "${dir}etc/apt/sources.list");
+	opendir (DEBS, "${dir}${libdir}lists/")
+		or die (_g("Cannot read apt lists directory.\n"));
+	my @lists=grep(!m:\.\.?$:, readdir DEBS);
+	closedir (DEBS);
+	foreach my $file (@lists)
+	{
+		next if (-d $file);
+		unlink ("${dir}${libdir}lists/$file");
+	}
+	opendir (DEBS, "${dir}${cachedir}/")
+		or die (_g("Cannot read apt cache directory.\n"));
+	my @files=grep(!m:\.\.?$:, readdir DEBS);
+	closedir (DEBS);
+	foreach my $file (@files)
+	{
+		next if (-d $file);
+		next unless ($file =~ /\.bin$/);
+		unlink ("${dir}${cachedir}$file");
+	}
+	if ($unpack eq "true")
+	{
+		opendir (DEBS, "${dir}${cachedir}/archives/")
+			or die (_g("Cannot read apt archives directory.\n"));
+		my @files=grep(!m:\.\.?$:, readdir DEBS);
+		closedir (DEBS);
+		foreach my $file (@files)
+		{
+			next if (-d $file);
+			next unless ($file =~ /\.deb$/);
+			(defined $sourcedir) ?
+			system ("mv ${dir}${cachedir}archives/$file $sourcedir/$file") :
+			unlink ("${dir}${cachedir}archives/$file");
+			;
+		}
+	}
+}
+
+# if native arch, do a few tasks just because we can and probably should.
+sub native
+{
+	print _g("I: Native mode - configuring unpacked packages . . .\n");
+	my $e=`LC_ALL=C printenv`;
+	my $str = ($e =~ /\nUSER=root\n/) ? "" : "sudo";
+	$str = (-f "/usr/bin/sudo") ? "$str" : "";
+	my $env = "DEBIAN_FRONTEND=noninteractive ".
+	"DEBCONF_NONINTERACTIVE_SEEN=true ".
+	"LC_ALL=C LANGUAGE=C LANG=C";
+	printf (_g("I: dpkg configuration settings:\n\t%s\n"), $env);
+	# check that we have a workable shell inside the chroot
+	&check_bin_sh("$dir");
+	system ("$str $env chroot $dir dpkg --configure -a");
+}
+
+sub get_required_debs
+{
+	# emulate required="$(get_debs Priority: required)"
+	# from debootstrap/functions
+	# needs to be run after the first apt-get install so that
+	# Packages files exist
+	my @required=();
+	my @debs=();
+	opendir (PKGS, "${dir}${libdir}lists/")
+		or die sprintf(_g("Cannot open %s directory. %s\n"),
+			"${dir}${libdir}lists/", $!);
+	my @lists=grep(/_Packages$/, readdir (PKGS));
+	closedir (PKGS);
+	foreach my $strap (@debootstrap)
+	{
+		my $s = lc($strap);
+		foreach my $l (@lists)
+		{
+			push (@required, $l);
+		}
+	}
+	foreach my $file (@required)
+	{
+		my $fh = IO::File->new("${dir}${libdir}lists/$file");
+		my $parser = Parse::Debian::Packages->new( $fh );
+		while (my %package = $parser->next)
+		{
+			next unless $package{'Priority'} eq "required";
+			push @debs, $package{'Package'};
+		}
+	}
+	return \@debs;
+}
+
+# inherited from apt-cross
+sub prepare_sources_list
+{
+	my @source_list=();
+	# collate all available/configured sources into one list
+	if (-e "/etc/apt/sources.list") {
+		open (SOURCES, "/etc/apt/sources.list")
+			or die _g("cannot open apt sources list. %s",$!);
+		@source_list = <SOURCES>;
+		close (SOURCES);
+	}
+	if (-d "/etc/apt/sources.list.d/") {
+		opendir (FILES, "/etc/apt/sources.list.d/")
+			or die _g("cannot open apt sources.list directory %s\n",$!);
+		my @files = grep(!/^\.\.?$/, readdir FILES);
+		foreach my $f (@files) {
+			next if ($f =~ /\.ucf-old$/);
+			open (SOURCES, "/etc/apt/sources.list.d/$f") or
+				die _g("cannot open /etc/apt/sources.list.d/%s %s",$f, $!);
+			while(<SOURCES>) {
+				push @source_list, $_;
+			}
+			close (SOURCES);
+		}
+		closedir (FILES);
+	}
+	return \@source_list;
+}
+
+sub usageversion {
+	printf STDERR (_g("
+%s version %s
+
+Usage:
+ %s [-a ARCH] [-d DIR] -f CONFIG_FILE
+ %s -?|-h|--help|--version
+
+Command:
+ -f|--file CONFIG_FILE:  path the the multistrap configuration file.
+
+Options:
+ -a|--arch ARCHITECTURE: override the configuration file architecture.
+ -d|--dir PATH:          override the configuration file directory.
+    --no-auth:           do not use Secure Apt for any repositories
+    --tidy-up:           remove apt cache data and downloaded archives.
+ -?|-h|--help:           print this usage message and exit
+ --version:              print this usage message and exit
+
+%s extends debootstrap to provide support for multiple
+repositories, using a configuration file to specify the relevant suites,
+architecture, extra packages and the mirror to use for each repository.
+
+Example configuration:
+[General]
+arch=armel
+directory=/opt/multistrap/
+# same as --tidy-up option if set to true
+cleanup=true
+# same as --no-auth option if set to true
+# keyring packages listed in each debootstrap will
+# still be installed.
+noauth=false
+# extract all downloaded archives (default is true)
+unpack=true
+# aptsources is a list of sections to be used for downloading packages
+# and lists and placed in the /etc/apt/sources.list.d/multistrap.sources.list
+# of the target. Order is not important
+aptsources=Grip Updates
+# the order of sections is not important.
+# the debootstrap option determines which repository
+# is used to calculate the list of Priority: required packages.
+debootstrap=Debian
+
+[Debian]
+packages=
+source=http://ftp.uk.debian.org/debian
+keyring=debian-archive-keyring
+suite=lenny
+
+This will result in a completely normal debootstrap of Debian lenny from
+the specified mirror, for armel in /opt/multistrap/.
+
+'Architecture' and 'directory' can be overridden on the command line.
+
+Specify a package to extend the debootstap to include that package and
+all dependencies. Dependencies will be calculated by apt so as to use
+only the most recent suitable version from all configured repositories.
+
+General settings:
+
+'directory' specifies the top level directory where the debootstrap
+will be created - it is not packed into a .tgz once complete.
+
+"), $progname, $ourversion, $progname, $progname, $progname)
+	or die ("$progname: ". _g("failed to write usage:") . "$!\n");
+}
+
+sub cascade
+{
+	$file = shift;
+	$config = Config::Auto::parse($file);
+	foreach $key (%$config)
+	{
+		$type = lc($key) if (ref $key ne "HASH");
+		$value = $key if (ref $key eq "HASH");
+		$keys{$type} = $value;
+	}
+	
+	foreach $section (sort keys %keys)
+	{
+		if ($section eq "general")
+		{
+			$arch = $keys{$section}{'arch'}
+				if (defined $keys{$section}{'arch'}
+				and (not defined $arch));
+			$dir = $keys{$section}{'directory'}
+				if (defined $keys{$section}{'directory'}
+				and (not defined $dir));
+			# support the original value but replace by new value.
+			$unpack = lc($keys{$section}{'unpack'})
+				if (defined $keys{$section}{'forceunpack'}
+				and (not defined $unpack));
+			$unpack = lc($keys{$section}{'unpack'})
+				if (defined $keys{$section}{'unpack'}
+				and (not defined $unpack));
+			$configsh = lc($keys{$section}{'configscript'})
+				if (defined $keys{$section}{'configscript'}
+				and (not defined $configsh));
+			$setupsh = lc($keys{$section}{'setupscript'})
+				if (defined $keys{$section}{'setupscript'}
+				and (not defined $setupsh));
+			$omitrequired = lc($keys{$section}{'omitrequired'})
+				if (defined $keys{$section}{'omitrequired'}
+				and (not defined $omitrequired));
+			$tidy++ if ((defined $keys{$section}{'cleanup'}) and
+				($keys{$section}{'cleanup'} eq "true") and
+				(defined $tidy));
+			$noauth++ if ((defined $keys{$section}{'noauth'}) and
+				($keys{$section}{'noauth'} eq "true") and
+				(defined $noauth));
+			$sourcedir = $keys{$section}{'retainsources'} if 
+				((defined $keys{$section}{'retainsources'}) and
+				(-d $keys{$section}{'retainsources'}));
+			my @d = split(' ', lc($keys{$section}{'debootstrap'}));
+			push @debootstrap, @d;
+			my @a = split (' ', lc($keys{$section}{'aptsources'}));
+			push @aptsources, @a;
+			my @i = split (' ', lc($keys{$section}{'include'}));
+			push @includes, @i;
+		}
+		else
+		{
+			$sources{$section}=$keys{$section}{'source'}
+				if (not exists $source{$section});
+			$packages{$section}=$keys{$section}{'packages'}
+				if (not exists $packages{$section});
+			$suites{$section}=$keys{$section}{'suite'}
+				if (not exists $suites{$section});
+			$components{$section}=$keys{$section}{'components'}
+				if (not exists $components{$section});
+			if (not defined $components{$section})
+			{
+				$components{$section}='main';
+			}
+			$keyrings{$section}=$keys{$section}{'keyring'}
+				if (not exists $keyrings{$section});
+			push @extrapkgs, split (' ', lc($keys{$section}{'additional'}));
+		}
+	}
+}
+
+sub _g {
+	return gettext(shift);
+}
+
+=pod
+
+=head1 Name
+
+multistrap - extends debootstrap for multiple repository support
+
+=head1 Synopsis
+
+ multistrap [-a ARCH] [-d DIR] -f CONFIG_FILE
+ multistrap -?|-h|--help|--version
+
+=head1 Options
+
+(These options can also be set in the configuration file.)
+
+--tidy-up - remove apt cache data, downloaded Packages files and
+the apt package cache. Same as cleanup=true.
+
+--no-auth - allow the use of unauthenticated repositories. Same
+as noauth=true
+
+=head1 Description
+
+multistrap provides a debootstrap-like method based on apt and
+extended to provide support for multiple repositories, using a
+configuration file to specify the relevant suites, architecture,
+extra packages and the mirror to use for each debootstrap.
+
+The aim is to create a complete debootstrap with all packages
+installed and configured, instead of just the base system.
+
+Example configuration:
+
+ [General]
+ arch=armel
+ directory=/opt/multistrap/
+ # same as --tidy-up option if set to true
+ cleanup=true
+ # same as --no-auth option if set to true
+ # keyring packages listed in each debootstrap will
+ # still be installed.
+ noauth=false
+ # extract all downloaded archives (default is true)
+ unpack=true
+ # aptsources is a list of sections to be used for downloading packages
+ # and lists and placed in the /etc/apt/sources.list.d/multistrap.sources.list      
+ # of the target. Order is not important
+ aptsources=Grip Updates
+ # the order of sections is not important.
+ # the debootstrap option determines which repository
+ # is used to calculate the list of Priority: required packages.
+ debootstrap=Debian
+ 
+ [Debian]
+ packages=
+ source=http://ftp.uk.debian.org/debian
+ keyring=debian-archive-keyring
+ suite=lenny
+
+This will result in a completely normal debootstrap of Debian lenny from
+the specified mirror, for armel in '/opt/multistrap/'.
+
+Specify a package to extend the multistrap to include that package and
+all dependencies.
+
+Specify more debootstraps by adding new sections. Section names are used
+in the debootstrap general option.
+
+Section names are case-insensitive.
+
+e.g. change
+
+ debootstrap=Debian
+
+to
+
+ debootstrap=Grip
+ 
+then add the new section for Grip:
+ 
+ [Grip]
+ packages=locales
+ keyring=emdebian-archive-keyring
+ source=http://www.emdebian.org/grip
+ suite=lenny
+
+Setting Grip instead of Debian in the debootstrap option, as above,
+will provide a base system from Emdebian Grip 1.0 and locate any
+missing dependencies in Debian 5.0 Lenny, allowing you to add any
+package(s) you need from Debian that are not yet in Emdebian Grip.
+
+All dependencies are resolved only by apt, using all configured
+repositories, to use only the most recent and most suitable
+dependencies. Note that multistrap turns off Install-Recommends
+so if the multistrap needs a package that is only a Recommended
+dependency, the recommended package needs to be specified in the
+packages line explicitly.
+
+'Architecture' and 'directory' can be overridden on the command line.
+Other general options have command line options, except debootstrap
+itself.
+
+=head1 General settings:
+
+'directory' specifies the top level directory where the debootstrap
+will be created - it is not packed into a .tgz once complete.
+
+As with debootstrap, multistrap will continue after errors.
+
+multistrap does not currently implement the machine:variant support
+used in Emdebian but the build directory is not packed up at the
+end of the run so other scripts can be used to implement customisations.
+
+=head1 Secure Apt
+
+To use authenticated apt repositories, multistrap either needs to be
+able to install an appropriate keyring package from the existing apt
+sources *outside the multistrap environment* or have the relevant keys
+already configured using apt-key *on the host system*.
+
+If relevant packages exist, specify them in the 'keyring' option for
+each repository. multistrap will then check that apt has already
+installed this package so that the repository can be authenticated
+before any packages are downloaded from it.
+
+Note that *all* repositories to be used with multistrap must be
+authenticated or apt will fail. Similarly, secure apt can only be
+disabled for all repositories (by using the --no-auth command line
+option or setting the general noauth option in the configuration
+file), even if only one repository does not have a suitable keyring
+available. Not all packages need keyring packages, if you configure
+apt-key appropriately.
+
+The keyring package(s) will also be installed inside the multistrap
+environment to match the installed apt sources for the multistrap.
+
+All configuration of apt-key needs to be done for the machine
+running multistrap itself.
+
+=head1 State
+
+multistrap is stateless - if the directory exists, it will simply
+proceed as normal and apt will try to pick up where it left off.
+
+=head1 Configuration
+
+multistrap unpacks the downloaded packages but other stages of
+system configuration are not attempted. Examples include:
+
+ /etc/inittab
+ /etc/fstab
+ /etc/hosts
+ /etc/securetty
+ /etc/modules
+ /etc/hostname
+ /etc/network/interfaces
+ /etc/init.d
+ /etc/dhcp3 
+
+Any device-specific device nodes will also need to be created
+using MAKEDEV.
+
+As an alternative, multistrap includes a device-table.pl helper
+script that can work around some of the issues with MAKEDEV.
+device-table.pl requires a device table file along the lines of
+the one in the mtd-utils source package.
+
+Once multistrap has successfully created the basic file and
+directory layout, other device-specific scripts are needed before
+the filesystem can be packaged up and installed onto the
+target device.
+
+Once installed, the packages themselves need to be configured
+using the package maintainer scripts and C<dpkg --configure -a>,
+unless this is a native multistrap.
+
+For C<dpkg> to work, F</proc> and F</sysfs> must be mounted (or
+mountable), F</dev/pts> is also recommended.
+
+See also: http://wiki.debian.org/Multistrap
+
+=head1 Environment
+
+To configure the unpacked packages (whether in native or cross mode),
+certain environment variables are needed:
+
+Debconf needs to be told to accept that user interaction is not
+desired:
+
+ DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
+ 
+Perl needs to be told to accept that no locales are available inside
+the chroot and not to complain:
+
+ LC_ALL=C LANGUAGE=C LANG=C
+
+Then, dpkg can configure the packages:
+
+chroot method (PATH = top directory of chroot):
+
+ DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \
+ LC_ALL=C LANGUAGE=C LANG=C chroot /PATH/ dpkg --configure -a
+
+at a login shell:
+
+ # export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
+ # export LC_ALL=C LANGUAGE=C LANG=C 
+ # dpkg --configure -a
+
+(As above, dpkg needs F</proc> and F</sysfs> mounted first.)
+
+=head1 Native mode - multistrap
+
+multistrap was not intended for native support, it was developed for
+cross architecture support. In order for multiple repositories to be
+used, multistrap only unpacks the packages selected by apt.
+
+In native mode, various post-multistrap operations are likely to be
+needed that debootstrap would do for you:
+
+ 1. copy /etc/hosts into the chroot
+ 2. clean the environment to unset LANGUAGE, LC_ALL and LANG
+    to silence nuisance perl warnings that obscure other errors
+
+(An alternative to unset the localisation variables is to add
+locales to your multistrap configuration file in the 'packages'
+option.
+
+A native multistrap can be used directly with chroot, so
+C<multistrap> runs C<dpkg --configure -a> at the end of the
+multistrap process. 
+
+=head1 Cascading configuration
+
+=head1 Machine:variant support
+
+The old packages.conf variables from emsandbox can all be converted
+into C<multistrap> configuration variables. The machine:variant
+support in C<multistrap> concentrates on the scripts, 
+F<config.sh> and F<setup.sh>
+
+Once C<multistrap> has unpacked the downloaded packages, the 
+C<setup.sh> can be called, passing the location and architecture of
+the root filesystem, so that other fine tuning can take place. At
+this stage, any operations inside the rootfs must not try to execute
+any binaries within the rootfs. As the final stage of the multistrap
+process, C<config.sh> is copied into the F</machine/$MACHINE/default/>
+directory of the rootfs.
+
+One advantage of using machine:variant support is that the entire
+rootfilesystem can be managed by a single call to multistrap - this
+is useful when building root filesystems in userspace.
+
+=head1 Restricting package selection
+
+C<multistrap> includes Required packages by default, the current list
+of packages can be seen using:
+
+ grep-available  -FPriority 'required' -sPackage
+
+If the OmitRequired option is set to true, these packages will not be
+added - whilst useful, this option can easily lead to a useless
+rootfs. Only the packages specified manually in the configuration
+files will be used in the calculations - dependencies of those packages
+will be added but no others.
+
+=cut
