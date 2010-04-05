@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: emdebian-rootfs 2.0.5\n"
 "Report-Msgid-Bugs-To: multistrap@packages.debian.org\n"
-"POT-Creation-Date: 2010-04-01 07:32+0100\n"
+"POT-Creation-Date: 2010-04-05 20:59+0100\n"
 "PO-Revision-Date: 2010-04-01 16:04+0930\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
@@ -16,32 +16,32 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: LocFactoryEditor 1.8\n"
 
-#: ../em_multistrap:73
+#: ../multistrap:74
 msgid "Unknown option"
 msgstr "Không rõ tuỳ chọn"
 
-#: ../em_multistrap:76
+#: ../multistrap:77
 #, perl-format
 msgid "Need a configuration file - use %s -f\n"
 msgstr "Yêu cầu một tập tin cấu hình: dùng « %s -f »\n"
 
 #. Translators: fields are: programname, versionstring, configfile.
-#: ../em_multistrap:129
+#: ../multistrap:88 ../multistrap:93
 #, perl-format
 msgid "%s %s using %s\n"
 msgstr "%s %s dùng %s\n"
 
-#: ../em_multistrap:135 ../em_multistrap:139
+#: ../multistrap:99 ../multistrap:103
 #, perl-format
 msgid "Defaulting architecture to native: %s\n"
 msgstr "Mặc định là sử dụng kiến trúc sở hữu : %s\n"
 
-#: ../em_multistrap:143
+#: ../multistrap:107
 #, perl-format
 msgid "Using foreign architecture: %s\n"
 msgstr "Dùng kiến trúc ngoài: %s\n"
 
-#: ../em_multistrap:149
+#: ../multistrap:113
 #, fuzzy, perl-format
 msgid ""
 "No sources defined for a foreign multistrap.\n"
@@ -54,62 +54,66 @@ msgstr ""
 "\tdùng cú pháp « aptsources= »."
 
 #. Translators: fields are: programname, architecture, host architecture.
-#: ../em_multistrap:157
+#: ../multistrap:121
 #, perl-format
 msgid "%s building %s multistrap on '%s'\n"
 msgstr "%s đang xây dựng multistrap %s trên « %s »\n"
 
-#: ../em_multistrap:179
+#. system ("mkdir -p ${dir}/usr/share/doc/gcc-4.2-base/")
+#. if (not -d "${dir}/usr/share/doc/gcc-4.2-base/");
+#. system ("touch ${dir}/usr/share/doc/gcc-4.2-base/.copyright");
+#. system ("touch ${dir}/usr/share/doc/gcc-4.2-base/#changelog.Debian.gz");
+#: ../multistrap:149
 #, perl-format
 msgid "Unable to create directory '%s'\n"
 msgstr ""
 
-#: ../em_multistrap:215
+#: ../multistrap:185
 msgid "INF: ./lib64 -> /lib symbolic link reset to ./lib.\n"
 msgstr ""
 "INF: ./lib64 -> liên kết tượng trưng « /lib » được đặt lại thành « ./lib ».\n"
 
-#: ../em_multistrap:225
+#: ../multistrap:195
 msgid "INF: Setting ./lib64 -> ./lib symbolic link.\n"
 msgstr "TIN: Đang đặt liên kết tượng trưng « ./lib64 » -> « ./lib ».\n"
 
-#: ../em_multistrap:258 ../em_multistrap:265
+#: ../multistrap:228 ../multistrap:235 ../multistrap:337 ../multistrap:344
 msgid "Cannot open sources list"
 msgstr "Không mở được danh sách nguồn"
 
-#: ../em_multistrap:289
+#: ../multistrap:260
 #, perl-format
 msgid "I: Installing %s\n"
 msgstr "TIN: Đang cài đặt %s\n"
 
 # « apt-get » và « update » thuộc về một câu lệnh nghĩa chữ
-#: ../em_multistrap:306
+#: ../multistrap:277
 #, perl-format
 msgid "Getting package lists: apt-get %s update\n"
 msgstr "Đang lấy các danh sách gói: apt-get %s update\n"
 
-#: ../em_multistrap:308
+#: ../multistrap:279
 #, perl-format
 msgid "apt update failed. Exit value: %d\n"
 msgstr "Tiến trình « apt update » (cập nhật) bị lỗi. Giá trị thoát: %d\n"
 
-#: ../em_multistrap:326
+#: ../multistrap:310
 #, perl-format
 msgid "apt download failed. Exit value: %d\n"
 msgstr "Tiến trình « apt download » (tải về) bị lỗi. Giá trị thoát: %d\n"
 
-#: ../em_multistrap:338
+#: ../multistrap:322
 msgid "ERR: ./lib64 -> /lib symbolic link reset to ./lib after unpacking.\n"
 msgstr ""
 "LỖI: Liên kết tượng trưng « ./lib64 » -> « /lib » bị đặt lại thành « ./lib » "
 "sau khi mở gói.\n"
 
-#: ../em_multistrap:339
+#: ../multistrap:323
 #, perl-format
 msgid "ERR: Some files may have been unpacked outside %s!\n"
 msgstr "LỖI: Một số tập tin nào đó có thể bị mở gói bên ngoài %s !\n"
 
-#: ../em_multistrap:343
+#: ../multistrap:327
 #, perl-format
 msgid ""
 "\n"
@@ -120,88 +124,88 @@ msgstr ""
 "Hệ thống multistrap đã được cài đặt vào %s.\n"
 "\n"
 
-#: ../em_multistrap:376 ../em_multistrap:427 ../em_multistrap:590
+#: ../multistrap:382 ../multistrap:433 ../multistrap:596
 msgid "Cannot read apt archives directory.\n"
 msgstr "Không đọc được thư mục kho lưu apt.\n"
 
 # msgid "Cannot read apt archives directory.\n"
 # msgstr "Không đọc được thư mục kho lưu apt.\n"
-#: ../em_multistrap:393
+#: ../multistrap:399
 msgid "I: Calculating obsolete packages\n"
 msgstr "TIN: Đang tính các gói cũ\n"
 
-#: ../em_multistrap:410 ../em_multistrap:416
+#: ../multistrap:416 ../multistrap:422
 #, perl-format
 msgid "I: Removing %s\n"
 msgstr "TIN: Đang gỡ bỏ %s\n"
 
-#: ../em_multistrap:434
+#: ../multistrap:440
 #, perl-format
 msgid "Using directory %s for unpacking operations\n"
 msgstr ""
 
-#: ../em_multistrap:437
+#: ../multistrap:443
 #, perl-format
 msgid "I: Extracting %s...\n"
 msgstr "TIN: Đang giải nén %s...\n"
 
-#: ../em_multistrap:450
+#: ../multistrap:456
 #, perl-format
 msgid ""
 "dpkg -X failed with error code %s\n"
 "Skipping...\n"
 msgstr ""
 
-#: ../em_multistrap:490
+#: ../multistrap:496
 #, perl-format
 msgid " -> Processing conffiles for %s\n"
 msgstr " -> Đang xử lý các tập tin cấu hình cho %s\n"
 
-#: ../em_multistrap:511
+#: ../multistrap:517
 #, perl-format
 msgid "ERR: lib64 -> ./lib symbolic link clobbered by %s\n"
 msgstr "LỖI: Liên kết tượng trưng « /lib64 » -> « ./lib » bị ghi đè bởi %s\n"
 
-#: ../em_multistrap:514
+#: ../multistrap:520
 msgid "INF: lib64 -> /lib symbolic link reset to ./lib.\n"
 msgstr ""
 "TIN: Liên kết tượng trưng « /lib64 » -> « /lib » được đặt lại thành « ./lib ».\n"
 
-#: ../em_multistrap:521
+#: ../multistrap:527
 msgid "I: Unpacking complete.\n"
 msgstr "TIN: Hoàn tất mở gói.\n"
 
-#: ../em_multistrap:536
+#: ../multistrap:542
 #, fuzzy
 msgid "ERR: ./bin/sh symbolic link does not exist.\n"
 msgstr "LỖI: Liên kết tượng trưng « /lib64 » -> « ./lib » bị ghi đè bởi %s\n"
 
-#: ../em_multistrap:539
+#: ../multistrap:545
 #, fuzzy
 msgid "INF: Setting ./bin/sh -> ./bin/dash\n"
 msgstr "TIN: Đang đặt liên kết tượng trưng « ./lib64 » -> « ./lib ».\n"
 
-#: ../em_multistrap:546
+#: ../multistrap:552
 msgid "INF: ./bin/dash not found. Setting ./bin/sh -> ./bin/bash\n"
 msgstr ""
 
-#: ../em_multistrap:565
+#: ../multistrap:571
 msgid "I: Tidying up apt cache and list data.\n"
 msgstr "TIN: Đang làm sạch vùng nhớ tạm và dữ liệu danh sách của apt.\n"
 
-#: ../em_multistrap:569
+#: ../multistrap:575
 msgid "Cannot read apt lists directory.\n"
 msgstr "Không đọc được thư mục danh sách apt.\n"
 
-#: ../em_multistrap:578
+#: ../multistrap:584
 msgid "Cannot read apt cache directory.\n"
 msgstr "Không đọc được thư mục nhớ tạm apt.\n"
 
-#: ../em_multistrap:608
+#: ../multistrap:614
 msgid "I: Native mode - configuring unpacked packages . . .\n"
 msgstr "TIN: Chế độ sở hữu — cấu hình các gói chưa mở . . .\n"
 
-#: ../em_multistrap:615
+#: ../multistrap:621
 #, perl-format
 msgid ""
 "I: dpkg configuration settings:\n"
@@ -210,27 +214,27 @@ msgstr ""
 "TIN: Thiết lập cấu hình dpkg:\n"
 "\t%s\n"
 
-#: ../em_multistrap:630
+#: ../multistrap:636
 #, perl-format
 msgid "Cannot open %s directory. %s\n"
 msgstr "Không mở được thư mục %s. %s\n"
 
-#: ../em_multistrap:663
+#: ../multistrap:668
 #, perl-format
 msgid "cannot open apt sources list. %s"
 msgstr "không mở được danh sách nguồn apt. %s"
 
-#: ../em_multistrap:669
+#: ../multistrap:674
 #, perl-format
 msgid "cannot open apt sources.list directory %s\n"
 msgstr "không mở được thư mục danh sách nguồn « apt sources.list » %s\n"
 
-#: ../em_multistrap:674
+#: ../multistrap:679
 #, perl-format
 msgid "cannot open /etc/apt/sources.list.d/%s %s"
 msgstr "không mở được /etc/apt/sources.list.d/%s %s"
 
-#: ../em_multistrap:686
+#: ../multistrap:691
 #, fuzzy, perl-format
 msgid ""
 "\n"
@@ -363,6 +367,6 @@ msgstr ""
 "Nó không phải được đóng gói thành một .tgz một khi hoàn tất.\n"
 "\n"
 
-#: ../em_multistrap:750
+#: ../multistrap:755
 msgid "failed to write usage:"
 msgstr "lỗi ghi cách sử dụng:"

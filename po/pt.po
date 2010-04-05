@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: emdebian-rootfs_2.0.5\n"
 "Report-Msgid-Bugs-To: multistrap@packages.debian.org\n"
-"POT-Creation-Date: 2010-04-01 07:32+0100\n"
+"POT-Creation-Date: 2010-04-05 20:59+0100\n"
 "PO-Revision-Date: 2010-03-06 23:50+0000\n"
 "Last-Translator: Pedro Ribeiro <p.m42.ribeiro@gmail.com>\n"
 "Language-Team: Portuguese <traduz@debianpt.org>\n"
@@ -15,32 +15,32 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../em_multistrap:73
+#: ../multistrap:74
 msgid "Unknown option"
 msgstr "Opção desconhecida"
 
-#: ../em_multistrap:76
+#: ../multistrap:77
 #, perl-format
 msgid "Need a configuration file - use %s -f\n"
 msgstr "É necessário um ficheiro de configuração - use %s -f\n"
 
 #. Translators: fields are: programname, versionstring, configfile.
-#: ../em_multistrap:129
+#: ../multistrap:88 ../multistrap:93
 #, perl-format
 msgid "%s %s using %s\n"
 msgstr "%s %s a usar %s\n"
 
-#: ../em_multistrap:135 ../em_multistrap:139
+#: ../multistrap:99 ../multistrap:103
 #, perl-format
 msgid "Defaulting architecture to native: %s\n"
 msgstr "A usar a arquitectura nativa padrão: %s\n"
 
-#: ../em_multistrap:143
+#: ../multistrap:107
 #, perl-format
 msgid "Using foreign architecture: %s\n"
 msgstr "A usar arquitectura estrangeira: %s\n"
 
-#: ../em_multistrap:149
+#: ../multistrap:113
 #, perl-format
 msgid ""
 "No sources defined for a foreign multistrap.\n"
@@ -52,60 +52,64 @@ msgstr ""
 "\te listá-las com aptsources= em '%s'."
 
 #. Translators: fields are: programname, architecture, host architecture.
-#: ../em_multistrap:157
+#: ../multistrap:121
 #, perl-format
 msgid "%s building %s multistrap on '%s'\n"
 msgstr "%s a criar multistrap para %s em '%s'\n"
 
-#: ../em_multistrap:179
+#. system ("mkdir -p ${dir}/usr/share/doc/gcc-4.2-base/")
+#. if (not -d "${dir}/usr/share/doc/gcc-4.2-base/");
+#. system ("touch ${dir}/usr/share/doc/gcc-4.2-base/.copyright");
+#. system ("touch ${dir}/usr/share/doc/gcc-4.2-base/#changelog.Debian.gz");
+#: ../multistrap:149
 #, perl-format
 msgid "Unable to create directory '%s'\n"
 msgstr ""
 
-#: ../em_multistrap:215
+#: ../multistrap:185
 msgid "INF: ./lib64 -> /lib symbolic link reset to ./lib.\n"
 msgstr "INF: link simbólico ./lib64 -> /lib reposto para ./lib.\n"
 
-#: ../em_multistrap:225
+#: ../multistrap:195
 msgid "INF: Setting ./lib64 -> ./lib symbolic link.\n"
 msgstr "INF: A definir link simbólico ./lib64 -> ./lib.\n"
 
-#: ../em_multistrap:258 ../em_multistrap:265
+#: ../multistrap:228 ../multistrap:235 ../multistrap:337 ../multistrap:344
 msgid "Cannot open sources list"
 msgstr "Impossível abrir lista de fontes"
 
-#: ../em_multistrap:289
+#: ../multistrap:260
 #, perl-format
 msgid "I: Installing %s\n"
 msgstr "I: A instalar %s\n"
 
-#: ../em_multistrap:306
+#: ../multistrap:277
 #, perl-format
 msgid "Getting package lists: apt-get %s update\n"
 msgstr "A obter listas de pacotes: apt-get %s update\n"
 
-#: ../em_multistrap:308
+#: ../multistrap:279
 #, perl-format
 msgid "apt update failed. Exit value: %d\n"
 msgstr "apt update falhou. Valor de saída: %d\n"
 
-#: ../em_multistrap:326
+#: ../multistrap:310
 #, perl-format
 msgid "apt download failed. Exit value: %d\n"
 msgstr "apt download falhou. Valor de saída: %d\n"
 
-#: ../em_multistrap:338
+#: ../multistrap:322
 msgid "ERR: ./lib64 -> /lib symbolic link reset to ./lib after unpacking.\n"
 msgstr ""
 "ERRO: link simbólico ./lib64 -> /lib reposto para ./lib após "
 "desempacotamento.\n"
 
-#: ../em_multistrap:339
+#: ../multistrap:323
 #, perl-format
 msgid "ERR: Some files may have been unpacked outside %s!\n"
 msgstr "ERRO: Alguns ficheiros podem ter sido desempacotados fora de %s!\n"
 
-#: ../em_multistrap:343
+#: ../multistrap:327
 #, perl-format
 msgid ""
 "\n"
@@ -116,85 +120,85 @@ msgstr ""
 "Sistema multistrap instalado com sucesso em %s.\n"
 "\n"
 
-#: ../em_multistrap:376 ../em_multistrap:427 ../em_multistrap:590
+#: ../multistrap:382 ../multistrap:433 ../multistrap:596
 msgid "Cannot read apt archives directory.\n"
 msgstr "Impossível ler o directório de arquivos apt.\n"
 
-#: ../em_multistrap:393
+#: ../multistrap:399
 msgid "I: Calculating obsolete packages\n"
 msgstr "I: A calcular pacotes obsoletos\n"
 
-#: ../em_multistrap:410 ../em_multistrap:416
+#: ../multistrap:416 ../multistrap:422
 #, perl-format
 msgid "I: Removing %s\n"
 msgstr "I: A remover %s\n"
 
-#: ../em_multistrap:434
+#: ../multistrap:440
 #, perl-format
 msgid "Using directory %s for unpacking operations\n"
 msgstr ""
 
-#: ../em_multistrap:437
+#: ../multistrap:443
 #, perl-format
 msgid "I: Extracting %s...\n"
 msgstr "I: A extrair %s...\n"
 
-#: ../em_multistrap:450
+#: ../multistrap:456
 #, perl-format
 msgid ""
 "dpkg -X failed with error code %s\n"
 "Skipping...\n"
 msgstr ""
 
-#: ../em_multistrap:490
+#: ../multistrap:496
 #, perl-format
 msgid " -> Processing conffiles for %s\n"
 msgstr " -> A processar ficheiros de configuração para %s\n"
 
-#: ../em_multistrap:511
+#: ../multistrap:517
 #, perl-format
 msgid "ERR: lib64 -> ./lib symbolic link clobbered by %s\n"
 msgstr "ERRO: link simbólico lib64 -> ./lib ocultado por %s\n"
 
-#: ../em_multistrap:514
+#: ../multistrap:520
 msgid "INF: lib64 -> /lib symbolic link reset to ./lib.\n"
 msgstr "INF: link simbólico lib64 -> /lib reposto para ./lib.\n"
 
-#: ../em_multistrap:521
+#: ../multistrap:527
 msgid "I: Unpacking complete.\n"
 msgstr "I: Desempacotamento completo.\n"
 
-#: ../em_multistrap:536
+#: ../multistrap:542
 msgid "ERR: ./bin/sh symbolic link does not exist.\n"
 msgstr "ERRO: link simbólico ./bin/sh não existe.\n"
 
-#: ../em_multistrap:539
+#: ../multistrap:545
 msgid "INF: Setting ./bin/sh -> ./bin/dash\n"
 msgstr "INF: A definir link simbólico ./bin/sh -> ./bin/dash\n"
 
-#: ../em_multistrap:546
+#: ../multistrap:552
 msgid "INF: ./bin/dash not found. Setting ./bin/sh -> ./bin/bash\n"
 msgstr "INF: ./bin/dash não foi encontrado. A definir ./bin/sh -> ./bin/bash\n"
 
-#: ../em_multistrap:565
+#: ../multistrap:571
 msgid "I: Tidying up apt cache and list data.\n"
 msgstr "I: A arrumar dados de lista e de apt cache.\n"
 
-#: ../em_multistrap:569
+#: ../multistrap:575
 msgid "Cannot read apt lists directory.\n"
 msgstr "Impossível ler directório de listas apt.\n"
 
-#: ../em_multistrap:578
+#: ../multistrap:584
 msgid "Cannot read apt cache directory.\n"
 msgstr "Impossível ler directório/ de apt cache.\n"
 
 # msgid "Cannot read apt archives directory.\n"
 # msgstr "Impossível ler directório/ de arquivos apt.\n"
-#: ../em_multistrap:608
+#: ../multistrap:614
 msgid "I: Native mode - configuring unpacked packages . . .\n"
 msgstr "I: Modo nativo - a configurar pacotes desempacotados . . .\n"
 
-#: ../em_multistrap:615
+#: ../multistrap:621
 #, perl-format
 msgid ""
 "I: dpkg configuration settings:\n"
@@ -203,27 +207,27 @@ msgstr ""
 "I: opções de configuração do dpkg:\n"
 "\t%s\n"
 
-#: ../em_multistrap:630
+#: ../multistrap:636
 #, perl-format
 msgid "Cannot open %s directory. %s\n"
 msgstr "Impossível abrir o directório %s. %s\n"
 
-#: ../em_multistrap:663
+#: ../multistrap:668
 #, perl-format
 msgid "cannot open apt sources list. %s"
 msgstr "impossível abrir lista de fontes. %s"
 
-#: ../em_multistrap:669
+#: ../multistrap:674
 #, perl-format
 msgid "cannot open apt sources.list directory %s\n"
 msgstr "impossível abrir directório de apt sources.list %s\n"
 
-#: ../em_multistrap:674
+#: ../multistrap:679
 #, perl-format
 msgid "cannot open /etc/apt/sources.list.d/%s %s"
 msgstr "impossível abrir /etc/apt/sources.list.d/%s %s"
 
-#: ../em_multistrap:686
+#: ../multistrap:691
 #, perl-format
 msgid ""
 "\n"
@@ -361,7 +365,7 @@ msgstr ""
 "será criado - não será empacotado num .tgz após ficar completo.\n"
 "\n"
 
-#: ../em_multistrap:750
+#: ../multistrap:755
 msgid "failed to write usage:"
 msgstr "falhou a escrita do modo de utilização:"
 
