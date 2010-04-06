@@ -17,6 +17,7 @@
 
 use strict;
 use warnings;
+use File::Basename;
 use POSIX qw(locale_h);
 use Locale::gettext;
 use vars qw/ @list @seq $file $dir $line @cmd $i $dry
@@ -32,6 +33,8 @@ $ourversion = &our_version();
 # default file from mtd-utils.
 $file = "/usr/share/multistrap/device-table.txt";
 $dir = `pwd`;
+chomp ($dir);
+$dir .= "/tmp/";
 $fakeroot = "fakeroot";
 
 while( @ARGV ) {
@@ -64,11 +67,10 @@ while( @ARGV ) {
 
 $msg = sprintf (_g("Need a configuration file - use %s -f\n"), $progname);
 die ($msg)
-	if (-f $file);
+	if (not -f $file);
 
-my $ret = mkdir ("$dir") if (not -d "$dir");
-die ("Unable to create directory '$dir'\n")
-	if ($ret == 0);
+my $ret = 0;
+$ret = mkdir ("$dir") if (not -d "$dir");
 $dir = `realpath $dir`;
 chomp ($dir);
 $dir .= ($dir =~ m:/$:) ? '' : "/";
@@ -114,6 +116,19 @@ else
 sub our_version {
 	my $query = `dpkg-query -W -f='\${Version}' multistrap`;
 	(defined $query) ? return $query : return "0.0.9";
+}
+
+sub usageversion {
+	printf STDERR (_g("
+%s version %s
+
+ %s [-d DIR] [-f FILE]
+ %s -?|-h|--help|--version
+"), $progname, $ourversion, $progname, $progname);
+}
+
+sub _g {
+    return gettext(shift);
 }
 
 =pod

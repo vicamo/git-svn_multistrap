@@ -1,13 +1,14 @@
 multistrap ./usr/sbin/
 doc/multistrap/man/* ./usr/share/man/
+examples/device_table.txt ./usr/share/doc/multistrap/examples/
 examples/multistrap-example.conf ./usr/share/doc/multistrap/examples/
 examples/sid.conf ./usr/share/multistrap/
 examples/squeeze.conf ./usr/share/multistrap/
 examples/lenny.conf ./usr/share/multistrap/
 examples/setup.sh ./usr/share/doc/multistrap/examples/
 examples/config.sh ./usr/share/doc/multistrap/examples/
-update-rc.d ./usr/share/multistrap/
 check-deps.sh ./usr/share/multistrap/
 device-table.pl ./usr/share/multistrap/
+update-rc.d ./usr/share/multistrap/
 crosschroot.conf ./usr/share/multistrap/
 bash/multistrap ./etc/bash_completion.d/
