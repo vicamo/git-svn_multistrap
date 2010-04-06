@@ -3,8 +3,9 @@ multistrap (2.1.0) experimental; urgency=low
   * Experimental branch to replace pbuilder support in Crush. 
   * Drop emsandbox and use experimental multistrap.
   * Add initial crosschroot.conf for multistrap support.
+  * Add device-table.pl helper - internal support to follow.
 
- -- Neil Williams <codehelp@debian.org>  Mon, 05 Apr 2010 23:20:08 +0100
+ -- Neil Williams <codehelp@debian.org>  Tue, 06 Apr 2010 20:15:55 +0100
 
 emdebian-rootfs (2.0.9) unstable; urgency=low
 

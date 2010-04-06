@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: emdebian-rootfs 2.0.4\n"
-"POT-Creation-Date: 2010-04-05 20:59+0200\n"
+"POT-Creation-Date: 2010-04-06 20:04+0200\n"
 "PO-Revision-Date: 2009-11-14 17:16+0000\n"
 "Last-Translator: Américo Monteiro <a_monteiro@netcabo.pt>\n"
 "Language-Team: Portuguese <traduz@debianpt.org>\n"
@@ -17,12 +17,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. type: =head1
-#: multistrap:838
+#: multistrap:845 device-table.pl:121
 msgid "Name"
 msgstr "Nome"
 
 #. type: textblock
-#: multistrap:840
+#: multistrap:847
 #, fuzzy
 #| msgid "em_multistrap - extends debootstrap for multiple repository support"
 msgid "multistrap - extends debootstrap for multiple repository support"
@@ -30,12 +30,12 @@ msgstr ""
 "em_multistrap - estende o debootstrap para suporte a múltiplos repositórios"
 
 #. type: =head1
-#: multistrap:842
+#: multistrap:849 device-table.pl:125
 msgid "Synopsis"
 msgstr "Sinopse"
 
 #. type: verbatim
-#: multistrap:844
+#: multistrap:851
 #, fuzzy, no-wrap
 #| msgid ""
 #| " em_multistrap [-a ARCH] [-d DIR] -f CONFIG_FILE\n"
@@ -51,17 +51,17 @@ msgstr ""
 "\n"
 
 #. type: =head1
-#: multistrap:847
+#: multistrap:854 device-table.pl:130
 msgid "Options"
 msgstr "Opções"
 
 #. type: textblock
-#: multistrap:849
+#: multistrap:856
 msgid "(These options can also be set in the configuration file.)"
 msgstr "(Estas opções também podem ser definidas no ficheiro de configuração.)"
 
 #. type: textblock
-#: multistrap:851
+#: multistrap:858
 msgid ""
 "--tidy-up - remove apt cache data, downloaded Packages files and the apt "
 "package cache. Same as cleanup=true."
@@ -70,7 +70,7 @@ msgstr ""
 "e a cache de pacotes do apt. O mesmo que cleanup=true."
 
 #. type: textblock
-#: multistrap:854
+#: multistrap:861
 msgid ""
 "--no-auth - allow the use of unauthenticated repositories. Same as "
 "noauth=true"
@@ -79,12 +79,12 @@ msgstr ""
 "noauth=true"
 
 #. type: =head1
-#: multistrap:857
+#: multistrap:864
 msgid "Description"
 msgstr "Descrição"
 
 #. type: textblock
-#: multistrap:859
+#: multistrap:866
 #, fuzzy
 #| msgid ""
 #| "em_multistrap provides a debootstrap-like method based on apt and "
@@ -103,7 +103,7 @@ msgstr ""
 "arquitectura, pacotes extra e o mirror a usar para cada debootstrap."
 
 #. type: textblock
-#: multistrap:864
+#: multistrap:871
 msgid ""
 "The aim is to create a complete debootstrap with all packages installed and "
 "configured, instead of just the base system."
@@ -112,12 +112,12 @@ msgstr ""
 "e configurados, e vez de apenas o sistema base."
 
 #. type: textblock
-#: multistrap:867
+#: multistrap:874
 msgid "Example configuration:"
 msgstr "Exemplo de configuração:"
 
 #. type: verbatim
-#: multistrap:869
+#: multistrap:876
 #, no-wrap
 msgid ""
 " [General]\n"
@@ -163,7 +163,7 @@ msgstr ""
 " \n"
 
 #. type: verbatim
-#: multistrap:889
+#: multistrap:896
 #, no-wrap
 msgid ""
 " [Debian]\n"
@@ -181,7 +181,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: multistrap:895
+#: multistrap:902
 msgid ""
 "This will result in a completely normal debootstrap of Debian lenny from the "
 "specified mirror, for armel in '/opt/multistrap/'."
@@ -190,7 +190,7 @@ msgstr ""
 "partir do mirror especificado, para armel em '/opt/multistrap/'."
 
 #. type: textblock
-#: multistrap:898
+#: multistrap:905
 msgid ""
 "Specify a package to extend the multistrap to include that package and all "
 "dependencies."
@@ -199,7 +199,7 @@ msgstr ""
 "todas as dependências."
 
 #. type: textblock
-#: multistrap:901
+#: multistrap:908
 msgid ""
 "Specify more debootstraps by adding new sections. Section names are used in "
 "the debootstrap general option."
@@ -208,17 +208,17 @@ msgstr ""
 "secções são usados na opção geral do debootstrap."
 
 #. type: textblock
-#: multistrap:904
+#: multistrap:911
 msgid "Section names are case-insensitive."
 msgstr "Os nomes das secções são insensíveis a maiúsculas/minúsculas."
 
 #. type: textblock
-#: multistrap:906
+#: multistrap:913
 msgid "e.g. change"
 msgstr "ex. change"
 
 #. type: verbatim
-#: multistrap:908
+#: multistrap:915
 #, no-wrap
 msgid ""
 " debootstrap=Debian\n"
@@ -228,12 +228,12 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: multistrap:910
+#: multistrap:917
 msgid "to"
 msgstr "para"
 
 #. type: verbatim
-#: multistrap:912
+#: multistrap:919
 #, no-wrap
 msgid ""
 " debootstrap=Grip\n"
@@ -243,7 +243,7 @@ msgstr ""
 " \n"
 
 #. type: verbatim
-#: multistrap:914
+#: multistrap:921
 #, no-wrap
 msgid ""
 "then add the new section for Grip:\n"
@@ -253,7 +253,7 @@ msgstr ""
 " \n"
 
 #. type: verbatim
-#: multistrap:916
+#: multistrap:923
 #, no-wrap
 msgid ""
 " [Grip]\n"
@@ -271,7 +271,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: multistrap:922
+#: multistrap:929
 msgid ""
 "Setting Grip instead of Debian in the debootstrap option, as above, will "
 "provide a base system from Emdebian Grip 1.0 and locate any missing "
@@ -285,7 +285,7 @@ msgstr ""
 "Emdebian Grip."
 
 #. type: textblock
-#: multistrap:927
+#: multistrap:934
 msgid ""
 "All dependencies are resolved only by apt, using all configured "
 "repositories, to use only the most recent and most suitable dependencies. "
@@ -301,7 +301,7 @@ msgstr ""
 "explicitamente na linha de pacotes."
 
 #. type: textblock
-#: multistrap:934
+#: multistrap:941
 msgid ""
 "'Architecture' and 'directory' can be overridden on the command line.  Other "
 "general options have command line options, except debootstrap itself."
@@ -311,12 +311,12 @@ msgstr ""
 "debootstrap."
 
 #. type: =head1
-#: multistrap:938
+#: multistrap:945
 msgid "General settings:"
 msgstr "Definições gerais:"
 
 #. type: textblock
-#: multistrap:940
+#: multistrap:947
 msgid ""
 "'directory' specifies the top level directory where the debootstrap will be "
 "created - it is not packed into a .tgz once complete."
@@ -325,7 +325,7 @@ msgstr ""
 "ser criado - não é empacotado em um .tgz depois de completo."
 
 #. type: textblock
-#: multistrap:943
+#: multistrap:950
 #, fuzzy
 #| msgid "As with debootstrap, em_multistrap will continue after errors."
 msgid "As with debootstrap, multistrap will continue after errors."
@@ -333,7 +333,7 @@ msgstr ""
 "Tal como acontece com o debootstrap, em_multistrap irá continuar após erros."
 
 #. type: textblock
-#: multistrap:945
+#: multistrap:952
 #, fuzzy
 #| msgid ""
 #| "em_multistrap does not currently implement the machine:variant support "
@@ -350,12 +350,12 @@ msgstr ""
 "personalizações."
 
 #. type: =head1
-#: multistrap:949
+#: multistrap:956
 msgid "Secure Apt"
 msgstr "Segurança do Apt"
 
 #. type: textblock
-#: multistrap:951
+#: multistrap:958
 msgid ""
 "To use authenticated apt repositories, multistrap either needs to be able to "
 "install an appropriate keyring package from the existing apt sources "
@@ -368,7 +368,7 @@ msgstr ""
 "configuradas usando apt-key *na máquina do sistema*."
 
 #. type: textblock
-#: multistrap:956
+#: multistrap:963
 #, fuzzy
 #| msgid ""
 #| "If relevant packages exist, specify them in the 'keyring' option for each "
@@ -387,7 +387,7 @@ msgstr ""
 "pacotes sejam descarregados dele."
 
 #. type: textblock
-#: multistrap:961
+#: multistrap:968
 msgid ""
 "Note that *all* repositories to be used with multistrap must be "
 "authenticated or apt will fail. Similarly, secure apt can only be disabled "
@@ -405,7 +405,7 @@ msgstr ""
 "apt-key apropriadamente."
 
 #. type: textblock
-#: multistrap:969
+#: multistrap:976
 msgid ""
 "The keyring package(s) will also be installed inside the multistrap "
 "environment to match the installed apt sources for the multistrap."
@@ -414,7 +414,7 @@ msgstr ""
 "multistrap para coincidir com as fontes apt instaladas para o multistrap."
 
 #. type: textblock
-#: multistrap:972
+#: multistrap:979
 msgid ""
 "All configuration of apt-key needs to be done for the machine running "
 "multistrap itself."
@@ -423,12 +423,12 @@ msgstr ""
 "correndo o próprio multistrap."
 
 #. type: =head1
-#: multistrap:975
+#: multistrap:982
 msgid "State"
 msgstr "Estado"
 
 #. type: textblock
-#: multistrap:977
+#: multistrap:984
 msgid ""
 "multistrap is stateless - if the directory exists, it will simply proceed as "
 "normal and apt will try to pick up where it left off."
@@ -437,12 +437,12 @@ msgstr ""
 "prosseguir como normalmente e o apt irá tentar prosseguir de onde ficou."
 
 #. type: =head1
-#: multistrap:980
+#: multistrap:987
 msgid "Configuration"
 msgstr "Configuração"
 
 #. type: textblock
-#: multistrap:982
+#: multistrap:989
 msgid ""
 "multistrap unpacks the downloaded packages but other stages of system "
 "configuration are not attempted. Examples include:"
@@ -451,7 +451,7 @@ msgstr ""
 "outros estágios da configuração do sistema. Os exemplos incluem:"
 
 #. type: verbatim
-#: multistrap:985
+#: multistrap:992
 #, no-wrap
 msgid ""
 " /etc/inittab\n"
@@ -477,7 +477,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: multistrap:995
+#: multistrap:1002
 msgid ""
 "Any device-specific device nodes will also need to be created using MAKEDEV."
 msgstr ""
@@ -485,7 +485,7 @@ msgstr ""
 "ser criados usando o MAKEDEV."
 
 #. type: textblock
-#: multistrap:998
+#: multistrap:1005
 msgid ""
 "As an alternative, multistrap includes a device-table.pl helper script that "
 "can work around some of the issues with MAKEDEV.  device-table.pl requires a "
@@ -493,7 +493,7 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: multistrap:1003
+#: multistrap:1010
 msgid ""
 "Once multistrap has successfully created the basic file and directory "
 "layout, other device-specific scripts are needed before the filesystem can "
@@ -505,7 +505,7 @@ msgstr ""
 "de destino."
 
 #. type: textblock
-#: multistrap:1008
+#: multistrap:1015
 msgid ""
 "Once installed, the packages themselves need to be configured using the "
 "package maintainer scripts and C<dpkg --configure -a>, unless this is a "
@@ -516,7 +516,7 @@ msgstr ""
 "seja um multistrap nativo."
 
 #. type: textblock
-#: multistrap:1012
+#: multistrap:1019
 msgid ""
 "For C<dpkg> to work, F</proc> and F</sysfs> must be mounted (or mountable), "
 "F</dev/pts> is also recommended."
@@ -525,17 +525,17 @@ msgstr ""
 "(ou serem montáveis), também é recomendado F</dev/pts>."
 
 #. type: textblock
-#: multistrap:1015
+#: multistrap:1022
 msgid "See also: http://wiki.debian.org/Multistrap"
 msgstr "Veja também: http://wiki.debian.org/Multistrap"
 
 #. type: =head1
-#: multistrap:1017
+#: multistrap:1024
 msgid "Environment"
 msgstr "Ambiente"
 
 #. type: textblock
-#: multistrap:1019
+#: multistrap:1026
 msgid ""
 "To configure the unpacked packages (whether in native or cross mode), "
 "certain environment variables are needed:"
@@ -544,7 +544,7 @@ msgstr ""
 "são necessárias certas variáveis de ambiente:"
 
 #. type: textblock
-#: multistrap:1022
+#: multistrap:1029
 msgid ""
 "Debconf needs to be told to accept that user interaction is not desired:"
 msgstr ""
@@ -552,7 +552,7 @@ msgstr ""
 "utilizador não é desejada:"
 
 #. type: verbatim
-#: multistrap:1025
+#: multistrap:1032
 #, no-wrap
 msgid ""
 " DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true\n"
@@ -562,7 +562,7 @@ msgstr ""
 " \n"
 
 #. type: textblock
-#: multistrap:1027
+#: multistrap:1034
 msgid ""
 "Perl needs to be told to accept that no locales are available inside the "
 "chroot and not to complain:"
@@ -571,44 +571,44 @@ msgstr ""
 "dentro da chroot e não se queixar:"
 
 #. type: verbatim
-#: multistrap:1030
+#: multistrap:1037
 #, no-wrap
 msgid ""
 " LC_ALL=C LANGUAGE=C LANG=C\n"
 "\n"
 msgstr ""
 " LC_ALL=C LANGUAGE=C LANG=C\n"
-"\n"
-
-#. type: textblock
-#: multistrap:1032
-msgid "Then, dpkg can configure the packages:"
-msgstr "Depois, o dpkg pode configurar os pacotes."
-
-#. type: textblock
-#: multistrap:1034
-msgid "chroot method (PATH = top directory of chroot):"
-msgstr "método de chroot (PATH = directório de topo da chroot):"
-
-#. type: verbatim
-#: multistrap:1036
-#, no-wrap
-msgid ""
-" DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \\\n"
-" LC_ALL=C LANGUAGE=C LANG=C chroot /PATH/ dpkg --configure -a\n"
-"\n"
-msgstr ""
-" DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \\\n"
-" LC_ALL=C LANGUAGE=C LANG=C chroot /PATH/ dpkg --configure -a\n"
 "\n"
 
 #. type: textblock
 #: multistrap:1039
+msgid "Then, dpkg can configure the packages:"
+msgstr "Depois, o dpkg pode configurar os pacotes."
+
+#. type: textblock
+#: multistrap:1041
+msgid "chroot method (PATH = top directory of chroot):"
+msgstr "método de chroot (PATH = directório de topo da chroot):"
+
+#. type: verbatim
+#: multistrap:1043
+#, no-wrap
+msgid ""
+" DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \\\n"
+" LC_ALL=C LANGUAGE=C LANG=C chroot /PATH/ dpkg --configure -a\n"
+"\n"
+msgstr ""
+" DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \\\n"
+" LC_ALL=C LANGUAGE=C LANG=C chroot /PATH/ dpkg --configure -a\n"
+"\n"
+
+#. type: textblock
+#: multistrap:1046
 msgid "at a login shell:"
 msgstr "numa shell de login:"
 
 #. type: verbatim
-#: multistrap:1041
+#: multistrap:1048
 #, no-wrap
 msgid ""
 " # export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true\n"
@@ -622,18 +622,18 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: multistrap:1045
+#: multistrap:1052
 msgid "(As above, dpkg needs F</proc> and F</sysfs> mounted first.)"
 msgstr ""
 "(Como em cima, o dpkg precisa de F</proc> e F</sysfs> montados primeiro.)"
 
 #. type: =head1
-#: multistrap:1047
+#: multistrap:1054
 msgid "Native mode - multistrap"
 msgstr "Modo nativo - multistrap"
 
 #. type: textblock
-#: multistrap:1049
+#: multistrap:1056
 #, fuzzy
 #| msgid ""
 #| "em_multistrap was not intended for native support, it was developed for "
@@ -650,7 +650,7 @@ msgstr ""
 "apt."
 
 #. type: textblock
-#: multistrap:1053
+#: multistrap:1060
 msgid ""
 "In native mode, various post-multistrap operations are likely to be needed "
 "that debootstrap would do for you:"
@@ -659,7 +659,7 @@ msgstr ""
 "multistrap que o debootstrap faria por si:"
 
 #. type: verbatim
-#: multistrap:1056
+#: multistrap:1063
 #, no-wrap
 msgid ""
 " 1. copy /etc/hosts into the chroot\n"
@@ -673,7 +673,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: multistrap:1060
+#: multistrap:1067
 msgid ""
 "(An alternative to unset the localisation variables is to add locales to "
 "your multistrap configuration file in the 'packages' option."
@@ -682,7 +682,7 @@ msgstr ""
 "seu ficheiro de configuração multistrap na opção 'packages')."
 
 #. type: textblock
-#: multistrap:1064
+#: multistrap:1071
 msgid ""
 "A native multistrap can be used directly with chroot, so C<multistrap> runs "
 "C<dpkg --configure -a> at the end of the multistrap process."
@@ -691,21 +691,21 @@ msgstr ""
 "C<multistrap> corra C<dpkg --configure -a> no final do processo multistrap."
 
 #. type: =head1
-#: multistrap:1068
+#: multistrap:1075
 #, fuzzy
 #| msgid "Configuration"
 msgid "Cascading configuration"
 msgstr "Configuração"
 
 #. type: =head1
-#: multistrap:1070
+#: multistrap:1077
 #, fuzzy
 #| msgid "Machine variants"
 msgid "Machine:variant support"
 msgstr "Variantes de máquina"
 
 #. type: textblock
-#: multistrap:1072
+#: multistrap:1079
 msgid ""
 "The old packages.conf variables from emsandbox can all be converted into "
 "C<multistrap> configuration variables. The machine:variant support in "
@@ -713,7 +713,7 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: multistrap:1077
+#: multistrap:1084
 msgid ""
 "Once C<multistrap> has unpacked the downloaded packages, the C<setup.sh> can "
 "be called, passing the location and architecture of the root filesystem, so "
@@ -724,7 +724,7 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: multistrap:1085
+#: multistrap:1092
 msgid ""
 "One advantage of using machine:variant support is that the entire "
 "rootfilesystem can be managed by a single call to multistrap - this is "
@@ -732,19 +732,19 @@ msgid ""
 msgstr ""
 
 #. type: =head1
-#: multistrap:1089
+#: multistrap:1096
 msgid "Restricting package selection"
 msgstr ""
 
 #. type: textblock
-#: multistrap:1091
+#: multistrap:1098
 msgid ""
 "C<multistrap> includes Required packages by default, the current list of "
 "packages can be seen using:"
 msgstr ""
 
 #. type: verbatim
-#: multistrap:1094
+#: multistrap:1101
 #, no-wrap
 msgid ""
 " grep-available  -FPriority 'required' -sPackage\n"
@@ -752,12 +752,60 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: multistrap:1096
+#: multistrap:1103
 msgid ""
 "If the OmitRequired option is set to true, these packages will not be added "
 "- whilst useful, this option can easily lead to a useless rootfs. Only the "
 "packages specified manually in the configuration files will be used in the "
 "calculations - dependencies of those packages will be added but no others."
+msgstr ""
+
+#. type: textblock
+#: device-table.pl:123
+msgid "device-table.pl - parses simple device tables and passes to mknod"
+msgstr ""
+
+#. type: verbatim
+#: device-table.pl:127
+#, fuzzy, no-wrap
+#| msgid ""
+#| " em_multistrap [-a ARCH] [-d DIR] -f CONFIG_FILE\n"
+#| " em_multistrap -?|-h|--help|--version\n"
+#| "\n"
+msgid ""
+" device-table.pl [-d DIR] [-f FILE]\n"
+" device-table.pl -?|-h|--help|--version\n"
+"\n"
+msgstr ""
+" em_multistrap [-a ARQUITECTURA] [-d DIRECTÓRIO] -f FICHEIRO_CONFIGURAÇÃO\n"
+" em_multistrap -?|-h|--help|--version\n"
+"\n"
+
+#. type: textblock
+#: device-table.pl:132
+msgid ""
+"By default, device-table.pl writes out the device nodes in the current "
+"working directory. Use the directory option to write out elsewhere."
+msgstr ""
+
+#. type: textblock
+#: device-table.pl:135
+msgid ""
+"multistrap contains a default device-table file, use the file option to "
+"override the default /usr/share/multistrap/device-table.txt"
+msgstr ""
+
+#. type: textblock
+#: device-table.pl:138
+msgid "Use the dry-run option to see the commands that would be run."
+msgstr ""
+
+#. type: textblock
+#: device-table.pl:140
+msgid ""
+"Device nodes needs fakeroot or another way to use root access. If device-"
+"table.pl is already being run under fakeroot or equivalent, use the no-"
+"fakeroot option to drop the internal fakeroot usage."
 msgstr ""
 
 #~ msgid "emdebian-rootfs"
