@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: emdebian-rootfs 2.0.4\n"
-"POT-Creation-Date: 2010-04-06 20:04+0200\n"
+"POT-Creation-Date: 2010-04-06 21:01+0200\n"
 "PO-Revision-Date: 2009-11-14 17:16+0000\n"
 "Last-Translator: Américo Monteiro <a_monteiro@netcabo.pt>\n"
 "Language-Team: Portuguese <traduz@debianpt.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. type: =head1
-#: multistrap:845 device-table.pl:121
+#: multistrap:845 device-table.pl:136
 msgid "Name"
 msgstr "Nome"
 
@@ -30,7 +30,7 @@ msgstr ""
 "em_multistrap - estende o debootstrap para suporte a múltiplos repositórios"
 
 #. type: =head1
-#: multistrap:849 device-table.pl:125
+#: multistrap:849 device-table.pl:140
 msgid "Synopsis"
 msgstr "Sinopse"
 
@@ -51,7 +51,7 @@ msgstr ""
 "\n"
 
 #. type: =head1
-#: multistrap:854 device-table.pl:130
+#: multistrap:854 device-table.pl:145
 msgid "Options"
 msgstr "Opções"
 
@@ -761,12 +761,12 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: device-table.pl:123
+#: device-table.pl:138
 msgid "device-table.pl - parses simple device tables and passes to mknod"
 msgstr ""
 
 #. type: verbatim
-#: device-table.pl:127
+#: device-table.pl:142
 #, fuzzy, no-wrap
 #| msgid ""
 #| " em_multistrap [-a ARCH] [-d DIR] -f CONFIG_FILE\n"
@@ -782,26 +782,26 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: device-table.pl:132
+#: device-table.pl:147
 msgid ""
 "By default, device-table.pl writes out the device nodes in the current "
 "working directory. Use the directory option to write out elsewhere."
 msgstr ""
 
 #. type: textblock
-#: device-table.pl:135
+#: device-table.pl:150
 msgid ""
 "multistrap contains a default device-table file, use the file option to "
 "override the default /usr/share/multistrap/device-table.txt"
 msgstr ""
 
 #. type: textblock
-#: device-table.pl:138
+#: device-table.pl:153
 msgid "Use the dry-run option to see the commands that would be run."
 msgstr ""
 
 #. type: textblock
-#: device-table.pl:140
+#: device-table.pl:155
 msgid ""
 "Device nodes needs fakeroot or another way to use root access. If device-"
 "table.pl is already being run under fakeroot or equivalent, use the no-"
