@@ -629,6 +629,13 @@ sub native
 	# check that we have a workable shell inside the chroot
 	&check_bin_sh("$dir");
 	system ("$str $env chroot $dir dpkg --configure -a");
+	opendir (PRI, "${dir}/var/lib/dpkg/info") or return;
+	my @preinsts=grep(/\.preinst$/, readdir PRI);
+	closedir (PRI);
+	foreach my $script (sort @preinsts)
+	{
+		system ("$str $env chroot $dir /var/lib/dpkg/info/$script update");
+	}
 }
 
 sub get_required_debs
@@ -1105,5 +1112,17 @@ added - whilst useful, this option can easily lead to a useless
 rootfs. Only the packages specified manually in the configuration
 files will be used in the calculations - dependencies of those packages
 will be added but no others.
+
+=head1 Collecting packages from specific codenames/suites.
+
+Packages specified explicitly in the configuration sections will be
+passed to apt as package/codename so that the configuration controls
+which version of a package is installed should the package exist in
+two sources with different suites.
+
+When using this support in Lenny, ensure that each section uses the
+codename (etch, lenny, squeeze, sid) instead of the suite (oldstable,
+stable, testing, sid) for the C<suite> configuration item as the version
+of apt in Lenny and previous can only use the codename.
 
 =cut
