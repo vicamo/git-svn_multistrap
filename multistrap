@@ -634,7 +634,7 @@ sub native
 	closedir (PRI);
 	foreach my $script (sort @preinsts)
 	{
-		system ("$str $env chroot $dir /var/lib/dpkg/info/$script update");
+		system ("$str $env chroot $dir /var/lib/dpkg/info/$script upgrade");
 	}
 }
 
