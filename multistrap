@@ -444,7 +444,7 @@ sub force_unpack
 	my $old = `pwd`;
 	chomp ($old);
 	chdir ("${dir}");
-	printf (_g("Using directory %s for unpacking operations\n"), ${dir});
+	printf (_g("Using directory %s for unpacking operations\n"), $dir);
 	foreach $deb (sort @archives)
 	{
 		printf (_g("I: Extracting %s...\n"), $deb);
@@ -1124,5 +1124,10 @@ When using this support in Lenny, ensure that each section uses the
 codename (etch, lenny, squeeze, sid) instead of the suite (oldstable,
 stable, testing, sid) for the C<suite> configuration item as the version
 of apt in Lenny and previous can only use the codename.
+
+=head1 Recommends TOIMPLEMENT:
+
+Default recommends OFF
+option to set it as on.
 
 =cut
