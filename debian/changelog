@@ -14,8 +14,11 @@ emdebian-rootfs (2.0.9) unstable; urgency=low
   * Allow empty keyring values.
   * Fix separation of debootstrap vs aptsources and remove reliance on
     the section label matching the lists name.
+  * Add check-deps.sh and device-table.pl helper scripts.
+  * Leave device_table.txt uncompressed for use with device-table.pl
+  * Actually need to specify apt once Recommends: are switched off.
 
- -- Neil Williams <codehelp@debian.org>  Mon, 05 Apr 2010 20:38:52 +0100
+ -- Neil Williams <codehelp@debian.org>  Wed, 14 Apr 2010 20:35:20 +0100
 
 emdebian-rootfs (2.0.8) unstable; urgency=low
 
