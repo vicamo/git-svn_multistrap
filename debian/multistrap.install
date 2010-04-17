@@ -10,5 +10,5 @@ examples/config.sh ./usr/share/doc/multistrap/examples/
 check-deps.sh ./usr/share/multistrap/
 device-table.pl ./usr/share/multistrap/
 update-rc.d ./usr/share/multistrap/
-crosschroot.conf ./usr/share/multistrap/
 bash/multistrap ./etc/bash_completion.d/
+cross/*.conf ./usr/share/multistrap/
