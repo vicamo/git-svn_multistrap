@@ -2,8 +2,10 @@ multistrap (2.1.1) experimental; urgency=low
 
   * Add --simulate mode for cascading configuration testing.
   * Split out the POD - not needed in the runtime script.
+  * Add cascading configuration to support standard Emdebian cross
+    architectures.
 
- -- Neil Williams <codehelp@debian.org>  Sat, 17 Apr 2010 22:24:43 +0100
+ -- Neil Williams <codehelp@debian.org>  Sat, 17 Apr 2010 22:25:45 +0100
 
 multistrap (2.1.0) experimental; urgency=low
 

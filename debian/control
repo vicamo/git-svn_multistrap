@@ -6,7 +6,7 @@ Uploaders: Wookey <wookey@debian.org>
 Build-Depends: cdbs, debhelper (>= 5), po4a (>= 0.37.1), po-debconf
 Build-Depends-Indep: devscripts, gnupg, intltool
 Standards-Version: 3.8.4
-Homepage: http://www.emdebian.org/
+Homepage: http://www.emdebian.org/multistrap
 Vcs-Browser: http://buildd.emdebian.org/svn/browser/current/host/trunk/emdebian-rootfs/trunk/
 Vcs-Svn: http://buildd.emdebian.org/repos/current/host/trunk/emdebian-rootfs/trunk/
 
@@ -23,8 +23,8 @@ Description: multiple repository bootstrap based on apt
  using apt to handle all dependency issues and conflicts.
  .
  Multistrap includes support for foreign architecture multistraps
- that need  only minimal configuration on the final device. Also
- supports cleaning  up the generated bootstrap filesystem to 
+ that need only minimal configuration on the final device. Also
+ supports cleaning up the generated bootstrap filesystem to 
  remove downloaded packages and hooks to modify the files in
  the bootstrap filesystem after the packages have been unpacked
  but before being configured.
@@ -37,6 +37,3 @@ Description: multiple repository bootstrap based on apt
  Also included is the previous emdebian-rootfs support for
  customisation of package selection and of files created
  within the root filesystem.
- .
- Root filesystems created with multistrap need minimal
- configuration on the embedded device before the first boot.
