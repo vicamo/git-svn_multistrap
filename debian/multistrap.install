@@ -12,3 +12,4 @@ device-table.pl ./usr/share/multistrap/
 update-rc.d ./usr/share/multistrap/
 bash/multistrap ./etc/bash_completion.d/
 cross/*.conf ./usr/share/multistrap/
+cross/test.c ./usr/share/multistrap/
