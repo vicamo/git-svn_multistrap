@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: emdebian-rootfs 2.0.2\n"
-"POT-Creation-Date: 2010-04-17 23:02+0200\n"
+"POT-Creation-Date: 2010-04-20 17:29+0200\n"
 "PO-Revision-Date: 2009-11-11 21:57+0100\n"
 "Last-Translator: Alexandre Normand <aj.normand@free.fr>\n"
 "Language-Team: French <debian-l10n-french@lists.debian.org>\n"
@@ -24,7 +24,6 @@ msgstr "Nom"
 #. type: textblock
 #: pod/multistrap:5
 #, fuzzy
-#| msgid "em_multistrap - extends debootstrap for multiple repository support"
 msgid "multistrap - extends debootstrap for multiple repository support"
 msgstr ""
 "em_multistrap - Ajoute à debootstrap la capacité de gérer plusieurs dépôts"
@@ -37,10 +36,6 @@ msgstr "Synopsis"
 #. type: verbatim
 #: pod/multistrap:9
 #, fuzzy, no-wrap
-#| msgid ""
-#| " em_multistrap [-a ARCH] [-d DIR] -f CONFIG_FILE\n"
-#| " em_multistrap -?|-h|--help|--version\n"
-#| "\n"
 msgid ""
 " multistrap [-a ARCH] [-d DIR] -f CONFIG_FILE\n"
 " multistrap -?|-h|--help|--version\n"
@@ -88,11 +83,6 @@ msgstr "Description"
 #. type: textblock
 #: pod/multistrap:24
 #, fuzzy
-#| msgid ""
-#| "em_multistrap provides a debootstrap-like method based on apt and "
-#| "extended to provide support for multiple repositories, using a "
-#| "configuration file to specify the relevant suites, architecture, extra "
-#| "packages and the mirror to use for each debootstrap."
 msgid ""
 "multistrap provides a debootstrap-like method based on apt and extended to "
 "provide support for multiple repositories, using a configuration file to "
@@ -329,7 +319,6 @@ msgstr ""
 #. type: textblock
 #: pod/multistrap:108
 #, fuzzy
-#| msgid "As with debootstrap, em_multistrap will continue after errors."
 msgid "As with debootstrap, multistrap will continue after errors."
 msgstr "Comme pour debootstrap, em_multistrap se poursuivra après des erreurs."
 
@@ -370,11 +359,6 @@ msgstr ""
 #. type: textblock
 #: pod/multistrap:125
 #, fuzzy
-#| msgid ""
-#| "If relevant packages exist, specify them in the 'keyring' option for each "
-#| "repository. em_multistrap will then check that apt has already installed "
-#| "this package so that the repository can be authenticated before any "
-#| "packages are downloaded from it."
 msgid ""
 "If relevant packages exist, specify them in the 'keyring' option for each "
 "repository. multistrap will then check that apt has already installed this "
@@ -637,10 +621,6 @@ msgstr "mode natif - multistrap"
 #. type: textblock
 #: pod/multistrap:218
 #, fuzzy
-#| msgid ""
-#| "em_multistrap was not intended for native support, it was developed for "
-#| "cross architecture support. In order for multiple repositories to be "
-#| "used, em_multistrap only unpacks the packages selected by apt."
 msgid ""
 "multistrap was not intended for native support, it was developed for cross "
 "architecture support. In order for multiple repositories to be used, "
@@ -697,7 +677,6 @@ msgstr ""
 #. type: =head1
 #: pod/multistrap:237
 #, fuzzy
-#| msgid "Configuration"
 msgid "Cascading configuration"
 msgstr "Configuration"
 
@@ -760,7 +739,6 @@ msgstr ""
 #. type: =head1
 #: pod/multistrap:265
 #, fuzzy
-#| msgid "Machine variants"
 msgid "Machine:variant support"
 msgstr "Variantes de Machines"
 
@@ -879,10 +857,6 @@ msgstr ""
 #. type: verbatim
 #: device-table.pl:142
 #, fuzzy, no-wrap
-#| msgid ""
-#| " em_multistrap [-a ARCH] [-d DIR] -f CONFIG_FILE\n"
-#| " em_multistrap -?|-h|--help|--version\n"
-#| "\n"
 msgid ""
 " device-table.pl [-d DIR] [-f FILE]\n"
 " device-table.pl -?|-h|--help|--version\n"
