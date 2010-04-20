@@ -6,8 +6,11 @@ multistrap (2.1.2) experimental; urgency=low
   * fix handling of omitrequired and configsh when empty
   * add force-yes when using noauth
   * split the package list even if using only spaces, not commas
+  * Add support for compressing the filesystem into a tarball.
+  * Add support for reinstalling packages known to fail due to preinst
+    problems.
 
- -- Neil Williams <codehelp@debian.org>  Tue, 20 Apr 2010 16:46:49 +0100
+ -- Neil Williams <codehelp@debian.org>  Tue, 20 Apr 2010 18:14:51 +0100
 
 multistrap (2.1.1) experimental; urgency=low
 

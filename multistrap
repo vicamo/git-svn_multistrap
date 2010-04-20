@@ -31,7 +31,7 @@ use vars qw/ $progname $ourversion $dstrap $extra @aptsources $mirror
  $component $repo @dirs @touch %sources $section %keys $host $key $value
  $type $file $config $tidy $noauth $keyring %keyrings $deflist $cfgdir
  @extrapkgs @includes %source $setupsh $configsh $omitrequired $dryrun
- $omitpreinst /;
+ $omitpreinst @reinstall $tgzname /;
 
 setlocale(LC_MESSAGES, "");
 textdomain("multistrap");
@@ -382,11 +382,26 @@ END
 	}
 }
 
+if (defined $tgzname)
+{
+	printf (_g("\nCompressing multistrap system in '%s' to a tarball called: '%s'.\n"), $dir, $tgzname);
+	chdir ("$dir");
+	unlink $tgzname if (-f $tgzname);
+	my $retval = system ("tar -czf ../$tgzname .");
+	$retval /= 256;
+	if ($retval == 0)
+	{
+		printf (_g("\nRemoving build directory: '%s'\n\n"), $dir);
+		system ("rm -rf $dir/*");
+	}
+	printf (_g("\nMultistrap system packaged successfully as %s.\n\n"), $tgzname);
+}
+
 exit 0;
 
 sub our_version {
 	my $query = `dpkg-query -W -f='\${Version}' multistrap`;
-	(defined $query) ? return $query : return "0.0.9";
+	(defined $query) ? return $query : return "2.1.1";
 }
 
 sub add_extra_packages
@@ -655,10 +670,19 @@ sub native
 	my @preinsts=grep(/\.preinst$/, readdir PRI);
 	closedir (PRI);
 	printf (_g("I: Running preinst scripts with 'upgrade' argument.\n"));
+	my $f = join (" ", @reinstall);
 	foreach my $script (sort @preinsts)
 	{
+		my $t = $script;
+		$t =~ s/\.preinst//;
+		next if ($t =~ /$f/);
 		next if ($script =~ /bash/);
 		system ("$str $env chroot $dir /var/lib/dpkg/info/$script upgrade");
+	}
+	# reinstall set
+	foreach my $reinst (sort @reinstall)
+	{
+		system ("$str $env chroot $dir apt-get --reinstall -y install $reinst");
 	}
 }
 
@@ -826,6 +850,9 @@ sub cascade
 			$configsh = lc($keys{$section}{'configscript'})
 				if (defined $keys{$section}{'configscript'}
 				and (not defined $configsh));
+			$tgzname = lc($keys{$section}{'tarballname'})
+				if (defined $keys{$section}{'tarballname'}
+				and (not defined $tgzname));
 			undef $configsh if ((defined $configsh) and (-x $configsh));
 			$setupsh = lc($keys{$section}{'setupscript'})
 				if (defined $keys{$section}{'setupscript'}
@@ -862,6 +889,7 @@ sub cascade
 				if (not exists $suites{$section});
 			$components{$section}=$keys{$section}{'components'}
 				if (not exists $components{$section});
+			push @reinstall, split (/ /, lc($keys{$section}{'reinstall'}));
 			if (not defined $components{$section})
 			{
 				$components{$section}='main';
@@ -871,6 +899,13 @@ sub cascade
 			push @extrapkgs, split (' ', lc($keys{$section}{'additional'}));
 		}
 	}
+	my %uniq=();
+	foreach my $listing (@reinstall)
+	{
+		$uniq{$listing}++;
+	}
+	@reinstall=();
+	@reinstall=sort keys %uniq;
 }
 
 sub _g {
@@ -887,6 +922,8 @@ sub dump_config {
 	print "Components: ".join (", ", sort values %components)."\n";
 	print "Extra Packages: ".join (", ", sort @extrapkgs)."\n"
 		if (scalar @extrapkgs > 0);
+	print "reinstall: ".join (", ", sort (@reinstall))."\n"
+		if (scalar @reinstall > 0);
 	print "arch: $arch\n";
 	print "dir: $dir\n";
 	print "unpack: $unpack\n" if (defined $unpack);
