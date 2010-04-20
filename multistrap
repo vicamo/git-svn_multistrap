@@ -31,7 +31,7 @@ use vars qw/ $progname $ourversion $dstrap $extra @aptsources $mirror
  $component $repo @dirs @touch %sources $section %keys $host $key $value
  $type $file $config $tidy $noauth $keyring %keyrings $deflist $cfgdir
  @extrapkgs @includes %source $setupsh $configsh $omitrequired $dryrun
- /;
+ $omitpreinst /;
 
 setlocale(LC_MESSAGES, "");
 textdomain("multistrap");
@@ -141,9 +141,10 @@ $dpkgdir = "var/lib/dpkg/";   # state
 
 if (not -d "$dir")
 {
-	my $ret = mkdir ("$dir");
+	my $ret = system ("mkdir -p $dir");
+	$ret /= 256 if (defined $ret);
 	die ("Unable to create directory '$dir' $!\n")
-		if ($ret == 0);
+		if ($ret != 0);
 }
 $dir = `realpath $dir`;
 chomp ($dir);
@@ -296,7 +297,7 @@ die (sprintf (_g("apt update failed. Exit value: %d\n"), ($retval/256)))
 	if ($retval != 0);
 my @s = ();
 $str = "";
-if (not defined $omitrequired)
+if ((defined $omitrequired) and ($omitrequired eq "false"))
 {
 	print "Calculating required packages.\n";
 	my $required = &get_required_debs;
@@ -312,9 +313,12 @@ foreach my $sect (sort keys %packages)
 	foreach my $pkg (@list)
 	{
 		next if ($packages{$pkg} =~ /^\s*$/);
-		# remove a duplicate from required list.
-		$str =~ s/$packages{$pkg}//;
-		$str .= "$packages{$pkg}/$suites{$sect} ";
+		my @long=split (/ /, $packages{$sect});
+		foreach my $l (@long)
+		{
+			chomp ($l);
+			$str .= " $l/$suites{$sect}" if ((defined $l) and ($l !~ /^\s*$/));
+		}
 	}
 }
 chomp($str);
@@ -327,13 +331,15 @@ foreach my $a (@s)
 	$uniq{$a}++;
 }
 $str = join (' ', sort keys %uniq);
-print "apt-get -y $config_str install $str\n";
+my $forceyes="";
+$forceyes="--force-yes" if (defined $noauth);
+print "apt-get $forceyes -y $config_str install $str\n";
 $retval = system ("apt-get -y $config_str install $str");
 die (sprintf (_g("apt download failed. Exit value: %d\n"),($retval/256)))
 	if ($retval != 0);
 system ("$setupsh") if (defined $setupsh);
 &force_unpack if ($unpack eq "true");
-system ("cp $configsh $dir/") if (defined $configsh);
+system ("cp $configsh $dir/") if ((defined $configsh) and (-f "$configsh"));
 system ("touch ${dir}${libdir}lists/lock");
 &native if (not defined ($foreign));
 &add_extra_packages;
@@ -585,7 +591,7 @@ sub check_bin_sh
 	}
 	else
 	{
-		die ("No shell.");
+		die ("No shell in $dir.");
 	}
 }
 
@@ -648,8 +654,10 @@ sub native
 	opendir (PRI, "${dir}/var/lib/dpkg/info") or return;
 	my @preinsts=grep(/\.preinst$/, readdir PRI);
 	closedir (PRI);
+	printf (_g("I: Running preinst scripts with 'upgrade' argument.\n"));
 	foreach my $script (sort @preinsts)
 	{
+		next if ($script =~ /bash/);
 		system ("$str $env chroot $dir /var/lib/dpkg/info/$script upgrade");
 	}
 }
@@ -817,19 +825,23 @@ sub cascade
 				and (not defined $unpack));
 			$configsh = lc($keys{$section}{'configscript'})
 				if (defined $keys{$section}{'configscript'}
-				and (not defined $configsh) and (-x $configsh));
+				and (not defined $configsh));
+			undef $configsh if ((defined $configsh) and (-x $configsh));
 			$setupsh = lc($keys{$section}{'setupscript'})
 				if (defined $keys{$section}{'setupscript'}
-				and (not defined $setupsh) and (-x $setupsh));
+				and (not defined $setupsh));
+			undef $setupsh if ((defined $setupsh) and (-x $setupsh));
 			$omitrequired = lc($keys{$section}{'omitrequired'})
 				if (defined $keys{$section}{'omitrequired'}
 				and (not defined $omitrequired));
+			$omitpreinst = lc($keys{$section}{'omitpreinst'})
+				if (defined $keys{$section}{'omitpreinst'}
+				and (not defined $omitpreinst));
 			$tidy++ if ((defined $keys{$section}{'cleanup'}) and
 				($keys{$section}{'cleanup'} eq "true") and
 				(defined $tidy));
 			$noauth++ if ((defined $keys{$section}{'noauth'}) and
-				($keys{$section}{'noauth'} eq "true") and
-				(defined $noauth));
+				($keys{$section}{'noauth'} eq "true"));
 			$sourcedir = $keys{$section}{'retainsources'} if 
 				((defined $keys{$section}{'retainsources'}) and
 				(-d $keys{$section}{'retainsources'}));

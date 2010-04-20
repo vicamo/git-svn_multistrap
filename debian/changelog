@@ -1,3 +1,14 @@
+multistrap (2.1.2) experimental; urgency=low
+
+  * Add support to avoid running preinst scripts and
+     always ignore the bash preinst which does not respect
+     DEBIAN_FRONTEND=noninteractive 
+  * fix handling of omitrequired and configsh when empty
+  * add force-yes when using noauth
+  * split the package list even if using only spaces, not commas
+
+ -- Neil Williams <codehelp@debian.org>  Tue, 20 Apr 2010 16:46:49 +0100
+
 multistrap (2.1.1) experimental; urgency=low
 
   * Add --simulate mode for cascading configuration testing.
