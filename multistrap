@@ -31,7 +31,7 @@ use vars qw/ $progname $ourversion $dstrap $extra @aptsources $mirror
  $component $repo @dirs @touch %sources $section %keys $host $key $value
  $type $file $config $tidy $noauth $keyring %keyrings $deflist $cfgdir
  @extrapkgs @includes %source $setupsh $configsh $omitrequired $dryrun
- $omitpreinst @reinstall $tgzname /;
+ $omitpreinst @reinstall $tgzname %uniq /;
 
 setlocale(LC_MESSAGES, "");
 textdomain("multistrap");
@@ -237,7 +237,14 @@ foreach $repo (sort keys %suites)
 		mkdir "$dir/${cachedir}archives/partial";
 	}
 }
-foreach my $aptsrc (@aptsources)
+%uniq=();
+foreach my $line (@debootstrap)
+{
+	$uniq{$line}++;
+}
+@debootstrap=sort keys %uniq;
+%uniq=();
+foreach my $aptsrc (@debootstrap)
 {
 	if (defined $deflist)
 	{
@@ -248,7 +255,7 @@ foreach my $aptsrc (@aptsources)
 	}
 	elsif (-d "${dir}etc/apt/")
 	{
-		open (SOURCES, ">>${dir}etc/apt/sources.list.d/multistrap.sources.list") 
+		open (SOURCES, ">>${dir}etc/apt/sources.list.d/multistrap-${aptsrc}.list") 
 			or die _g("Cannot open sources list"). $!;
 		$mirror = $sources{$aptsrc};
 		$suite = $suites{$aptsrc};
@@ -324,7 +331,7 @@ foreach my $sect (sort keys %packages)
 chomp($str);
 $str .= " " . join (' ', values %keyrings) . " "; 
 chomp($str);
-my %uniq=();
+%uniq=();
 @s = split (' ', $str);
 foreach my $a (@s)
 {
@@ -353,11 +360,28 @@ if (-l "${dir}lib64" ) {
 	}
 	else
 	{
-		printf (_g("\nMultistrap system installed successfully in %s.\n\n"), $dir);
+		printf (_g("\nMultistrap system installed successfully in %s.\n"), $dir);
 	}
 }
+# cleanly separate the debootstrap sources from the final apt sources.
 unlink ("${dir}etc/apt/sources.list.d/multistrap.sources.list")
 	if (-f "${dir}etc/apt/sources.list.d/multistrap.sources.list");
+opendir (LISTS, "${dir}etc/apt/sources.list.d/")
+	or die (_g("Cannot read apt sources list directory.\n"));
+my @sources=grep(!m:\.\.?$:, readdir LISTS);
+closedir (LISTS);
+foreach my $filelist (@sources)
+{
+	next if (-d $filelist);
+	unlink ("${dir}etc/apt/sources.list.d/$filelist");
+}
+%uniq=();
+foreach my $line (@aptsources)
+{
+	$uniq{$line}++;
+}
+@aptsources=sort keys %uniq;
+%uniq=();
 foreach my $aptsrc (@aptsources)
 {
 	if (defined $deflist)
@@ -369,7 +393,7 @@ foreach my $aptsrc (@aptsources)
 	}
 	elsif (-d "${dir}etc/apt/")
 	{
-		open (SOURCES, ">>${dir}etc/apt/sources.list.d/multistrap.sources.list") 
+		open (SOURCES, ">>${dir}etc/apt/sources.list.d/multistrap-${aptsrc}.list") 
 			or die _g("Cannot open sources list"). $!;
 		$mirror = $sources{$aptsrc};
 		$suite = $suites{$aptsrc};
@@ -381,6 +405,8 @@ END
 		close SOURCES;
 	}
 }
+# altered the sources, so get apt to update.
+(not defined $tidy) ? system ("apt-get $config_str update") : &tidy_apt;
 
 if (defined $tgzname)
 {
@@ -391,12 +417,14 @@ if (defined $tgzname)
 	$retval /= 256;
 	if ($retval == 0)
 	{
-		printf (_g("\nRemoving build directory: '%s'\n\n"), $dir);
+		printf (_g("\nRemoving build directory: '%s'\n"), $dir);
 		system ("rm -rf $dir/*");
 	}
-	printf (_g("\nMultistrap system packaged successfully as %s.\n\n"), $tgzname);
+	my $final_path=`realpath $dir/../$tgzname`;
+	chomp ($final_path);
+	printf (_g("\nMultistrap system packaged successfully as %s.\n"), $final_path);
 }
-
+print "\n";
 exit 0;
 
 sub our_version {

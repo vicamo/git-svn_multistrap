@@ -10,8 +10,10 @@ multistrap (2.1.2) experimental; urgency=low
   * Add support for reinstalling packages known to fail due to preinst
     problems.
   * Add a simple C file to test the compiler inside the chroot
+  * sort duplicate sources list entries and use dedicated sources list
+    files
 
- -- Neil Williams <codehelp@debian.org>  Tue, 20 Apr 2010 18:15:22 +0100
+ -- Neil Williams <neilw@toby-churchill.com>  Wed, 21 Apr 2010 15:23:23 +0100
 
 multistrap (2.1.1) experimental; urgency=low
 
