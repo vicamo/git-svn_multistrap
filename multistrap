@@ -422,7 +422,7 @@ if (defined $tgzname)
 	}
 	my $final_path=`realpath $dir/../$tgzname`;
 	chomp ($final_path);
-	printf (_g("\nMultistrap system packaged successfully as %s.\n"), $final_path);
+	printf (_g("\nMultistrap system packaged successfully as '%s'.\n"), $final_path);
 }
 print "\n";
 exit 0;
