@@ -335,7 +335,7 @@ chomp($str);
 $str .= " " . join (' ', values %keyrings) . " "; 
 chomp($str);
 %uniq=();
-@s = split (' ', $str);
+@s = split (/ /, $str);
 foreach my $a (@s)
 {
 	$uniq{$a}++;
