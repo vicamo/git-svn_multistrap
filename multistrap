@@ -402,6 +402,7 @@ foreach my $aptsrc (@aptsources)
 		$suite = $suites{$aptsrc};
 		$component = (defined $components{$aptsrc}) ? $components{$aptsrc} : "main";
 		if (defined $mirror and defined $suite)
+		{
 			print SOURCES<<END;
 deb $mirror $suite $component
 deb-src $mirror $suite $component
