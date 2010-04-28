@@ -31,7 +31,7 @@ use vars qw/ $progname $ourversion $dstrap $extra @aptsources $mirror
  $component $repo @dirs @touch %sources $section %keys $host $key $value
  $type $file $config $tidy $noauth $keyring %keyrings $deflist $cfgdir
  @extrapkgs @includes %source $setupsh $configsh $omitrequired $dryrun
- $omitpreinst @reinstall $tgzname %uniq /;
+ $omitpreinst @reinstall $tgzname %uniq %required /;
 
 setlocale(LC_MESSAGES, "");
 textdomain("multistrap");
@@ -81,6 +81,11 @@ while( @ARGV ) {
 $msg = sprintf (_g("Need a configuration file - use %s -f\n"), $progname);
 die ($msg)
 	if (not defined $file);
+
+$cachedir = "var/cache/apt/"; # archives
+$libdir = "var/lib/apt/";     # lists
+$etcdir = "etc/apt/";         # sources
+$dpkgdir = "var/lib/dpkg/";   # state
 
 $cfgdir=dirname($file);
 cascade($file);
@@ -134,10 +139,6 @@ unless (keys %sources and @aptsources)
 
 # Translators: fields are: programname, architecture, host architecture.
 printf (_g("%s building %s multistrap on '%s'\n"), $progname, $arch, $host);
-$cachedir = "var/cache/apt/"; # archives
-$libdir = "var/lib/apt/";     # lists
-$etcdir = "etc/apt/";         # sources
-$dpkgdir = "var/lib/dpkg/";   # state
 
 if (not -d "$dir")
 {
@@ -307,11 +308,11 @@ die (sprintf (_g("apt update failed. Exit value: %d\n"), ($retval/256)))
 	if ($retval != 0);
 my @s = ();
 $str = "";
-if ((defined $omitrequired) and ($omitrequired eq "false"))
+if ((not defined $omitrequired) or ($omitrequired eq "false"))
 {
 	print "Calculating required packages.\n";
-	my $required = &get_required_debs;
-	$str .= join (' ', @$required);
+	&get_required_debs;
+	$str .= join (' ', keys %required);
 	chomp($str);
 }
 $str .= " ";
@@ -347,7 +348,7 @@ print "apt-get $forceyes -y $config_str install $str\n";
 $retval = system ("apt-get -y $config_str install $str");
 die (sprintf (_g("apt download failed. Exit value: %d\n"),($retval/256)))
 	if ($retval != 0);
-system ("$setupsh") if (defined $setupsh);
+system ("$setupsh $dir $arch") if (defined $setupsh);
 &force_unpack if ($unpack eq "true");
 system ("cp $configsh $dir/") if ((defined $configsh) and (-f "$configsh"));
 system ("touch ${dir}${libdir}lists/lock");
@@ -726,8 +727,8 @@ sub get_required_debs
 	# from debootstrap/functions
 	# needs to be run after the first apt-get install so that
 	# Packages files exist
-	my @required=();
-	my @debs=();
+	%required=();
+	my %listfiles=();
 	opendir (PKGS, "${dir}${libdir}lists/")
 		or die sprintf(_g("Cannot open %s directory. %s\n"),
 			"${dir}${libdir}lists/", $!);
@@ -738,20 +739,19 @@ sub get_required_debs
 		my $s = lc($strap);
 		foreach my $l (@lists)
 		{
-			push (@required, $l);
+			$listfiles{$l}++;
 		}
 	}
-	foreach my $file (@required)
+	foreach my $file (keys %listfiles)
 	{
 		my $fh = IO::File->new("${dir}${libdir}lists/$file");
 		my $parser = Parse::Debian::Packages->new( $fh );
 		while (my %package = $parser->next)
 		{
 			next unless $package{'Priority'} eq "required";
-			push @debs, $package{'Package'};
+			$required{$package{'Package'}}++;
 		}
 	}
-	return \@debs;
 }
 
 # inherited from apt-cross
@@ -947,7 +947,7 @@ sub _g {
 }
 
 sub dump_config {
-	print "Debootstrap: ".join (", ", sort @debootstrap)."\n";
+	print "Bootstrap: ".join (", ", sort @debootstrap)."\n";
 	print "Apt sources: ".join (", ", sort @aptsources)."\n";
 	print "Includes: ".join (", ", sort @includes)."\n";
 	print "Sources: ".join (", ", sort values %sources)."\n";

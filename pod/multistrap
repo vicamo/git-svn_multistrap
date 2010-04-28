@@ -37,19 +37,20 @@ Example configuration:
  # same as --tidy-up option if set to true
  cleanup=true
  # same as --no-auth option if set to true
- # keyring packages listed in each debootstrap will
+ # keyring packages listed in each bootstrap will
  # still be installed.
  noauth=false
  # extract all downloaded archives (default is true)
  unpack=true
- # aptsources is a list of sections to be used for downloading packages
- # and lists and placed in the /etc/apt/sources.list.d/multistrap.sources.list      
+ # aptsources is a list of sections to be used
+ # the /etc/apt/sources.list.d/multistrap.sources.list      
  # of the target. Order is not important
  aptsources=Grip Updates
  # the order of sections is not important.
- # the debootstrap option determines which repository
- # is used to calculate the list of Priority: required packages.
- debootstrap=Debian
+ # the bootstrap option determines which repository
+ # is used to calculate the list of Priority: required packages
+ # and which packages go into the rootfs.
+ bootstrap=Debian
  
  [Debian]
  packages=
