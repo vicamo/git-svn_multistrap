@@ -29,9 +29,9 @@ _multistrap()
 	cur="${COMP_WORDS[COMP_CWORD]}"
 	prev="${COMP_WORDS[COMP_CWORD-1]}"
 	help="-h -? --help --version "
-	arch="-a --arch "
-	opts="-f --file"
-	dir="-d --directory"
+	arch="-a --arch --source-dir --tidy-up "
+	opts="-f --file --no-auth --dry-run --simulate "
+	dir="-d --directory "
 	case "$prev" in
 			-@(a|-arch))
 			COMPREPLY=( $( _get_dpkg_cross_list $cur ) )
