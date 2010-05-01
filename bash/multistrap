@@ -22,23 +22,23 @@ _get_dpkg_cross_list()
 		| cut -d':' -f2 | sed -e 's/None, //' | sed -e 's/,//g'
 }
 
-_em_multistrap()
+_multistrap()
 {
-	local cur prev opts cmds help machine arch quiet
+	local cur prev opts cmds help dir arch quiet
 	COMPREPLY=()
 	cur="${COMP_WORDS[COMP_CWORD]}"
 	prev="${COMP_WORDS[COMP_CWORD-1]}"
 	help="-h -? --help --version "
 	arch="-a --arch "
 	opts="-f --file"
-	machine=""
+	dir="-d --directory"
 	case "$prev" in
 			-@(a|-arch))
 			COMPREPLY=( $( _get_dpkg_cross_list $cur ) )
 			;;
 			*)
-		COMPREPLY=( $(compgen -W "${arch}${help}${opts}${machine}${cmds}" -- ${cur}) )
+		COMPREPLY=( $(compgen -W "${arch}${help}${opts}${dir}${cmds}" -- ${cur}) )
 		;;
 	esac
 }
-complete -F _em_multistrap -o default em_multistrap
+complete -F _multistrap -o default multistrap
