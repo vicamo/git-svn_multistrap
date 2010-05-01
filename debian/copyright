@@ -1,20 +1,16 @@
 This package was downloaded from
-http://buildd.emdebian.org/svn/browser/current/host/trunk/emdebian-rootfs/trunk/
+http://buildd.emdebian.org/svn/browser/current/host/trunk/multistrap/trunk/
 
 Files: debian/*
 Licence: GPL-3+
-Copyright: 2006-2007 Neil Williams <codehelp@debian.org>
+Copyright: 2006-2010 Neil Williams <codehelp@debian.org>
 
 Files: *
 Licence: GPL-3+
-Copyright:   Copyright 2006-2008 Neil Williams <codehelp@debian.org>
+Copyright:   Copyright 2006-2010 Neil Williams <codehelp@debian.org>
              Copyright 2008 Hands.com Ltd <phil@hands.com>
              Copyright 2006-2007 Wookey <wookey@debian.org>
-             Copyright 1998-2006 Craig Small <csmall@debian.org>
-             Copyright 1999-2003 Julian Gilbey <jdg@debian.org>
-             Copyright 2002,2003 Colin Walters <walters@debian.org>
              Copyright 2001-2006 Junichi Uekawa <dancer@netfort.gr.jp>
-             Copyright 2001-2005 Anthony Towns <ajt@debian.org>
 
 License:
 
