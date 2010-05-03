@@ -344,12 +344,12 @@ print "apt-get $forceyes -y $config_str install $str\n";
 $retval = system ("apt-get -y $config_str install $str");
 die (sprintf (_g("apt download failed. Exit value: %d\n"),($retval/256)))
 	if ($retval != 0);
-system ("$setupsh $dir $arch") if ((defined $setupsh) and (-f $setupsh));
 &force_unpack if ($unpack eq "true");
-system ("cp $configsh $dir/") if ((defined $configsh) and (-f $configsh));
 system ("touch ${dir}${libdir}lists/lock");
 &native if (not defined ($foreign));
+system ("$setupsh $dir $arch") if ((defined $setupsh) and (-f $setupsh));
 &add_extra_packages;
+system ("cp $configsh $dir/") if ((defined $configsh) and (-f $configsh));
 (not defined $tidy) ? system ("apt-get $config_str update") : &tidy_apt;
 if (-l "${dir}lib64" ) {
 	my $r = readlink "${dir}lib64";
@@ -357,10 +357,6 @@ if (-l "${dir}lib64" ) {
 	{
 		print _g("ERR: ./lib64 -> /lib symbolic link reset to ./lib after unpacking.\n");
 		printf (_g("ERR: Some files may have been unpacked outside %s!\n"), $dir);
-	}
-	else
-	{
-		printf (_g("\nMultistrap system installed successfully in %s.\n"), $dir);
 	}
 }
 # cleanly separate the debootstrap sources from the final apt sources.
@@ -410,7 +406,7 @@ END
 }
 # altered the sources, so get apt to update.
 (not defined $tidy) ? system ("apt-get $config_str update") : &tidy_apt;
-
+printf (_g("\nMultistrap system installed successfully in %s.\n"), $dir);
 if (defined $tgzname)
 {
 	printf (_g("\nCompressing multistrap system in '%s' to a tarball called: '%s'.\n"), $dir, $tgzname);
@@ -882,11 +878,11 @@ sub cascade
 			$tgzname = lc($keys{$section}{'tarballname'})
 				if (defined $keys{$section}{'tarballname'}
 				and (not defined $tgzname));
-			undef $configsh if ((defined $configsh) and (-x $configsh));
+			undef $configsh if ((defined $configsh) and (not -x $configsh));
 			$setupsh = lc($keys{$section}{'setupscript'})
 				if (defined $keys{$section}{'setupscript'}
 				and (not defined $setupsh));
-			undef $setupsh if ((defined $setupsh) and (-x $setupsh));
+			undef $setupsh if ((defined $setupsh) and (not -x $setupsh));
 			$omitrequired = lc($keys{$section}{'omitrequired'})
 				if (defined $keys{$section}{'omitrequired'}
 				and (not defined $omitrequired));
