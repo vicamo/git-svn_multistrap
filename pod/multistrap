@@ -123,7 +123,7 @@ used in Emdebian Crush, although in a different implementation. Using
 the cascading configuration support, particular machine:variant
 combinations can be supported by simple changes on the command line.
 
-Setting C<compress> to true also packs up the final filesystem into
+Setting C<tarballname> to true also packs up the final filesystem into
 a tarball.
 
 =head1 Secure Apt

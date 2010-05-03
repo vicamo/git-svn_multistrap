@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: emdebian-rootfs 2.0.4\n"
-"POT-Creation-Date: 2010-05-03 14:10+0200\n"
+"POT-Creation-Date: 2010-05-03 17:16+0200\n"
 "PO-Revision-Date: 2009-11-14 17:16+0000\n"
 "Last-Translator: Américo Monteiro <a_monteiro@netcabo.pt>\n"
 "Language-Team: Portuguese <traduz@debianpt.org>\n"
@@ -375,7 +375,7 @@ msgstr ""
 #. type: textblock
 #: pod/multistrap:126
 msgid ""
-"Setting C<compress> to true also packs up the final filesystem into a "
+"Setting C<tarballname> to true also packs up the final filesystem into a "
 "tarball."
 msgstr ""
 
