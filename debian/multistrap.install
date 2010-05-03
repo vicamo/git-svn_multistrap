@@ -13,3 +13,5 @@ update-rc.d ./usr/share/multistrap/
 bash/multistrap ./etc/bash_completion.d/
 cross/*.conf ./usr/share/multistrap/
 cross/test.c ./usr/share/multistrap/
+cross/setcrossarch.sh ./usr/share/multistrap/
+cross/functions ./usr/share/multistrap/

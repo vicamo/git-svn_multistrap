@@ -3,12 +3,12 @@ Section: utils
 Priority: optional
 Maintainer: Neil Williams <codehelp@debian.org>
 Uploaders: Wookey <wookey@debian.org>
-Build-Depends: cdbs, debhelper (>= 5), po4a (>= 0.37.1), po-debconf
-Build-Depends-Indep: devscripts, gnupg, intltool
+Build-Depends: cdbs, debhelper (>= 5), po4a (>= 0.37.1)
+Build-Depends-Indep: intltool
 Standards-Version: 3.8.4
 Homepage: http://www.emdebian.org/multistrap
-Vcs-Browser: http://buildd.emdebian.org/svn/browser/current/host/trunk/emdebian-rootfs/trunk/
-Vcs-Svn: http://buildd.emdebian.org/repos/current/host/trunk/emdebian-rootfs/trunk/
+Vcs-Browser: http://buildd.emdebian.org/svn/browser/current/host/trunk/multistrap/trunk/
+Vcs-Svn: http://buildd.emdebian.org/repos/current/host/trunk/multistrap/trunk/
 
 Package: multistrap
 Section: admin

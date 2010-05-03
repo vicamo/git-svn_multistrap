@@ -160,10 +160,6 @@ system ("mkdir -p ${dir}etc/apt/preferences.d/")
 system ("mkdir -p ${dir}usr/share/info/")
 	if (not -d "${dir}usr/share/info/");
 system ("touch ${dir}usr/share/info/dir");
-#system ("mkdir -p ${dir}/usr/share/doc/gcc-4.2-base/")
-#	if (not -d "${dir}/usr/share/doc/gcc-4.2-base/");
-#system ("touch ${dir}/usr/share/doc/gcc-4.2-base/.copyright");
-#system ("touch ${dir}/usr/share/doc/gcc-4.2-base/#changelog.Debian.gz");
 my $msg = sprintf(_g("Unable to create directory '%s'\n"), "${dir}etc/apt/preferences.d/");
 die ($msg)
 	if (not -d "${dir}etc/apt/preferences.d/");
@@ -348,9 +344,9 @@ print "apt-get $forceyes -y $config_str install $str\n";
 $retval = system ("apt-get -y $config_str install $str");
 die (sprintf (_g("apt download failed. Exit value: %d\n"),($retval/256)))
 	if ($retval != 0);
-system ("$setupsh $dir $arch") if (defined $setupsh);
+system ("$setupsh $dir $arch") if ((defined $setupsh) and (-f $setupsh));
 &force_unpack if ($unpack eq "true");
-system ("cp $configsh $dir/") if ((defined $configsh) and (-f "$configsh"));
+system ("cp $configsh $dir/") if ((defined $configsh) and (-f $configsh));
 system ("touch ${dir}${libdir}lists/lock");
 &native if (not defined ($foreign));
 &add_extra_packages;
@@ -863,7 +859,6 @@ sub cascade
 		$value = $key if (ref $key eq "HASH");
 		$keys{$type} = $value;
 	}
-	
 	foreach $section (sort keys %keys)
 	{
 		if ($section eq "general")

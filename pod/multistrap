@@ -11,13 +11,23 @@ multistrap - extends debootstrap for multiple repository support
 
 =head1 Options
 
-(These options can also be set in the configuration file.)
+--dry-run - collate all the configuration settings and output a
+bare summary.
+
+--simulate - same as --dry-run
+
+(The following options can also be set in the configuration file.)
 
 --tidy-up - remove apt cache data, downloaded Packages files and
 the apt package cache. Same as cleanup=true.
 
 --no-auth - allow the use of unauthenticated repositories. Same
 as noauth=true
+
+--sourcedir DIR - move the contents of var/cache/apt/archives/ from
+inside the chroot to the specified external directory. Same as
+retainsources=DIR
+
 
 =head1 Description
 
@@ -46,10 +56,10 @@ Example configuration:
  # the /etc/apt/sources.list.d/multistrap.sources.list      
  # of the target. Order is not important
  aptsources=Grip Updates
- # the order of sections is not important.
  # the bootstrap option determines which repository
  # is used to calculate the list of Priority: required packages
  # and which packages go into the rootfs.
+ # The order of sections is not important.
  bootstrap=Debian
  
  [Debian]

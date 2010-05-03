@@ -1,6 +1,7 @@
 multistrap (2.1.4) experimental; urgency=low
 
-  * Add support for multiple cross-toolchains in the chroot
+  * Add support for configurable single cross-toolchains in
+    the chroot - using the dpkg-cross default_arch, if any.
 
  -- Neil Williams <codehelp@debian.org>  Fri, 30 Apr 2010 18:11:16 +0100
 
