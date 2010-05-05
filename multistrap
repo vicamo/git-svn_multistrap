@@ -31,7 +31,7 @@ use vars qw/ $progname $ourversion $dstrap $extra @aptsources $mirror
  $component $repo @dirs @touch %sources $section %keys $host $key $value
  $type $file $config $tidy $noauth $keyring %keyrings $deflist $cfgdir
  @extrapkgs @includes %source $setupsh $configsh $omitrequired $dryrun
- $omitpreinst @reinstall $tgzname %uniq %required /;
+ $omitpreinst @reinstall $tgzname %uniq %required $check @check %uniq /;
 
 setlocale(LC_MESSAGES, "");
 textdomain("multistrap");
@@ -940,6 +940,17 @@ sub _g {
 sub dump_config {
 	print "Bootstrap: ".join (", ", sort @debootstrap)."\n";
 	print "Apt sources: ".join (", ", sort @aptsources)."\n";
+	@check=();
+	%uniq=();
+	push @check, @debootstrap;
+	push @check, @aptsources;
+	foreach my $sect (@check) { $uniq{$sect}++; }
+	foreach my $sect (sort keys %uniq)
+	{
+		if (not exists $keys{$sect}) {
+			$msg = sprintf (_g("ERROR: The '%s' section is not defined.\n"), $sect);
+		}
+	}
 	print "Includes: ".join (", ", sort @includes)."\n";
 	print "Sources: ".join (", ", sort values %sources)."\n";
 	print "Packages: ".join (", ", sort values %packages)."\n";
@@ -958,5 +969,9 @@ sub dump_config {
 	print "tidy_apt: $tidy\n" if (defined $tidy);
 	print "no_authentication: $noauth\n" if (defined $noauth);
 	print "source_dir: $sourcedir\n" if (defined $sourcedir);
+	if (defined $msg) {
+		warn ("\n$msg");
+		exit 1;
+	}
 	exit 0;
 }
