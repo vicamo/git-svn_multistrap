@@ -2,11 +2,12 @@
 
 =head1 Name
 
-multistrap - extends debootstrap for multiple repository support
+multistrap - debootstrap replacement for multiple repository support
 
 =head1 Synopsis
 
  multistrap [-a ARCH] [-d DIR] -f CONFIG_FILE
+ multistrap [--simulate] -f CONFIG_FILE
  multistrap -?|-h|--help|--version
 
 =head1 Options
@@ -36,8 +37,9 @@ extended to provide support for multiple repositories, using a
 configuration file to specify the relevant suites, architecture,
 extra packages and the mirror to use for each debootstrap.
 
-The aim is to create a complete debootstrap with all packages
-installed and configured, instead of just the base system.
+The aim is to create a complete bootstrap / root filesystem with
+all packages installed and configured, instead of just the base
+system.
 
 Example configuration:
 
@@ -55,7 +57,7 @@ Example configuration:
  # aptsources is a list of sections to be used
  # the /etc/apt/sources.list.d/multistrap.sources.list      
  # of the target. Order is not important
- aptsources=Grip Updates
+ aptsources=Debian
  # the bootstrap option determines which repository
  # is used to calculate the list of Priority: required packages
  # and which packages go into the rootfs.
@@ -74,33 +76,12 @@ the specified mirror, for armel in '/opt/multistrap/'.
 Specify a package to extend the multistrap to include that package and
 all dependencies.
 
-Specify more debootstraps by adding new sections. Section names are used
-in the debootstrap general option.
+Specify more bootstraps by adding new sections. Section names are used
+in the bootstrap general option.
 
 Section names are case-insensitive.
 
-e.g. change
-
- debootstrap=Debian
-
-to
-
- debootstrap=Grip
- 
-then add the new section for Grip:
- 
- [Grip]
- packages=locales
- keyring=emdebian-archive-keyring
- source=http://www.emdebian.org/grip
- suite=lenny
-
-Setting Grip instead of Debian in the debootstrap option, as above,
-will provide a base system from Emdebian Grip 1.0 and locate any
-missing dependencies in Debian 5.0 Lenny, allowing you to add any
-package(s) you need from Debian that are not yet in Emdebian Grip.
-
-All dependencies are resolved only by apt, using all configured
+All dependencies are resolved only by apt, using all bootstrap
 repositories, to use only the most recent and most suitable
 dependencies. Note that multistrap turns off Install-Recommends
 so if the multistrap needs a package that is only a Recommended
@@ -110,6 +91,21 @@ packages line explicitly.
 'Architecture' and 'directory' can be overridden on the command line.
 Other general options have command line options, except debootstrap
 itself.
+
+=Repositories
+
+C<aptsources> lists the sections which should be used to create the
+F</etc/apt/sources.list.d/multistrap.list> apt sources in the final
+system. Not all C<aptsources> have to appear in the C<bootstrap>
+section if you have some internal or local sources which are not
+accessible to the installed root filesystem.
+
+C<bootstrap> lists the sections which will be used to create the
+multistrap itself. Only packages listed in C<bootstrap> will be
+downloaded and unpacked by multistrap.
+
+Make sure C<bootstrap> lists all sections you need for apt to be
+able to find all the packages to be unpacked for the multistrap.
 
 =head1 General settings:
 

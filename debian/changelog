@@ -1,9 +1,11 @@
-multistrap (2.1.4) experimental; urgency=low
+multistrap (2.1.4) unstable; urgency=low
 
   * Add support for configurable single cross-toolchains in
     the chroot - using the dpkg-cross default_arch, if any.
+  * Clarify documentation of bootstrap and aptsources sections
+    (Closes: #579626)
 
- -- Neil Williams <codehelp@debian.org>  Fri, 30 Apr 2010 18:11:16 +0100
+ -- Neil Williams <codehelp@debian.org>  Wed, 05 May 2010 19:49:22 +0100
 
 multistrap (2.1.3) experimental; urgency=low
 
