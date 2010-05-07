@@ -6,8 +6,9 @@ multistrap (2.1.4) experimental; urgency=low
     (Closes: #579626)
   * Clarify error reporting in the --simulate option, warn if
     sections are not defined. (Closes: #579627)
+  * [INTL:vi] Vietnamese program translation update (Closes: #580623)
 
- -- Neil Williams <codehelp@debian.org>  Wed, 05 May 2010 20:13:27 +0100
+ -- Neil Williams <codehelp@debian.org>  Fri, 07 May 2010 12:54:20 +0100
 
 multistrap (2.1.3) experimental; urgency=low
 

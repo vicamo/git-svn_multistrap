@@ -1,13 +1,13 @@
-# Vietnamese translation for the Multistrap messages in emdebian-rootfs.
+# Vietnamese translation for Multistrap.
 # Copyright © 2010 Free Software Foundation, Inc.
 # Clytie Siddall <clytie@riverland.net.au>, 2010.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: emdebian-rootfs 2.0.5\n"
+"Project-Id-Version: multistrap 2.1.4\n"
 "Report-Msgid-Bugs-To: multistrap@packages.debian.org\n"
 "POT-Creation-Date: 2010-04-05 20:59+0100\n"
-"PO-Revision-Date: 2010-04-01 16:04+0930\n"
+"PO-Revision-Date: 2010-05-07 18:01+0930\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -25,13 +25,15 @@ msgstr "Không rõ tuỳ chọn"
 msgid "Need a configuration file - use %s -f\n"
 msgstr "Yêu cầu một tập tin cấu hình: dùng « %s -f »\n"
 
-#. Translators: fields are: programname, versionstring, configfile.
-#: ../multistrap:88 ../multistrap:93
+#: ../multistrap:88
+#: ../multistrap:93
 #, perl-format
+#. Translators: fields are: programname, versionstring, configfile.
 msgid "%s %s using %s\n"
 msgstr "%s %s dùng %s\n"
 
-#: ../multistrap:99 ../multistrap:103
+#: ../multistrap:99
+#: ../multistrap:103
 #, perl-format
 msgid "Defaulting architecture to native: %s\n"
 msgstr "Mặc định là sử dụng kiến trúc sở hữu : %s\n"
@@ -42,31 +44,31 @@ msgid "Using foreign architecture: %s\n"
 msgstr "Dùng kiến trúc ngoài: %s\n"
 
 #: ../multistrap:113
-#, fuzzy, perl-format
+#, perl-format
 msgid ""
 "No sources defined for a foreign multistrap.\n"
 "\tUsing your existing apt sources. To use different sources,\n"
 "\tlist them with aptsources= in '%s'."
 msgstr ""
-"Chưa xác định nguồn cho một multistrap lạ\n"
+"Chưa xác định nguồn cho một multistrap lạ.\n"
 "\tĐang sử dụng các nguồn apt đã có.\n"
 "\tĐể sử dụng nguồn khác, thêm vào « %s »\n"
 "\tdùng cú pháp « aptsources= »."
 
-#. Translators: fields are: programname, architecture, host architecture.
 #: ../multistrap:121
 #, perl-format
+#. Translators: fields are: programname, architecture, host architecture.
 msgid "%s building %s multistrap on '%s'\n"
 msgstr "%s đang xây dựng multistrap %s trên « %s »\n"
 
+#: ../multistrap:149
+#, perl-format
 #. system ("mkdir -p ${dir}/usr/share/doc/gcc-4.2-base/")
 #. if (not -d "${dir}/usr/share/doc/gcc-4.2-base/");
 #. system ("touch ${dir}/usr/share/doc/gcc-4.2-base/.copyright");
 #. system ("touch ${dir}/usr/share/doc/gcc-4.2-base/#changelog.Debian.gz");
-#: ../multistrap:149
-#, perl-format
 msgid "Unable to create directory '%s'\n"
-msgstr ""
+msgstr "Không thể tạo thư mục « %s »\n"
 
 #: ../multistrap:185
 msgid "INF: ./lib64 -> /lib symbolic link reset to ./lib.\n"
@@ -77,7 +79,10 @@ msgstr ""
 msgid "INF: Setting ./lib64 -> ./lib symbolic link.\n"
 msgstr "TIN: Đang đặt liên kết tượng trưng « ./lib64 » -> « ./lib ».\n"
 
-#: ../multistrap:228 ../multistrap:235 ../multistrap:337 ../multistrap:344
+#: ../multistrap:228
+#: ../multistrap:235
+#: ../multistrap:337
+#: ../multistrap:344
 msgid "Cannot open sources list"
 msgstr "Không mở được danh sách nguồn"
 
@@ -124,17 +129,18 @@ msgstr ""
 "Hệ thống multistrap đã được cài đặt vào %s.\n"
 "\n"
 
-#: ../multistrap:382 ../multistrap:433 ../multistrap:596
+#: ../multistrap:382
+#: ../multistrap:433
+#: ../multistrap:596
 msgid "Cannot read apt archives directory.\n"
 msgstr "Không đọc được thư mục kho lưu apt.\n"
 
-# msgid "Cannot read apt archives directory.\n"
-# msgstr "Không đọc được thư mục kho lưu apt.\n"
 #: ../multistrap:399
 msgid "I: Calculating obsolete packages\n"
 msgstr "TIN: Đang tính các gói cũ\n"
 
-#: ../multistrap:416 ../multistrap:422
+#: ../multistrap:416
+#: ../multistrap:422
 #, perl-format
 msgid "I: Removing %s\n"
 msgstr "TIN: Đang gỡ bỏ %s\n"
@@ -142,7 +148,7 @@ msgstr "TIN: Đang gỡ bỏ %s\n"
 #: ../multistrap:440
 #, perl-format
 msgid "Using directory %s for unpacking operations\n"
-msgstr ""
+msgstr "Đang sử dụng thư mục %s cho thao tác giải nén\n"
 
 #: ../multistrap:443
 #, perl-format
@@ -154,7 +160,8 @@ msgstr "TIN: Đang giải nén %s...\n"
 msgid ""
 "dpkg -X failed with error code %s\n"
 "Skipping...\n"
-msgstr ""
+msgstr "« dpkg -X » bị lỗi với mã lỗi %s\n"
+"Đang bỏ qua...\n"
 
 #: ../multistrap:496
 #, perl-format
@@ -176,18 +183,16 @@ msgid "I: Unpacking complete.\n"
 msgstr "TIN: Hoàn tất mở gói.\n"
 
 #: ../multistrap:542
-#, fuzzy
 msgid "ERR: ./bin/sh symbolic link does not exist.\n"
-msgstr "LỖI: Liên kết tượng trưng « /lib64 » -> « ./lib » bị ghi đè bởi %s\n"
+msgstr "LỖI: Liên kết tượng trưng « ./bin/sh » không tồn tại.\n"
 
 #: ../multistrap:545
-#, fuzzy
 msgid "INF: Setting ./bin/sh -> ./bin/dash\n"
-msgstr "TIN: Đang đặt liên kết tượng trưng « ./lib64 » -> « ./lib ».\n"
+msgstr "TIN: Đang đặt liên kết tượng trưng « ./bin/sh -> ./bin/dash »\n"
 
 #: ../multistrap:552
 msgid "INF: ./bin/dash not found. Setting ./bin/sh -> ./bin/bash\n"
-msgstr ""
+msgstr "TIN: Không tìm thấy « ./bin/dash ». Đang đặt « ./bin/sh -> ./bin/bash »\n"
 
 #: ../multistrap:571
 msgid "I: Tidying up apt cache and list data.\n"
@@ -234,8 +239,9 @@ msgstr "không mở được thư mục danh sách nguồn « apt sources.list �
 msgid "cannot open /etc/apt/sources.list.d/%s %s"
 msgstr "không mở được /etc/apt/sources.list.d/%s %s"
 
+#, fuzzy
 #: ../multistrap:691
-#, fuzzy, perl-format
+#, perl-format
 msgid ""
 "\n"
 "%s version %s\n"
@@ -310,17 +316,17 @@ msgstr ""
 " %s -?|-h|--help|--version\n"
 "\n"
 "Lệnh:\n"
-" -f|--file TỆP_CẤU_HÌNH:  path the the multistrap configuration file.\n"
+" -f|--file TỆP_CẤU_HÌNH:  đường dẫn đến tập tin cấu hình multistrap\n"
 "\n"
 "Tuỳ chọn:\n"
-" -a|--arch KIẾN_TRÚC: có quyền cao hơn kiến trúc trong tập tin cấu hình.\n"
-" -d|--dir ĐƯỜNG_DẪN:          có quyền cao hơn thư mục tập tin cấu hình.\n"
+" -a|--arch KIẾN_TRÚC: có quyền cao hơn kiến trúc trong tập tin cấu hình\n"
+" -d|--dir ĐƯỜNG_DẪN:          có quyền cao hơn thư mục tập tin cấu hình\n"
 "    --no-auth:           đừng dùng Secure Apt (Apt Bảo Mật) cho bất cứ kho "
 "lưu nào\n"
 "    --tidy-up:           gỡ bỏ dữ liệu nhớ tạm apt và các kho lưu đã tải "
-"về.\n"
+"về\n"
 " -?|-h|--help:          hiển thị trợ giúp này, sau đó thoát\n"
-" --version:              hiển thị thông tin về phiên bản, sau đó thoát\n"
+" --version:              hiển thị trợ giúp này, sau đó thoát\n"
 "\n"
 "%s mở rộng debootstrap để cung cấp hỗ trợ đa kho lưu,\n"
 "dùng một tập tin cấu hình để ghi rõ những bộ ứng dụng, kiến trúc,\n"
@@ -338,7 +344,10 @@ msgstr ""
 "noauth=false\n"
 "# trích ra mọi kho lưu đã tải về (mặc định là đúng)\n"
 "unpack=true\n"
-"# Thứ tự phần cũng không quan trọng.\n"
+"# aptsources là một danh sách các phần cần dùng để tải về các goi và danh sách,\n"
+"# mà nằm trong « /etc/apt/sources.list.d/multistrap.sources.list »\n"
+"# của đích. Thứ tự phần cũng không quan trọng.\n"
+"aptsources=Grip Updates\n"
 "# Tuỳ chọn debootstrap quyết định kho lưu nào được dùng\n"
 "# để tính danh sách các gói có mức ưu tiên « Yêu cầu »\n"
 "debootstrap=Debian\n"
@@ -351,7 +360,7 @@ msgstr ""
 "\n"
 "Cấu hình này có kết quả là một debootstrap Debian lenny\n"
 "hoàn toàn thông thường từ máy nhân bản đưa ra,\n"
-"cho armel trong « /opt/multistrap/ ».\n"
+"cho kiến trúc armel trong « /opt/multistrap/ ».\n"
 "\n"
 "'Architecture' (kiến trúc) và 'directory' (thư mục)\n"
 "cũng có thể được ghi đè trên dòng lệnh.\n"
