@@ -784,7 +784,7 @@ Usage:
  %s -?|-h|--help|--version
 
 Command:
- -f|--file CONFIG_FILE:  path the the multistrap configuration file.
+ -f|--file CONFIG_FILE:  path to the multistrap configuration file.
 
 Options:
  -a|--arch ARCHITECTURE: override the configuration file architecture.
