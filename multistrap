@@ -108,6 +108,11 @@ foreach my $inc (@includes)
 }
 
 &dump_config if (defined $dryrun);
+if (not defined $dir or not defined $arch)
+{
+	&dump_config;
+	exit 3;
+}
 
 # Translators: fields are: programname, versionstring, configfile.
 printf (_g("%s %s using %s\n"), $progname, $ourversion, $file);
@@ -796,7 +801,7 @@ Options:
  -?|-h|--help:           print this usage message and exit
  --version:              print this usage message and exit
 
-%s extends debootstrap to provide support for multiple
+%s replaces debootstrap to provide support for multiple
 repositories, using a configuration file to specify the relevant suites,
 architecture, extra packages and the mirror to use for each repository.
 
@@ -807,7 +812,7 @@ directory=/opt/multistrap/
 # same as --tidy-up option if set to true
 cleanup=true
 # same as --no-auth option if set to true
-# keyring packages listed in each debootstrap will
+# keyring packages listed in each bootstrap will
 # still be installed.
 noauth=false
 # extract all downloaded archives (default is true)
@@ -817,9 +822,9 @@ unpack=true
 # of the target. Order is not important
 aptsources=Grip Updates
 # the order of sections is not important.
-# the debootstrap option determines which repository
+# the bootstrap option determines which repository
 # is used to calculate the list of Priority: required packages.
-debootstrap=Debian
+bootstrap=Debian
 
 [Debian]
 packages=
@@ -838,7 +843,7 @@ only the most recent suitable version from all configured repositories.
 
 General settings:
 
-'directory' specifies the top level directory where the debootstrap
+'directory' specifies the top level directory where the bootstrap
 will be created - it is not packed into a .tgz once complete.
 
 "), $progname, $ourversion, $progname, $progname, $progname)
@@ -899,6 +904,8 @@ sub cascade
 				(-d $keys{$section}{'retainsources'}));
 			my @d = split(' ', lc($keys{$section}{'debootstrap'}));
 			push @debootstrap, @d;
+			my @b = split(' ', lc($keys{$section}{'bootstrap'}));
+			push @debootstrap, @b;
 			my @a = split (' ', lc($keys{$section}{'aptsources'}));
 			push @aptsources, @a;
 			my @i = split (' ', lc($keys{$section}{'include'}));
@@ -938,6 +945,12 @@ sub _g {
 }
 
 sub dump_config {
+	if (not defined $dir or not defined $arch)
+	{
+		my $msg = sprintf(_g("The supplied configuration file '%s'".
+		" cannot be parsed correctly."), $file);
+		warn ("\n$msg\n");
+	}
 	print "Bootstrap: ".join (", ", sort @debootstrap)."\n";
 	print "Apt sources: ".join (", ", sort @aptsources)."\n";
 	@check=();
@@ -948,7 +961,7 @@ sub dump_config {
 	foreach my $sect (sort keys %uniq)
 	{
 		if (not exists $keys{$sect}) {
-			$msg = sprintf (_g("ERROR: The '%s' section is not defined.\n"), $sect);
+			$msg .= sprintf (_g("ERROR: The '%s' section is not defined.\n"), $sect);
 		}
 	}
 	print "Includes: ".join (", ", sort @includes)."\n";
@@ -960,8 +973,16 @@ sub dump_config {
 		if (scalar @extrapkgs > 0);
 	print "reinstall: ".join (", ", sort (@reinstall))."\n"
 		if (scalar @reinstall > 0);
-	print "arch: $arch\n";
-	print "dir: $dir\n";
+	if (defined $arch) {
+		print "arch: $arch\n";
+	} else {
+		$msg .= sprintf(_g("Cannot determine architecture from '%s'.\n"), $file);
+	}
+	if (defined $dir) {
+		print "dir: $dir\n";
+	} else {
+		$msg .= sprintf(_g("Cannot determine directory from '%s'.\n"), $file);
+	}
 	print "unpack: $unpack\n" if (defined $unpack);
 	print "configscript: $configsh\n" if (defined $configsh);
 	print "setupscript: $setupsh\n" if (defined $setupsh);
@@ -970,7 +991,7 @@ sub dump_config {
 	print "no_authentication: $noauth\n" if (defined $noauth);
 	print "source_dir: $sourcedir\n" if (defined $sourcedir);
 	if (defined $msg) {
-		warn ("\n$msg");
+		warn ("\n$msg\n");
 		exit 1;
 	}
 	exit 0;

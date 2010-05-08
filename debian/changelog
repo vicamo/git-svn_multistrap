@@ -1,4 +1,4 @@
-multistrap (2.1.4) experimental; urgency=low
+multistrap (2.1.4) unstable; urgency=low
 
   * Add support for configurable single cross-toolchains in
     the chroot - using the dpkg-cross default_arch, if any.
@@ -7,8 +7,10 @@ multistrap (2.1.4) experimental; urgency=low
   * Clarify error reporting in the --simulate option, warn if
     sections are not defined. (Closes: #579627)
   * [INTL:vi] Vietnamese program translation update (Closes: #580623)
+  * Report parsing errors in config files (Closes: #580687)
+  * Move from experimental into unstable. 
 
- -- Neil Williams <codehelp@debian.org>  Fri, 07 May 2010 12:54:20 +0100
+ -- Neil Williams <codehelp@debian.org>  Sat, 08 May 2010 11:38:58 +0100
 
 multistrap (2.1.3) experimental; urgency=low
 

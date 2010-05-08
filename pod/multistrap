@@ -35,7 +35,7 @@ retainsources=DIR
 multistrap provides a debootstrap-like method based on apt and
 extended to provide support for multiple repositories, using a
 configuration file to specify the relevant suites, architecture,
-extra packages and the mirror to use for each debootstrap.
+extra packages and the mirror to use for each bootstrap.
 
 The aim is to create a complete bootstrap / root filesystem with
 all packages installed and configured, instead of just the base
@@ -89,10 +89,9 @@ dependency, the recommended package needs to be specified in the
 packages line explicitly.
 
 'Architecture' and 'directory' can be overridden on the command line.
-Other general options have command line options, except debootstrap
-itself.
+Some other general options also have command line options.
 
-=Repositories
+=head1 Repositories
 
 C<aptsources> lists the sections which should be used to create the
 F</etc/apt/sources.list.d/multistrap.list> apt sources in the final
@@ -107,12 +106,17 @@ downloaded and unpacked by multistrap.
 Make sure C<bootstrap> lists all sections you need for apt to be
 able to find all the packages to be unpacked for the multistrap.
 
+(Older versions of multistrap supported the same option under the
+C<debootstrap> name - this spelling is still supported but new
+configuration files should be C<bootstrap> instead.
+
 =head1 General settings:
 
-'directory' specifies the top level directory where the debootstrap
+'directory' specifies the top level directory where the bootstrap
 will be created - it is not packed into a .tgz once complete.
 
-As with debootstrap, multistrap will continue after errors.
+As with debootstrap, multistrap will continue after errors, as long
+as the configuration file can be correctly parsed.
 
 multistrap also implements the machine:variant support originally
 used in Emdebian Crush, although in a different implementation. Using
@@ -121,6 +125,11 @@ combinations can be supported by simple changes on the command line.
 
 Setting C<tarballname> to true also packs up the final filesystem into
 a tarball.
+
+Note that multistrap ignores any unrecognised options in the config
+file - this allows for backwards-compatible behaviour as well as
+overloading the multistrap config files to support other tools
+(like pbuilder).
 
 =head1 Secure Apt
 
