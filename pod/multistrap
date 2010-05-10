@@ -290,8 +290,7 @@ C<setup.sh> can be called, passing the location and architecture of
 the root filesystem, so that other fine tuning can take place. At
 this stage, any operations inside the rootfs must not try to execute
 any binaries within the rootfs. As the final stage of the multistrap
-process, C<config.sh> is copied into the F</machine/$MACHINE/default/>
-directory of the rootfs.
+process, C<config.sh> is copied into the root directory of the rootfs.
 
 One advantage of using machine:variant support is that the entire
 rootfilesystem can be managed by a single call to multistrap - this
@@ -302,8 +301,8 @@ be called in the variant configuration file (General section):
 
  [General]
  include=/path/to/general.conf
- setup_script=/path/to/setup.sh
- config_script=/path/to/config.sh
+ setupscript=/path/to/setup.sh
+ configscript=/path/to/config.sh
 
 
 =head1 Restricting package selection
