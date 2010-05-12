@@ -326,9 +326,17 @@ which version of a package is installed should the package exist in
 two sources with different suites.
 
 When using this support in Lenny, ensure that each section uses the
-codename (etch, lenny, squeeze, sid) instead of the suite (oldstable,
-stable, testing, sid) for the C<suite> configuration item as the version
-of apt in Lenny and previous can only use the codename.
+suite (oldstable, stable, testing, sid) and B<not> the codename
+(etch, lenny, squeeze, sid) in the C<suite> configuration item
+as the version of apt in Lenny and previous cannot use the codename.
+
+To test, on Lenny, try:
+
+ $ sudo apt-get install apt/stable
+
+Compare with
+
+ $ sudo apt-get install apt/lenny
 
 =head1 Recommends TOIMPLEMENT:
 
