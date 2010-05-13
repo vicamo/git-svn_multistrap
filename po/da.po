@@ -1,0 +1,401 @@
+# Danish translation multistrap.
+# Copyright (C) 2010 multistrap & Joe Hansen.
+# This file is distributed under the same license as the multistrap package.
+# Joe Hansen <joedalton2@yahoo.dk>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: multistrap\n"
+"Report-Msgid-Bugs-To: multistrap@packages.debian.org\n"
+"POT-Creation-Date: 2010-05-05 20:22+0100\n"
+"PO-Revision-Date: 2010-05-13 17:30+01:00\n"
+"Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"
+"Language-Team: Danish <debian-l10n-danish@lists.debian.org> \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../multistrap:78
+msgid "Unknown option"
+msgstr "Ukendt tilvalg"
+
+#: ../multistrap:81
+#, perl-format
+msgid "Need a configuration file - use %s -f\n"
+msgstr "Kræver en konfigurationsfil - brug %s -f\n"
+
+#. Translators: fields are: programname, versionstring, configfile.
+#: ../multistrap:106 ../multistrap:113
+#, perl-format
+msgid "%s %s using %s\n"
+msgstr "%s %s ved brug af %s\n"
+
+#: ../multistrap:119 ../multistrap:123
+#, perl-format
+msgid "Defaulting architecture to native: %s\n"
+msgstr "Falder tilbage på oprindelig arkitektur: %s\n"
+
+#: ../multistrap:127
+#, perl-format
+msgid "Using foreign architecture: %s\n"
+msgstr "Bruger fremmed arkitektur: %s\n"
+
+#: ../multistrap:133
+#, perl-format
+msgid ""
+"No sources defined for a foreign multistrap.\n"
+"\tUsing your existing apt sources. To use different sources,\n"
+"\tlist them with aptsources= in '%s'."
+msgstr ""
+"Ingen kilder defineret for en fremmed multistrap.\n"
+"\tBruger dine eksisterende apt-kilder. For at bruge andre kilder,\n"
+"\tvis dem med aptsources= i '%s'."
+
+#. Translators: fields are: programname, architecture, host architecture.
+#: ../multistrap:141
+#, perl-format
+msgid "%s building %s multistrap on '%s'\n"
+msgstr "%s bygger %s multistrap på '%s'\n"
+
+#: ../multistrap:163
+#, perl-format
+msgid "Unable to create directory '%s'\n"
+msgstr "Kunne ikke oprette mappe '%s'\n"
+
+#: ../multistrap:199
+msgid "INF: ./lib64 -> /lib symbolic link reset to ./lib.\n"
+msgstr "INF: ./lib64 -> /lib symbolsk henvisning nulstil til ./lib.\n"
+
+#: ../multistrap:209
+msgid "INF: Setting ./lib64 -> ./lib symbolic link.\n"
+msgstr "INF: Setting ./lib64 -> ./lib symbolic link.\n"
+
+#: ../multistrap:249 ../multistrap:256 ../multistrap:386 ../multistrap:393
+msgid "Cannot open sources list"
+msgstr "Kan ikke åbne kildeliste"
+
+#: ../multistrap:284
+#, perl-format
+msgid "I: Installing %s\n"
+msgstr "I: Installerer %s\n"
+
+#: ../multistrap:301
+#, perl-format
+msgid "Getting package lists: apt-get %s update\n"
+msgstr "Henter pakkelister: apt-get %s opdater\n"
+
+#: ../multistrap:303
+#, perl-format
+msgid "apt update failed. Exit value: %d\n"
+msgstr "apt update mislykkedes. Afslutningsværdi: %d\n"
+
+#: ../multistrap:345
+#, perl-format
+msgid "apt download failed. Exit value: %d\n"
+msgstr "apt-hentning mislykkedes. Afslutningsværdi: %d\n"
+
+#: ../multistrap:358
+msgid "ERR: ./lib64 -> /lib symbolic link reset to ./lib after unpacking.\n"
+msgstr "ERR: ./lib64 -> /lib symbolsk henvisning nulstil til ./lib efter udpakning.\n"
+
+#: ../multistrap:359
+#, perl-format
+msgid "ERR: Some files may have been unpacked outside %s!\n"
+msgstr "ERR: Nogle filer er måske blevet udpakket udenfor %s!\n"
+
+#: ../multistrap:366
+msgid "Cannot read apt sources list directory.\n"
+msgstr "Kan ikke læse apt-kildernes listemappe.\n"
+
+#: ../multistrap:409
+#, perl-format
+msgid ""
+"\n"
+"Multistrap system installed successfully in %s.\n"
+msgstr ""
+"\n"
+"Multistrap system installeret i %s.\n"
+
+#: ../multistrap:412
+#, perl-format
+msgid ""
+"\n"
+"Compressing multistrap system in '%s' to a tarball called: '%s'.\n"
+msgstr ""
+"\n"
+"Pakker multistrap system i '%s' til en tarball kaldt: '%s'.\n"
+
+#: ../multistrap:419
+#, perl-format
+msgid ""
+"\n"
+"Removing build directory: '%s'\n"
+msgstr ""
+"\n"
+"Fjerner kompileringsmappe: '%s'\n"
+
+#: ../multistrap:424
+#, perl-format
+msgid ""
+"\n"
+"Multistrap system packaged successfully as '%s'.\n"
+msgstr ""
+"\n"
+"Multistrap system pakket som '%s'.\n"
+
+#: ../multistrap:453 ../multistrap:504 ../multistrap:667
+msgid "Cannot read apt archives directory.\n"
+msgstr "Kan ikke læse apt-arkivets mappe.\n"
+
+#: ../multistrap:470
+msgid "I: Calculating obsolete packages\n"
+msgstr "I: Kalkulerer forældede pakker\n"
+
+#: ../multistrap:487 ../multistrap:493
+#, perl-format
+msgid "I: Removing %s\n"
+msgstr "I: Fjerner %s\n"
+
+#: ../multistrap:511
+#, perl-format
+msgid "Using directory %s for unpacking operations\n"
+msgstr "Bruger mappe %s til udpakningshandlinger\n"
+
+#: ../multistrap:514
+#, perl-format
+msgid "I: Extracting %s...\n"
+msgstr "I: Udpakker %s...\n"
+
+#: ../multistrap:527
+#, perl-format
+msgid ""
+"dpkg -X failed with error code %s\n"
+"Skipping...\n"
+msgstr ""
+"dpkg -X mislykkedes med fejlkode %s\n"
+"Springer over...\n"
+
+#: ../multistrap:567
+#, perl-format
+msgid " -> Processing conffiles for %s\n"
+msgstr " -> Behandler conffiler for %s\n"
+
+#: ../multistrap:588
+#, perl-format
+msgid "ERR: lib64 -> ./lib symbolic link clobbered by %s\n"
+msgstr "ERR: lib64 -> ./lib symbolsk henvisning knust af %s\n"
+
+#: ../multistrap:591
+msgid "INF: lib64 -> /lib symbolic link reset to ./lib.\n"
+msgstr "INF: lib64 -> /lib symbolsk henvisning nulstil til ./lib.\n"
+
+#: ../multistrap:598
+msgid "I: Unpacking complete.\n"
+msgstr "I: Udpakning færdig.\n"
+
+#: ../multistrap:613
+msgid "ERR: ./bin/sh symbolic link does not exist.\n"
+msgstr "ERR: ./bin/sh symbolsk henvisning eksisterer ikke.\n"
+
+#: ../multistrap:616
+msgid "INF: Setting ./bin/sh -> ./bin/dash\n"
+msgstr "INF: Indstiller ./bin/sh -> ./bin/dash\n"
+
+#: ../multistrap:623
+msgid "INF: ./bin/dash not found. Setting ./bin/sh -> ./bin/bash\n"
+msgstr "INF: ./bin/dash ikke fundet. Indstiller ./bin/sh -> ./bin/bash\n"
+
+#: ../multistrap:642
+msgid "I: Tidying up apt cache and list data.\n"
+msgstr "I: Rydder op i apt-mellemlager og listedata.\n"
+
+#: ../multistrap:646
+msgid "Cannot read apt lists directory.\n"
+msgstr "Kan ikke læse apt-listemapper.\n"
+
+#: ../multistrap:655
+msgid "Cannot read apt cache directory.\n"
+msgstr "Kan ikke læse apt-mellemlagermappe.\n"
+
+#: ../multistrap:685
+msgid "I: Native mode - configuring unpacked packages . . .\n"
+msgstr "I: Standardtilstand - konfigurerer upakkede pakker...\n"
+
+#: ../multistrap:692
+#, perl-format
+msgid ""
+"I: dpkg configuration settings:\n"
+"\t%s\n"
+msgstr ""
+"I: Opsætning af dpkg-konfiguration:\n"
+"\t%s\n"
+
+#: ../multistrap:699
+msgid "I: Running preinst scripts with 'upgrade' argument.\n"
+msgstr "I: Kører preinst-skripter med argumentet 'upgrade'.\n"
+
+#: ../multistrap:725
+#, perl-format
+msgid "Cannot open %s directory. %s\n"
+msgstr "Kan ikke åben mappen %s. %s\n"
+
+#: ../multistrap:756
+#, perl-format
+msgid "cannot open apt sources list. %s"
+msgstr "kan ikke åbne apt-kildeliste. %s"
+
+#: ../multistrap:762
+#, perl-format
+msgid "cannot open apt sources.list directory %s\n"
+msgstr "kan ikke åbne apt-sources-list-mappe %s\n"
+
+#: ../multistrap:767
+#, perl-format
+msgid "cannot open /etc/apt/sources.list.d/%s %s"
+msgstr "kan ikke åbne /etc/apt/sources.list.d/%s %s"
+
+#: ../multistrap:779
+#, perl-format
+msgid ""
+"\n"
+"%s version %s\n"
+"\n"
+"Usage:\n"
+" %s [-a ARCH] [-d DIR] -f CONFIG_FILE\n"
+" %s -?|-h|--help|--version\n"
+"\n"
+"Command:\n"
+" -f|--file CONFIG_FILE:  path the the multistrap configuration file.\n"
+"\n"
+"Options:\n"
+" -a|--arch ARCHITECTURE: override the configuration file architecture.\n"
+" -d|--dir PATH:          override the configuration file directory.\n"
+"    --no-auth:           do not use Secure Apt for any repositories\n"
+"    --tidy-up:           remove apt cache data and downloaded archives.\n"
+"    --dry-run:           output the configuration and exit\n"
+"    --simulate:          output the configuration and exit\n"
+" -?|-h|--help:           print this usage message and exit\n"
+" --version:              print this usage message and exit\n"
+"\n"
+"%s extends debootstrap to provide support for multiple\n"
+"repositories, using a configuration file to specify the relevant suites,\n"
+"architecture, extra packages and the mirror to use for each repository.\n"
+"\n"
+"Example configuration:\n"
+"[General]\n"
+"arch=armel\n"
+"directory=/opt/multistrap/\n"
+"# same as --tidy-up option if set to true\n"
+"cleanup=true\n"
+"# same as --no-auth option if set to true\n"
+"# keyring packages listed in each debootstrap will\n"
+"# still be installed.\n"
+"noauth=false\n"
+"# extract all downloaded archives (default is true)\n"
+"unpack=true\n"
+"# aptsources is a list of sections to be used for downloading packages\n"
+"# and lists and placed in the /etc/apt/sources.list.d/multistrap.sources."
+"list\n"
+"# of the target. Order is not important\n"
+"aptsources=Grip Updates\n"
+"# the order of sections is not important.\n"
+"# the debootstrap option determines which repository\n"
+"# is used to calculate the list of Priority: required packages.\n"
+"debootstrap=Debian\n"
+"\n"
+"[Debian]\n"
+"packages=\n"
+"source=http://ftp.uk.debian.org/debian\n"
+"keyring=debian-archive-keyring\n"
+"suite=lenny\n"
+"\n"
+"This will result in a completely normal debootstrap of Debian lenny from\n"
+"the specified mirror, for armel in /opt/multistrap/.\n"
+"\n"
+"'Architecture' and 'directory' can be overridden on the command line.\n"
+"\n"
+"Specify a package to extend the debootstap to include that package and\n"
+"all dependencies. Dependencies will be calculated by apt so as to use\n"
+"only the most recent suitable version from all configured repositories.\n"
+"\n"
+"General settings:\n"
+"\n"
+"'directory' specifies the top level directory where the debootstrap\n"
+"will be created - it is not packed into a .tgz once complete.\n"
+"\n"
+msgstr ""
+"\n"
+"%s version %s\n"
+"\n"
+"Brug:\n"
+" %s [-a ARKI] [-d MAPPE] -f KONFIG_FIL\n"
+" %s -?|-h|--help|--version\n"
+"\n"
+"Kommando:\n"
+" -f|--file KONFIG_FIL:   path the the multistrap configuration file.\n"
+"\n"
+"Tilvalg:\n"
+" -a|--arch ARKITEKTUR:   overskriv konfigurationsfilarkitekturen.\n"
+" -d|--dir STI:           overskriv konfigurationsfilmappen.\n"
+"    --no-auth:           brug ikke Secure Apt for arkiver\n"
+"    --tidy-up:           fjern apt-mellemlagerdata og hentede arkiver.\n"
+"    --dry-run:           vis konfigurationen og afslut\n"
+"    --simulate:          vis konfigurationen og afslut\n"
+" -?|-h|--help:           udskriv denne hjælpebesked og afslut\n"
+" --version:              udskriv denne hjælpebesked og afslut\n"
+"\n"
+"%s udvider debootstrap til at understøtte flere arkiver,\n"
+"ved at bruge en konfigurationsfil til at angive de relevante kodepakker,\n"
+"arktektur, ekstra pakker og spejlarkivet til brug for hvert arkiv.\n"
+"\n"
+"Eksempel på konfiguration:\n"
+"[Generelt]\n"
+"arch=armel\n"
+"directory=/opt/multistrap/\n"
+"# svarer til tilvalget --tidy-up hvis angivet som true\n"
+"cleanup=true\n"
+"# svarer til tilvalget --no-auth hvis angivet som true\n"
+"# keyring-pakker vist i hvert debootstrap vil stadig\n"
+"# blive installeret.\n"
+"noauth=false\n"
+"# udpakker alle hentede arkiver (standard er true)\n"
+"unpack=true\n"
+"# aptsources er en liste over afsnit, som skal bruges til at hente pakker\n"
+"# og lister, og er placeret i mållisten\n"
+"# /etc/apt/sources.list.d/multistrap.sources. Rækkefølge er ikke vigtig\n"
+"aptsources=Grip opdaterer\n"
+"# rækkefølgen af afsnit er ikke vigtig.\n"
+"# tilvalget debootstrap afgør hvilket arkiv der bruges til at \n"
+"# kalkulere prioritetslisten: Krævede pakker.\n"
+"debootstrap=Debian\n"
+"\n"
+"[Debian]\n"
+"packages=\n"
+"source=http://ftp.uk.debian.org/debian\n"
+"keyring=debian-archive-keyring\n"
+"suite=lenny\n"
+"\n"
+"Dette vil resultere i en fuldstændig normal debootstrap af Debian lenny fra\n"
+"det angivne spejlarkiv, for armel i /opt/multistrap/.\n"
+"\n"
+"'Arkitektur' og 'mappe' kan overskrives på kommandolinjen.\n"
+"\n"
+"Angiv en pakke for at udvide debootstap til at inkludere den ønskede pakke og\n"
+"alle afhængigheder. Afhængigheder vil blive beregnet af apt så kun de nyeste\n"
+"kodepakker fra alle konfigurerede arkiver bruges.\n"
+"\n"
+"Generel opsætning:\n"
+"\n"
+"'directory' angiver overmappen hvor debootstrap vil blive oprettet - \n"
+"hvis den ikke pakkes ind i en .tgz når den først er færdig.\n"
+"\n"
+
+#: ../multistrap:845
+msgid "failed to write usage:"
+msgstr "kunne ikke skrive brug:"
+
+#: ../multistrap:951
+#, perl-format
+msgid "ERROR: The '%s' section is not defined.\n"
+msgstr "FEJL: Afsnittet '%s' er ikke defineret.\n"
+
