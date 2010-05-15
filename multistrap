@@ -351,8 +351,8 @@ die (sprintf (_g("apt download failed. Exit value: %d\n"),($retval/256)))
 	if ($retval != 0);
 &force_unpack if ($unpack eq "true");
 system ("touch ${dir}${libdir}lists/lock");
-&native if (not defined ($foreign));
 system ("$setupsh $dir $arch") if ((defined $setupsh) and (-f $setupsh));
+&native if (not defined ($foreign));
 &add_extra_packages;
 system ("cp $configsh $dir/") if ((defined $configsh) and (-f $configsh));
 (not defined $tidy) ? system ("apt-get $config_str update") : &tidy_apt;
