@@ -4,8 +4,10 @@ multistrap (2.1.5) unstable; urgency=low
     (Closes: #581251)
   * [INTL:da] Danish translation of multistrap program
     (Closes: #581496)
+  * [INTL:pt] Updated Portuguese translation for manpage messages
+    (Closes: #581673)
 
- -- Neil Williams <codehelp@debian.org>  Thu, 13 May 2010 12:17:36 +0100
+ -- Neil Williams <codehelp@debian.org>  Sat, 15 May 2010 09:04:41 +0100
 
 multistrap (2.1.4) unstable; urgency=low
 

@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: emdebian-rootfs 2.0.2\n"
-"POT-Creation-Date: 2010-05-08 11:39+0200\n"
+"POT-Creation-Date: 2010-05-13 19:23+0200\n"
 "PO-Revision-Date: 2009-11-11 21:57+0100\n"
 "Last-Translator: Alexandre Normand <aj.normand@free.fr>\n"
 "Language-Team: French <debian-l10n-french@lists.debian.org>\n"
@@ -800,12 +800,12 @@ msgid ""
 "be called, passing the location and architecture of the root filesystem, so "
 "that other fine tuning can take place. At this stage, any operations inside "
 "the rootfs must not try to execute any binaries within the rootfs. As the "
-"final stage of the multistrap process, C<config.sh> is copied into the F</"
-"machine/$MACHINE/default/> directory of the rootfs."
+"final stage of the multistrap process, C<config.sh> is copied into the root "
+"directory of the rootfs."
 msgstr ""
 
 #. type: textblock
-#: pod/multistrap:296
+#: pod/multistrap:295
 msgid ""
 "One advantage of using machine:variant support is that the entire "
 "rootfilesystem can be managed by a single call to multistrap - this is "
@@ -813,37 +813,37 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: pod/multistrap:300
+#: pod/multistrap:299
 msgid ""
 "To enable machine:variant support, specify the path to the scripts to be "
 "called in the variant configuration file (General section):"
 msgstr ""
 
 #. type: verbatim
-#: pod/multistrap:303
+#: pod/multistrap:302
 #, no-wrap
 msgid ""
 " [General]\n"
 " include=/path/to/general.conf\n"
-" setup_script=/path/to/setup.sh\n"
-" config_script=/path/to/config.sh\n"
+" setupscript=/path/to/setup.sh\n"
+" configscript=/path/to/config.sh\n"
 "\n"
 msgstr ""
 
 #. type: =head1
-#: pod/multistrap:309
+#: pod/multistrap:308
 msgid "Restricting package selection"
 msgstr ""
 
 #. type: textblock
-#: pod/multistrap:311
+#: pod/multistrap:310
 msgid ""
 "C<multistrap> includes Required packages by default, the current list of "
 "packages can be seen using:"
 msgstr ""
 
 #. type: verbatim
-#: pod/multistrap:314
+#: pod/multistrap:313
 #, no-wrap
 msgid ""
 " grep-available  -FPriority 'required' -sPackage\n"
@@ -851,7 +851,7 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: pod/multistrap:316
+#: pod/multistrap:315
 msgid ""
 "If the OmitRequired option is set to true, these packages will not be added "
 "- whilst useful, this option can easily lead to a useless rootfs. Only the "
@@ -860,12 +860,12 @@ msgid ""
 msgstr ""
 
 #. type: =head1
-#: pod/multistrap:322
+#: pod/multistrap:321
 msgid "Collecting packages from specific codenames/suites."
 msgstr ""
 
 #. type: textblock
-#: pod/multistrap:324
+#: pod/multistrap:323
 msgid ""
 "Packages specified explicitly in the configuration sections will be passed "
 "to apt as package/codename so that the configuration controls which version "
@@ -874,21 +874,47 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: pod/multistrap:329
+#: pod/multistrap:328
 msgid ""
-"When using this support in Lenny, ensure that each section uses the codename "
-"(etch, lenny, squeeze, sid) instead of the suite (oldstable, stable, "
-"testing, sid) for the C<suite> configuration item as the version of apt in "
-"Lenny and previous can only use the codename."
+"When using this support in Lenny, ensure that each section uses the suite "
+"(oldstable, stable, testing, sid) and B<not> the codename (etch, lenny, "
+"squeeze, sid) in the C<suite> configuration item as the version of apt in "
+"Lenny and previous cannot use the codename."
+msgstr ""
+
+#. type: textblock
+#: pod/multistrap:333
+msgid "To test, on Lenny, try:"
+msgstr ""
+
+#. type: verbatim
+#: pod/multistrap:335
+#, no-wrap
+msgid ""
+" $ sudo apt-get install apt/stable\n"
+"\n"
+msgstr ""
+
+#. type: textblock
+#: pod/multistrap:337
+msgid "Compare with"
+msgstr ""
+
+#. type: verbatim
+#: pod/multistrap:339
+#, no-wrap
+msgid ""
+" $ sudo apt-get install apt/lenny\n"
+"\n"
 msgstr ""
 
 #. type: =head1
-#: pod/multistrap:334
+#: pod/multistrap:341
 msgid "Recommends TOIMPLEMENT:"
 msgstr ""
 
 #. type: textblock
-#: pod/multistrap:336
+#: pod/multistrap:343
 msgid "Default recommends OFF option to set it as on."
 msgstr ""
 
