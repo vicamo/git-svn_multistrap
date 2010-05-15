@@ -676,10 +676,11 @@ sub tidy_apt
 		{
 			next if (-d $file);
 			next unless ($file =~ /\.deb$/);
-			(defined $sourcedir) ?
-			system ("mv ${dir}${cachedir}archives/$file $sourcedir/$file") :
-			unlink ("${dir}${cachedir}archives/$file");
-			;
+			if (defined $sourcedir) {
+				system ("mv ${dir}${cachedir}archives/$file $sourcedir/$file");
+			} else {
+				unlink ("${dir}${cachedir}archives/$file");
+			}
 		}
 	}
 }
@@ -895,8 +896,7 @@ sub cascade
 				if (defined $keys{$section}{'omitpreinst'}
 				and (not defined $omitpreinst));
 			$tidy++ if ((defined $keys{$section}{'cleanup'}) and
-				($keys{$section}{'cleanup'} eq "true") and
-				(defined $tidy));
+				($keys{$section}{'cleanup'} eq "true"));
 			$noauth++ if ((defined $keys{$section}{'noauth'}) and
 				($keys{$section}{'noauth'} eq "true"));
 			$sourcedir = $keys{$section}{'retainsources'} if 
