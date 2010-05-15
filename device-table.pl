@@ -89,12 +89,14 @@ foreach $line (@list)
 	if ($cmd[9] =~ /-/)
 	{
 		push @seq, "mknod -m $cmd[2] $cmd[0] $cmd[1] $cmd[5] $cmd[6]";
+		push @seq, "chown $cmd[3]:$cmd[4] $cmd[0]";
 	}
 	else
 	{
 		for ($i = 0; $i < $cmd[9]; $i += $cmd[8])
 		{
-			push @seq, "mknod -m $cmd[2] $cmd[0]$i $cmd[1] $cmd[5] $cmd[6]";
+			push @seq, "mknod -m $cmd[2] $cmd[0]$i $cmd[1] $cmd[5] $i";
+			push @seq, "chown $cmd[3]:$cmd[4] $cmd[0]$i";
 		}
 	}
 }
