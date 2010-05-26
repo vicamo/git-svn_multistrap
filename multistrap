@@ -938,6 +938,26 @@ sub cascade
 	}
 	@reinstall=();
 	@reinstall=sort keys %uniq;
+	# check for old versions of apt, <= 0.7.20.2+lenny1
+	my $aptVer = `dpkg-query -W -f='\${Version}' apt`;
+	if (defined $aptVer and ($aptVer ne "")) {
+		chomp ($aptVer);
+		my $retval = system ("dpkg --compare-versions $aptVer '>>' 0.7.20.2+lenny1");
+		$retval /= 256;
+		if ($retval == 1) {
+			foreach my $key (sort keys %suites) {
+				if (($suites{$key} =~ /lenny/)
+				or ($suites{$key} =~ /squeeze/)
+				or ($suites{$key} =~ /sid/)
+				or ($suites{$key} =~ /etch/)) {
+					my $msg = sprintf (_g("Your version of apt is too old to support using a suitename like '%s'.\n" .
+					"You MUST use the suite and multistrap is unable to guess which one you meant.\n" .
+					"Use one of: oldstable, stable, stable-proposed-updates, testing, unstable or experimental.\n"), $suites{$key});
+					die ($msg);
+				}
+			}
+		}
+	}
 }
 
 sub _g {
