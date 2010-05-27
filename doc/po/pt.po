@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: multistrap 2.1.4\n"
-"POT-Creation-Date: 2010-05-27 16:13+0200\n"
+"POT-Creation-Date: 2010-05-27 16:59+0200\n"
 "PO-Revision-Date: 2010-05-14 20:52+0100\n"
 "Last-Translator: Américo Monteiro <a_monteiro@netcabo.pt>\n"
 "Language-Team: Portuguese <traduz@debianpt.org>\n"
@@ -90,9 +90,12 @@ msgstr ""
 
 #. type: textblock
 #: pod/multistrap:28
+#, fuzzy
 msgid ""
 "--sourcedir DIR - move the contents of var/cache/apt/archives/ from inside "
-"the chroot to the specified external directory. Same as retainsources=DIR"
+"the chroot to the specified external directory, then add the Debian source "
+"packages for each used binary. Same as retainsources=DIR If the specified "
+"directory does not exist, nothing is done."
 msgstr ""
 "--sourcedir DIRECTÓRIO - move o conteúdo de var/cache/apt/archives/ de "
 "dentro da chroot para o directório externo especificado. O mesmo que "

@@ -26,9 +26,9 @@ the apt package cache. Same as cleanup=true.
 as noauth=true
 
 --sourcedir DIR - move the contents of var/cache/apt/archives/ from
-inside the chroot to the specified external directory. Same as
-retainsources=DIR
-
+inside the chroot to the specified external directory, then add the
+Debian source packages for each used binary. Same as retainsources=DIR
+If the specified directory does not exist, nothing is done.
 
 =head1 Description
 

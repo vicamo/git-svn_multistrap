@@ -32,7 +32,7 @@ use vars qw/ $progname $ourversion $dstrap $extra @aptsources $mirror
  $type $file $config $tidy $noauth $keyring %keyrings $deflist $cfgdir
  @extrapkgs @includes %source $setupsh $configsh $omitrequired $dryrun
  $omitpreinst @reinstall $tgzname %uniq %required $check @check %uniq
- $explicit_suite $allow_recommends %omitdebsrc /;
+ $explicit_suite $allow_recommends %omitdebsrc @dsclist /;
 
 setlocale(LC_MESSAGES, "");
 textdomain("multistrap");
@@ -347,6 +347,7 @@ foreach my $a (@s)
 	$uniq{$a}++;
 }
 $str = join (' ', sort keys %uniq);
+@dsclist = sort keys %uniq;
 my $forceyes="";
 $forceyes="--force-yes" if (defined $noauth);
 print "apt-get $forceyes -y $config_str install $str\n";
@@ -647,6 +648,27 @@ sub check_bin_sh
 sub tidy_apt
 {
 	print _g("I: Tidying up apt cache and list data.\n");
+	if ($unpack eq "true")
+	{
+		opendir (DEBS, "${dir}${cachedir}/archives/")
+			or die (_g("Cannot read apt archives directory.\n"));
+		my @files=grep(!m:\.\.?$:, readdir DEBS);
+		closedir (DEBS);
+		foreach my $file (@files)
+		{
+			next if (-d $file);
+			next unless ($file =~ /\.deb$/);
+			if (defined $sourcedir) {
+				system ("mv ${dir}${cachedir}archives/$file $sourcedir/$file");
+				my $str = join (" ", @dsclist);
+				print "$str\n";
+				print "(cd $sourcedir; apt-get -d $config_str source $str)";
+				system ("(cd $sourcedir; apt-get -d $config_str source $str)");
+			} else {
+				unlink ("${dir}${cachedir}archives/$file");
+			}
+		}
+	}
 	unlink ("${dir}etc/apt/sources.list")
 		if (-f "${dir}etc/apt/sources.list");
 	opendir (DEBS, "${dir}${libdir}lists/")
@@ -667,23 +689,6 @@ sub tidy_apt
 		next if (-d $file);
 		next unless ($file =~ /\.bin$/);
 		unlink ("${dir}${cachedir}$file");
-	}
-	if ($unpack eq "true")
-	{
-		opendir (DEBS, "${dir}${cachedir}/archives/")
-			or die (_g("Cannot read apt archives directory.\n"));
-		my @files=grep(!m:\.\.?$:, readdir DEBS);
-		closedir (DEBS);
-		foreach my $file (@files)
-		{
-			next if (-d $file);
-			next unless ($file =~ /\.deb$/);
-			if (defined $sourcedir) {
-				system ("mv ${dir}${cachedir}archives/$file $sourcedir/$file");
-			} else {
-				unlink ("${dir}${cachedir}archives/$file");
-			}
-		}
 	}
 }
 
