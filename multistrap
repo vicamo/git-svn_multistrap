@@ -31,13 +31,15 @@ use vars qw/ $progname $ourversion $dstrap $extra @aptsources $mirror
  $component $repo @dirs @touch %sources $section %keys $host $key $value
  $type $file $config $tidy $noauth $keyring %keyrings $deflist $cfgdir
  @extrapkgs @includes %source $setupsh $configsh $omitrequired $dryrun
- $omitpreinst @reinstall $tgzname %uniq %required $check @check %uniq /;
+ $omitpreinst @reinstall $tgzname %uniq %required $check @check %uniq
+ $explicit_suite $allow_recommends %omitdebsrc /;
 
 setlocale(LC_MESSAGES, "");
 textdomain("multistrap");
 $progname = basename($0);
 $ourversion = &our_version();
 $unpack = "true";
+%omitdebsrc=();
 
 while( @ARGV ) {
 	$_= shift( @ARGV );
@@ -264,10 +266,8 @@ foreach my $aptsrc (@debootstrap)
 		$component = (defined $components{$aptsrc}) ? $components{$aptsrc} : "main";
 		if (defined $mirror and defined $suite)
 		{
-			print SOURCES<<END;
-deb $mirror $suite $component
-deb-src $mirror $suite $component
-END
+			print SOURCES "deb $mirror $suite $component\n";
+			print SOURCES "deb-src $mirror $suite $component\n" if (not defined $omitdebsrc{$aptsrc});
 			close SOURCES;
 		}
 	}
@@ -317,8 +317,6 @@ if ((not defined $omitrequired) or ($omitrequired eq "false"))
 	chomp($str);
 }
 $str .= " ";
-# instruct apt to get packages from the specified
-# suites (when the package exists in more than one).
 foreach my $sect (sort keys %packages)
 {
 	my @list = split (' ', $sect);
@@ -329,7 +327,13 @@ foreach my $sect (sort keys %packages)
 		foreach my $l (@long)
 		{
 			chomp ($l);
-			$str .= " $l/$suites{$sect}" if ((defined $l) and ($l !~ /^\s*$/));
+			if (defined $explicit_suite) {
+				# instruct apt to get packages from the specified
+				# suites (when the package exists in more than one).
+				$str .= " $l/$suites{$sect}" if ((defined $l) and ($l !~ /^\s*$/));
+			} else {
+				$str .= " $l" if ((defined $l) and ($l !~ /^\s*$/));
+			}
 		}
 	}
 }
@@ -401,10 +405,8 @@ foreach my $aptsrc (@aptsources)
 		$component = (defined $components{$aptsrc}) ? $components{$aptsrc} : "main";
 		if (defined $mirror and defined $suite)
 		{
-			print SOURCES<<END;
-deb $mirror $suite $component
-deb-src $mirror $suite $component
-END
+			print SOURCES "deb $mirror $suite $component\n";
+			print SOURCES "deb-src $mirror $suite $component\n" if (not defined $omitdebsrc{$aptsrc});
 			close SOURCES;
 		}
 	}
@@ -902,6 +904,10 @@ sub cascade
 			$sourcedir = $keys{$section}{'retainsources'} if 
 				((defined $keys{$section}{'retainsources'}) and
 				(-d $keys{$section}{'retainsources'}));
+			$explicit_suite++ if ((defined $keys{$section}{'explicitsuite'}) and
+				($keys{$section}{'explicitsuite'} eq "true"));
+			$allow_recommends++ if ((defined $keys{$section}{'allowrecommends'}) and
+				($keys{$section}{'allowrecommends'} eq "true"));
 			my @d = split(' ', lc($keys{$section}{'debootstrap'}));
 			push @debootstrap, @d;
 			my @b = split(' ', lc($keys{$section}{'bootstrap'}));
@@ -921,6 +927,8 @@ sub cascade
 				if (not exists $suites{$section});
 			$components{$section}=$keys{$section}{'components'}
 				if (not exists $components{$section});
+			$omitdebsrc{$section}=$keys{$section}{'omitdebsrc'}
+				if (not exists $omitdebsrc{$section});
 			push @reinstall, split (/ /, lc($keys{$section}{'reinstall'}));
 			if (not defined $components{$section})
 			{
@@ -950,10 +958,14 @@ sub cascade
 				or ($suites{$key} =~ /squeeze/)
 				or ($suites{$key} =~ /sid/)
 				or ($suites{$key} =~ /etch/)) {
-					my $msg = sprintf (_g("Your version of apt is too old to support using a suitename like '%s'.\n" .
-					"You MUST use the suite and multistrap is unable to guess which one you meant.\n" .
-					"Use one of: oldstable, stable, stable-proposed-updates, testing, unstable or experimental.\n"), $suites{$key});
-					die ($msg);
+					my $msg = sprintf (_g("ERROR: Your version of apt is too old to support ".
+					"using a codename like '%s'. You MUST use the suite and multistrap is ".
+					"unable to guess which one you meant because suites change over time. " .
+					"Use one of: 'oldstable', 'stable', 'stable-proposed-updates', 'testing',".
+					" 'unstable' or 'experimental'. Alternatively, upgrade to version of apt ".
+					"newer than 0.7.20.2+lenny1.\n"), $suites{$key});
+					system ("echo \"$msg\" | fold -s");
+					exit 5;
 				}
 			}
 		}
@@ -971,8 +983,10 @@ sub dump_config {
 		" cannot be parsed correctly."), $file);
 		warn ("\n$msg\n");
 	}
-	print "Bootstrap: ".join (", ", sort @debootstrap)."\n";
-	print "Apt sources: ".join (", ", sort @aptsources)."\n";
+	# Translators: followed by a list of section names from the config file.
+	printf ("bootstrap:\t"._g("Sections specifying packages for downloading in the bootstrap: ").join (", ", sort @debootstrap)."\n");
+	# Translators: followed by a list of section names from the config file.
+	printf ("aptsources:\t"._g("Sections specifying apt sources in the final system: ").join (", ", sort @aptsources)."\n");
 	@check=();
 	%uniq=();
 	push @check, @debootstrap;
@@ -984,32 +998,71 @@ sub dump_config {
 			$msg .= sprintf (_g("ERROR: The '%s' section is not defined.\n"), $sect);
 		}
 	}
-	print "Includes: ".join (", ", sort @includes)."\n";
-	print "Sources: ".join (", ", sort values %sources)."\n";
-	print "Packages: ".join (", ", sort values %packages)."\n";
-	print "Suites: ".join (", ", sort values %suites)."\n";
-	print "Components: ".join (", ", sort values %components)."\n";
+	if (scalar @includes > 0) {
+		printf ("include:\t"._g("Including configuration file from: ").join (", ", sort @includes)."\n");
+	} else {
+		printf ("include:\t"._g("No included configuration files.\n"));
+	}
+	print "source:  \tSources: ".join (", ", sort values %sources)."\n";
+	my @long=();
+	foreach my $sect (sort keys %packages)
+	{
+		my @list = split (' ', $sect);
+		foreach my $pkg (@list)
+		{
+			next if ($packages{$pkg} =~ /^\s*$/);
+			@long=split (/ /, $packages{$sect});
+		}
+	}
+	print "packages:\tPackages: ".join (", ", sort @long)."\n";
+	print "suites:  \tSuites: ".join (", ", sort values %suites)."\n";
+	print "components\tComponents: ".join (", ", sort values %components)."\n";
+	my $msg="omitdebsrc\t"._g("Omit deb-src from sources.list for sections:");
+	foreach my $omit (sort keys %omitdebsrc) {
+		$msg .= $omitdebsrc{$omit} if (defined $omitdebsrc{$omit});
+	}
+	print "$msg\n";
+	if (defined $explicit_suite) {
+		printf("explicitsuite:\t"._g("Explicit suite selection: Yes\n"));
+	} else {
+		printf("explicitsuite:\t"._g("Explicit suite selection: No - let apt use latest.\n"));
+	}
+	if (defined $allow_recommends) {
+		printf("allowrecommends:\t"._g("Recommended packages are added to the selection.\n"));
+	} else {
+		printf("allowrecommends:\t"._g("Recommended packages are ignored.\n"));
+	}
 	print "Extra Packages: ".join (", ", sort @extrapkgs)."\n"
 		if (scalar @extrapkgs > 0);
 	print "reinstall: ".join (", ", sort (@reinstall))."\n"
 		if (scalar @reinstall > 0);
 	if (defined $arch) {
-		print "arch: $arch\n";
+		printf (_g("arch:   \tArchitecture: %s\n"), $arch);
 	} else {
 		$msg .= sprintf(_g("Cannot determine architecture from '%s'.\n"), $file);
 	}
 	if (defined $dir) {
-		print "dir: $dir\n";
+		printf ("dir:    \t"._g("Output directory: '%s'\n"), $dir);
 	} else {
 		$msg .= sprintf(_g("Cannot determine directory from '%s'.\n"), $file);
 	}
-	print "unpack: $unpack\n" if (defined $unpack);
-	print "configscript: $configsh\n" if (defined $configsh);
-	print "setupscript: $setupsh\n" if (defined $setupsh);
-	print "omitrequired: $omitrequired\n" if (defined $omitrequired);
-	print "tidy_apt: $tidy\n" if (defined $tidy);
-	print "no_authentication: $noauth\n" if (defined $noauth);
-	print "source_dir: $sourcedir\n" if (defined $sourcedir);
+	printf ("unpack:   \t"._g("extract all downloaded archives: %s\n"), $unpack) if (defined $unpack);
+	print "configscript\t: $configsh\n" if (defined $configsh);
+	print "setupscript\t: $setupsh\n" if (defined $setupsh);
+	print "omitrequired\t: $omitrequired\n" if (defined $omitrequired);
+	if (defined $tidy) {
+		printf ("cleanup: \t"._g("remove apt cache data: true\n"));
+	} else {
+		printf ("cleanup: \t"._g("remove apt cache data: false\n"));
+	}
+	if (defined $noauth) {
+		printf ("noauth:   \t"._g("allow the use of unauthenticated repositories: true\n"));
+	} else {
+		printf ("noauth:   \t"._g("allow the use of unauthenticated repositories: false\n"));
+	}
+	if (defined $sourcedir) {
+		printf ("retainsources:\t"._g("Sources will be retained in: %s\n"), $sourcedir);
+	}
 	if (defined $msg) {
 		warn ("\n$msg\n");
 		exit 1;

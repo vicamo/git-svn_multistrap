@@ -54,8 +54,11 @@ Example configuration:
  noauth=false
  # extract all downloaded archives (default is true)
  unpack=true
+ # whether to add the /suite to be explicit about where apt
+ # needs to look for packages. Default is false.
+ explicitsuite=false
  # aptsources is a list of sections to be used
- # the /etc/apt/sources.list.d/multistrap.sources.list      
+ # the /etc/apt/sources.list.d/multistrap.sources.list
  # of the target. Order is not important
  aptsources=Debian
  # the bootstrap option determines which repository
@@ -112,8 +115,23 @@ configuration files should be C<bootstrap> instead.
 
 =head1 General settings:
 
+'arch' can be overridden on the command line using the C<--arch> option.
+
 'directory' specifies the top level directory where the bootstrap
 will be created - it is not packed into a .tgz once complete.
+
+'bootstrap' lists the Sections which will be used to specify the packages
+which will be downloaded (and optionally unpacked) into the bootstrap.
+
+'aptsources' lists the Sections which will be used to specify the apt
+sources in the final system, e.g. if you need to use a local repository
+to generate the rootfs which will not be available to the device at
+runtime, list that section in C<bootstrap> but not in C<aptsources>.
+
+If you want a package to be in the rootfs, it B<must> be specified in
+the C<bootstrap> list under General.
+
+The order of section names in either list is not important.
 
 As with debootstrap, multistrap will continue after errors, as long
 as the configuration file can be correctly parsed.
@@ -130,6 +148,39 @@ Note that multistrap ignores any unrecognised options in the config
 file - this allows for backwards-compatible behaviour as well as
 overloading the multistrap config files to support other tools
 (like pbuilder).
+
+=head1 Section settings
+
+ [Debian]
+ packages=
+ source=http://ftp.uk.debian.org/debian
+ keyring=debian-archive-keyring
+ suite=lenny
+
+The section name (in [] brackets) needs to be unique for this configuration
+file and any configuration files which this file includes. Section names
+are case insensitive (all comparisons happen after conversion to lower
+case).
+
+'packages' is the list of packages to be added when this Section
+is listed in C<bootstrap>.
+
+'source' is the apt source to use for this Section. (To use a local
+source on the same machine, ensure you use C<copy://> not C<file://>,
+so that apt is told to copy the packages into the rootfs instead of
+assuming it can try to download them later - because that "later" will
+never actually happen.
+
+'keyring' lists the package which contains the key used by the source
+listed in this Section. If no keyring is specified, the C<noauth>
+option must be set to B<true>. See Secure Apt.
+
+'suite' is the suite to use from this source. Note that this B<must>
+be the suite, not the codename.
+
+Suites change from time to time: (oldstable, stable, testing, sid)
+The codename (etch, lenny, squeeze, sid) does not change.
+
 
 =head1 Secure Apt
 
@@ -208,7 +259,7 @@ Debconf needs to be told to accept that user interaction is not
 desired:
 
  DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
- 
+
 Perl needs to be told to accept that no locales are available inside
 the chroot and not to complain:
 
@@ -318,12 +369,41 @@ rootfs. Only the packages specified manually in the configuration
 files will be used in the calculations - dependencies of those packages
 will be added but no others.
 
-=head1 Collecting packages from specific codenames/suites.
+=head1 Recommends behaviour
 
-Packages specified explicitly in the configuration sections will be
-passed to apt as package/codename so that the configuration controls
-which version of a package is installed should the package exist in
-two sources with different suites.
+The Debian default behaviour after the Lenny release was to consider
+recommended packages as extra packages to be installed when any one
+package is selected. Recommended packages are those which the maintainer
+considers that would be present on C<most> installations of that package
+and allowing Recommends means allowing Recommends of recommended packages
+and so on.
+
+The multistrap default is to turn recommends OFF.
+
+Set the allowrecommends option to true in the General section
+to use typical Debian behaviour.
+
+=head1 Explicit suite specification
+
+Sometimes, apt needs to be told to get a particular package from a
+particular suite, ignoring a more recent version in another suite
+in the same set of sources.
+
+C<multistrap> can operate with and without the explicit suite option,
+the default is to let apt use the most recent version from the collection
+of specified F<bootstrap> sources.
+
+Explicit suite specification has no effect on the final installed
+system - if your aptsources includes a repository which in turn includes
+a newer version of the package(s) specified explicitly, the next
+C<apt-get upgrade> on the device will bring in the newer version.
+
+Also, when specifying packages to get from a specific suite, apt will
+also try and ensure that the dependencies for that package are also
+from the same suite and this can cause apt to be unable to resolve the
+complete set of dependencies. In this situation, being explicit about
+one package selection may require being explicit about some (not
+necessarily all) of the dependencies of that package as well.
 
 When using this support in Lenny, ensure that each section uses the
 suite (oldstable, stable, testing, sid) and B<not> the codename
@@ -338,9 +418,22 @@ Compare with
 
  $ sudo apt-get install apt/lenny
 
-=head1 Recommends TOIMPLEMENT:
+=cut
 
-Default recommends OFF
-option to set it as on.
+=head1 Omitting deb-src listings
+
+Some multistrap environments do not need access to the Debian sources
+of packages being installed, typically this is required when preparing
+a build (or cross-build) chroot using multistrap.
+
+To turn off this additional source (and save both download time and
+apt-cache size), use the omitdebsrc field in each Section.
+
+ [Baked]
+ packages=
+ source=http://www.emdebian.org/baked
+ keyring=emdebian-archive-keyring
+ suite=testing
+ omitdebsrc=true
 
 =cut

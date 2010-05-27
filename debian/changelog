@@ -7,8 +7,10 @@ multistrap (2.1.5) unstable; urgency=low
   * [INTL:pt] Updated Portuguese translation for manpage messages
     (Closes: #581673)
   * [INTL:fr] French program output translation (Closes: #582059)
+  * Add support for omitdebsrc and change suite behaviour to be non-
+    default, usable by selecting explicitsuite to true.
 
- -- Neil Williams <codehelp@debian.org>  Tue, 18 May 2010 08:50:11 +0100
+ -- Neil Williams <codehelp@debian.org>  Thu, 27 May 2010 16:12:25 +0100
 
 multistrap (2.1.4) unstable; urgency=low
 
