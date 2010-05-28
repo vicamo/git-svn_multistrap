@@ -437,3 +437,20 @@ apt-cache size), use the omitdebsrc field in each Section.
  omitdebsrc=true
 
 =cut
+
+=head1 fakeroot
+
+Foreign architecture bootstraps can operate under C<fakeroot> (C<multistrap>
+is designed to do as much as it can within a single call to make this
+easier) but the configuration stage which normally happens with a native
+architecture bootstrap requires C<chroot> and C<chroot> itself will
+not operate under C<fakeroot>.
+
+Therefore, if C<multistrap> detects that C<fakeroot> is in use, native
+mode configuration is skipped with a reminder warning.
+
+The same problem applies to C<apt-get install> and therefore the
+installation of the keyring package on the host system is also skipped
+if fakeroot is detected.
+
+=cut

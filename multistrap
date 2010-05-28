@@ -284,10 +284,14 @@ foreach my $pkg (values %keyrings)
 if (defined $k)
 {
 	my $e=`LC_ALL=C printenv`;
-	my $str = ($e =~ /\nUSER=root\n/) ? "" : "sudo ";
-	$str = (-f "/usr/bin/sudo") ? "$str" : "";
-	printf (_g("I: Installing %s\n"), $k);
-	system ("$str apt-get install $k");
+	if ($e !~ /\nFAKEROOTKEY=[0-9]+\n/) {
+		my $str = "";
+		if (($e =~ /\nUSER=root\n/)) {
+			$str = "sudo" if (-f "/usr/bin/sudo");
+		}
+		printf (_g("I: Installing %s\n"), $k);
+		system ("$str apt-get install $k");
+	}
 }
 
 $config_str = '';
@@ -695,14 +699,20 @@ sub tidy_apt
 # if native arch, do a few tasks just because we can and probably should.
 sub native
 {
-	print _g("I: Native mode - configuring unpacked packages . . .\n");
 	my $e=`LC_ALL=C printenv`;
-	my $str = ($e =~ /\nUSER=root\n/) ? "" : "sudo";
-	$str = (-f "/usr/bin/sudo") ? "$str" : "";
 	my $env = "DEBIAN_FRONTEND=noninteractive ".
 	"DEBCONF_NONINTERACTIVE_SEEN=true ".
 	"LC_ALL=C LANGUAGE=C LANG=C";
 	printf (_g("I: dpkg configuration settings:\n\t%s\n"), $env);
+	if ($e =~ /\nFAKEROOTKEY=[0-9]+\n/) {
+		warn ("W: Cannot use 'chroot' when fakeroot is in use. Skipping package configuration.\n");
+		return;
+	}
+	print _g("I: Native mode - configuring unpacked packages . . .\n");
+	my $str = "";
+	if ($e =~ /\nUSER=root\n/) {
+		$str = "sudo" if (-f "/usr/bin/sudo");
+	}
 	# check that we have a workable shell inside the chroot
 	&check_bin_sh("$dir");
 	system ("$str $env chroot $dir dpkg --configure -a");
@@ -873,42 +883,30 @@ sub cascade
 		if ($section eq "general")
 		{
 			$arch = $keys{$section}{'arch'}
-				if (defined $keys{$section}{'arch'}
-				and (not defined $arch));
+				if (defined $keys{$section}{'arch'} and (not defined $arch));
 			$dir = $keys{$section}{'directory'}
-				if (defined $keys{$section}{'directory'}
-				and (not defined $dir));
+				if (defined $keys{$section}{'directory'} and (not defined $dir));
 			# support the original value but replace by new value.
 			$unpack = lc($keys{$section}{'unpack'})
-				if (defined $keys{$section}{'forceunpack'}
-				and (not defined $unpack));
+				if (defined $keys{$section}{'forceunpack'} and (not defined $unpack));
 			$unpack = lc($keys{$section}{'unpack'})
-				if (defined $keys{$section}{'unpack'}
-				and (not defined $unpack));
+				if (defined $keys{$section}{'unpack'} and (not defined $unpack));
 			$configsh = lc($keys{$section}{'configscript'})
-				if (defined $keys{$section}{'configscript'}
-				and (not defined $configsh));
+				if (defined $keys{$section}{'configscript'} and (not defined $configsh));
 			$tgzname = lc($keys{$section}{'tarballname'})
-				if (defined $keys{$section}{'tarballname'}
-				and (not defined $tgzname));
+				if (defined $keys{$section}{'tarballname'} and (not defined $tgzname));
 			undef $configsh if ((defined $configsh) and (not -x $configsh));
 			$setupsh = lc($keys{$section}{'setupscript'})
-				if (defined $keys{$section}{'setupscript'}
-				and (not defined $setupsh));
+				if (defined $keys{$section}{'setupscript'} and (not defined $setupsh));
 			undef $setupsh if ((defined $setupsh) and (not -x $setupsh));
 			$omitrequired = lc($keys{$section}{'omitrequired'})
-				if (defined $keys{$section}{'omitrequired'}
-				and (not defined $omitrequired));
+				if (defined $keys{$section}{'omitrequired'} and (not defined $omitrequired));
 			$omitpreinst = lc($keys{$section}{'omitpreinst'})
-				if (defined $keys{$section}{'omitpreinst'}
-				and (not defined $omitpreinst));
-			$tidy++ if ((defined $keys{$section}{'cleanup'}) and
-				($keys{$section}{'cleanup'} eq "true"));
-			$noauth++ if ((defined $keys{$section}{'noauth'}) and
-				($keys{$section}{'noauth'} eq "true"));
-			$sourcedir = $keys{$section}{'retainsources'} if 
-				((defined $keys{$section}{'retainsources'}) and
-				(-d $keys{$section}{'retainsources'}));
+				if (defined $keys{$section}{'omitpreinst'} and (not defined $omitpreinst));
+			$tidy++ if ((defined $keys{$section}{'cleanup'}) and ($keys{$section}{'cleanup'} eq "true"));
+			$noauth++ if ((defined $keys{$section}{'noauth'}) and ($keys{$section}{'noauth'} eq "true"));
+			$sourcedir = $keys{$section}{'retainsources'}
+				if ((defined $keys{$section}{'retainsources'}) and (-d $keys{$section}{'retainsources'}));
 			$explicit_suite++ if ((defined $keys{$section}{'explicitsuite'}) and
 				($keys{$section}{'explicitsuite'} eq "true"));
 			$allow_recommends++ if ((defined $keys{$section}{'allowrecommends'}) and
@@ -924,23 +922,14 @@ sub cascade
 		}
 		else
 		{
-			$sources{$section}=$keys{$section}{'source'}
-				if (not exists $source{$section});
-			$packages{$section}=$keys{$section}{'packages'}
-				if (not exists $packages{$section});
-			$suites{$section}=$keys{$section}{'suite'}
-				if (not exists $suites{$section});
-			$components{$section}=$keys{$section}{'components'}
-				if (not exists $components{$section});
-			$omitdebsrc{$section}=$keys{$section}{'omitdebsrc'}
-				if (not exists $omitdebsrc{$section});
+			$sources{$section}=$keys{$section}{'source'} if (not exists $source{$section});
+			$packages{$section}=$keys{$section}{'packages'} if (not exists $packages{$section});
+			$suites{$section}=$keys{$section}{'suite'} if (not exists $suites{$section});
+			$components{$section}=$keys{$section}{'components'} if (not exists $components{$section});
+			$omitdebsrc{$section}=$keys{$section}{'omitdebsrc'} if (not exists $omitdebsrc{$section});
 			push @reinstall, split (/ /, lc($keys{$section}{'reinstall'}));
-			if (not defined $components{$section})
-			{
-				$components{$section}='main';
-			}
-			$keyrings{$section}=$keys{$section}{'keyring'}
-				if (not exists $keyrings{$section});
+			$components{$section}='main' if (not defined $components{$section});
+			$keyrings{$section}=$keys{$section}{'keyring'} if (not exists $keyrings{$section});
 			push @extrapkgs, split (' ', lc($keys{$section}{'additional'}));
 		}
 	}
