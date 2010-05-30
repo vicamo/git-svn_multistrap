@@ -15,7 +15,8 @@ Section: admin
 Architecture: all
 Depends: ${perl:Depends}, ${misc:Depends}, apt, realpath,
  libconfig-auto-perl, libparse-debian-packages-perl
-Recommends: emdebian-archive-keyring, fakeroot | sudo
+Recommends: emdebian-archive-keyring
+Suggests: fakeroot
 Replaces: emdebian-rootfs (<= 2.0.9)
 Conflicts: emdebian-rootfs (<= 2.0.9)
 Provides: emdebian-rootfs
