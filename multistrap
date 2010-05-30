@@ -151,8 +151,8 @@ if (not -d "$dir")
 {
 	my $ret = system ("mkdir -p $dir");
 	$ret /= 256 if (defined $ret);
-	die ("Unable to create directory '$dir' $!\n")
-		if ($ret != 0);
+	my $msg = sprintf (_g("Unable to create directory '%s'"),$dir);
+	die "$progname: $msg\n" if ($ret != 0);
 }
 $dir = `realpath $dir`;
 chomp ($dir);
@@ -315,7 +315,7 @@ my @s = ();
 $str = "";
 if ((not defined $omitrequired) or ($omitrequired eq "false"))
 {
-	print "Calculating required packages.\n";
+	print _g("I: Calculating required packages.\n");
 	&get_required_debs;
 	$str .= join (' ', keys %required);
 	chomp($str);
@@ -440,7 +440,7 @@ exit 0;
 
 sub our_version {
 	my $query = `dpkg-query -W -f='\${Version}' multistrap`;
-	(defined $query) ? return $query : return "2.1.1";
+	(defined $query) ? return $query : return "2.1.5";
 }
 
 sub add_extra_packages
@@ -705,7 +705,7 @@ sub native
 	"LC_ALL=C LANGUAGE=C LANG=C";
 	printf (_g("I: dpkg configuration settings:\n\t%s\n"), $env);
 	if ($e =~ /\nFAKEROOTKEY=[0-9]+\n/) {
-		warn ("W: Cannot use 'chroot' when fakeroot is in use. Skipping package configuration.\n");
+		warn (_g("W: Cannot use 'chroot' when fakeroot is in use. Skipping package configuration.\n"));
 		return;
 	}
 	print _g("I: Native mode - configuring unpacked packages . . .\n");
@@ -934,8 +934,7 @@ sub cascade
 		}
 	}
 	my %uniq=();
-	foreach my $listing (@reinstall)
-	{
+	foreach my $listing (@reinstall) {
 		$uniq{$listing}++;
 	}
 	@reinstall=();
@@ -989,7 +988,7 @@ sub dump_config {
 	foreach my $sect (sort keys %uniq)
 	{
 		if (not exists $keys{$sect}) {
-			$msg .= sprintf (_g("ERROR: The '%s' section is not defined.\n"), $sect);
+			$msg .= sprintf (_g("ERR: The '%s' section is not defined.\n"), $sect);
 		}
 	}
 	if (scalar @includes > 0) {
@@ -1031,7 +1030,7 @@ sub dump_config {
 	print "reinstall: ".join (", ", sort (@reinstall))."\n"
 		if (scalar @reinstall > 0);
 	if (defined $arch) {
-		printf (_g("arch:   \tArchitecture: %s\n"), $arch);
+		printf ("arch:   \t"._g("Architecture: %s\n"), $arch);
 	} else {
 		$msg .= sprintf(_g("Cannot determine architecture from '%s'.\n"), $file);
 	}
