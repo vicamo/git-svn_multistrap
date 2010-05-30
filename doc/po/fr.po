@@ -7,10 +7,11 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: emdebian-rootfs 2.0.2\n"
-"POT-Creation-Date: 2010-05-27 16:59+0200\n"
+"POT-Creation-Date: 2010-05-28 22:11+0200\n"
 "PO-Revision-Date: 2009-11-11 21:57+0100\n"
 "Last-Translator: Alexandre Normand <aj.normand@free.fr>\n"
 "Language-Team: French <debian-l10n-french@lists.debian.org>\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -256,9 +257,9 @@ msgid ""
 "'Architecture' and 'directory' can be overridden on the command line.  Some "
 "other general options also have command line options."
 msgstr ""
-"« Architecture » et « directory » peuvent être modifiés en ligne de commande. "
-"D'autres options générales peuvent ausi être indiquées en ligne de commande, "
-"sauf debootstrap."
+"« Architecture » et « directory » peuvent être modifiés en ligne de "
+"commande. D'autres options générales peuvent ausi être indiquées en ligne de "
+"commande, sauf debootstrap."
 
 #. type: =head1
 #: pod/multistrap:97
@@ -316,8 +317,8 @@ msgid ""
 "'directory' specifies the top level directory where the bootstrap will be "
 "created - it is not packed into a .tgz once complete."
 msgstr ""
-"« directory » indique le répertoire de haut niveau dans lequel le debootstrap "
-"sera créé - il n'est pas empaqueté en un .tgz une fois complété."
+"« directory » indique le répertoire de haut niveau dans lequel le "
+"debootstrap sera créé - il n'est pas empaqueté en un .tgz une fois complété."
 
 #. type: textblock
 #: pod/multistrap:123
@@ -1051,6 +1052,36 @@ msgstr ""
 " suite=lenny\n"
 "\n"
 
+#. type: =head1
+#: pod/multistrap:441
+msgid "fakeroot"
+msgstr ""
+
+#. type: textblock
+#: pod/multistrap:443
+msgid ""
+"Foreign architecture bootstraps can operate under C<fakeroot> (C<multistrap> "
+"is designed to do as much as it can within a single call to make this "
+"easier) but the configuration stage which normally happens with a native "
+"architecture bootstrap requires C<chroot> and C<chroot> itself will not "
+"operate under C<fakeroot>."
+msgstr ""
+
+#. type: textblock
+#: pod/multistrap:449
+msgid ""
+"Therefore, if C<multistrap> detects that C<fakeroot> is in use, native mode "
+"configuration is skipped with a reminder warning."
+msgstr ""
+
+#. type: textblock
+#: pod/multistrap:452
+msgid ""
+"The same problem applies to C<apt-get install> and therefore the "
+"installation of the keyring package on the host system is also skipped if "
+"fakeroot is detected."
+msgstr ""
+
 #. type: textblock
 #: device-table.pl:140
 msgid "device-table.pl - parses simple device tables and passes to mknod"
@@ -1741,8 +1772,8 @@ msgstr ""
 #~ "Adds \"export DEBCONF_USE_CDEBCONF=true\" to $TARGET/etc/profile for "
 #~ "cdebconf support."
 #~ msgstr ""
-#~ "Ajoute « export DEBCONF_USE_CDEBCONF=true » au fichier $TARGET/etc/profile "
-#~ "pour activer l'assistance de cdebconf."
+#~ "Ajoute « export DEBCONF_USE_CDEBCONF=true » au fichier $TARGET/etc/"
+#~ "profile pour activer l'assistance de cdebconf."
 
 #~ msgid "symlink_rcS"
 #~ msgstr "symlink_rcS"
