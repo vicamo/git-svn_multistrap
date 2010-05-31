@@ -35,8 +35,12 @@ $file = "/usr/share/multistrap/device-table.txt";
 $dir = `pwd`;
 chomp ($dir);
 $dir .= "/tmp/";
-$fakeroot = "fakeroot";
-
+my $e=`LC_ALL=C printenv`;
+if ($e !~ /\nFAKEROOTKEY=[0-9]+\n/) {
+	$fakeroot = "fakeroot";
+} else {
+	$fakeroot="";
+}
 while( @ARGV ) {
 	$_= shift( @ARGV );
 	last if m/^--$/;
@@ -68,35 +72,56 @@ while( @ARGV ) {
 $msg = sprintf (_g("Need a configuration file - use %s -f\n"), $progname);
 die ($msg)
 	if (not -f $file);
-
-my $ret = 0;
-$ret = mkdir ("$dir") if (not -d "$dir");
-$dir = `realpath $dir`;
-chomp ($dir);
-$dir .= ($dir =~ m:/$:) ? '' : "/";
-
 printf (_g("%s %s using %s\n"), $progname, $ourversion, $file);
 open (TABLE, "<", $file) or die ("$file: $!\n");
 @list=<TABLE>;
 close (TABLE);
+
+my $ret = 0;
+if (not defined $dry) {
+	$ret = mkdir ("$dir") if (not -d "$dir");
+	$dir = `realpath $dir`;
+	chomp ($dir);
+	$dir .= ($dir =~ m:/$:) ? '' : "/";
+	chdir ($dir);
+} else {
+	push @seq, "mkdir $dir";
+	push @seq, "cd $dir";
+}
+
 foreach $line (@list)
 {
 	chomp ($line);
 	next if ($line =~ /^#/);
 	next if ($line =~ /^$/);
 	@cmd = split (/\t/, $line);
-	next if ($cmd[2] eq "d");
+	next if (not defined $cmd[1]);
+	next if (scalar @cmd != 10);
+	if ($cmd[1] eq "s") {
+		push @seq, "ln -s $cmd[0] $cmd[2]";
+		next;
+	}
+	if ($cmd[1] eq "h") {
+		push @seq, "ln $cmd[0] $cmd[2]";
+		next;
+	}
+	if ($cmd[1] eq "d"){
+		push @seq, "mkdir -m $cmd[2] -p .$cmd[0]";
+		next;
+	}
 	if ($cmd[9] =~ /-/)
 	{
-		push @seq, "mknod -m $cmd[2] $cmd[0] $cmd[1] $cmd[5] $cmd[6]";
-		push @seq, "chown $cmd[3]:$cmd[4] $cmd[0]";
+		push @seq, "mknod .$cmd[0] $cmd[1] $cmd[5] $cmd[6]";
+		push @seq, "chmod $cmd[2] .$cmd[0]";
+		push @seq, "chown $cmd[3]:$cmd[4] .$cmd[0]";
 	}
 	else
 	{
 		for ($i = 0; $i < $cmd[9]; $i += $cmd[8])
 		{
-			push @seq, "mknod -m $cmd[2] $cmd[0]$i $cmd[1] $cmd[5] $i";
-			push @seq, "chown $cmd[3]:$cmd[4] $cmd[0]$i";
+			push @seq, "mknod .$cmd[0]$i $cmd[1] $cmd[5] $i";
+			push @seq, "chmod $cmd[2] .$cmd[0]$i";
+			push @seq, "chown $cmd[3]:$cmd[4] .$cmd[0]$i";
 		}
 	}
 }
@@ -107,8 +132,6 @@ if (defined $dry)
 }
 else
 {
-	chdir ("$dir");
-	system ("pwd");
 	foreach my $node (@seq)
 	{
 		system ("$fakeroot $node");
@@ -116,7 +139,7 @@ else
 }
 
 sub our_version {
-	my $query = `dpkg-query -W -f='\${Version}' multistrap`;
+	my $query = `dpkg-query -W -f='\${Version}' multistrap 2>/dev/null`;
 	(defined $query) ? return $query : return "0.0.9";
 }
 
@@ -124,7 +147,7 @@ sub usageversion {
 	printf STDERR (_g("
 %s version %s
 
- %s [-d DIR] [-f FILE]
+ %s [-n|--dry-run] [-d DIR] [-f FILE]
  %s -?|-h|--help|--version
 "), $progname, $ourversion, $progname, $progname);
 }
@@ -141,21 +164,48 @@ device-table.pl - parses simple device tables and passes to mknod
 
 =head1 Synopsis
 
- device-table.pl [-d DIR] [-f FILE]
+ device-table.pl [-n|--dry-run] [-d DIR] [-f FILE]
  device-table.pl -?|-h|--help|--version
 
 =head1 Options
 
-By default, device-table.pl writes out the device nodes in the current
+By default, F<device-table.pl> writes out the device nodes in the current
 working directory. Use the directory option to write out elsewhere.
 
 multistrap contains a default device-table file, use the file option
-to override the default /usr/share/multistrap/device-table.txt
+to override the default F</usr/share/multistrap/device-table.txt>
 
 Use the dry-run option to see the commands that would be run.
 
-Device nodes needs fakeroot or another way to use root access. If
-device-table.pl is already being run under fakeroot or equivalent,
+Device nodes need fakeroot or another way to use root access. If
+F<device-table.pl> is already being run under fakeroot or equivalent,
+the existing fakeroot session will be used, alternatively,
 use the no-fakeroot option to drop the internal fakeroot usage.
+
+Note that fakeroot does not support changing the actual ownerships,
+for that, run the final packing into a tarball under fakeroot as well,
+or use C<sudo> when running F<device-table.pl>
+
+=head1 Device table format
+
+Device table files are tab separated value files (TSV). All lines in the
+device table must have exactly 10 entries, each separated by a single
+tab, except comments - which must start with #
+
+Device table entries take the form of:
+
+ <name> <type> <mode> <uid> <gid> <major> <minor> <start> <inc> <count>
+
+where name is the file name, type can be one of: 
+
+ f A regular file
+ d Directory
+ s symlink
+ h hardlink
+ c Character special device file
+ b Block special device file
+ p Fifo (named pipe)
+
+See http://wiki.debian.org/DeviceTableScripting
 
 =cut

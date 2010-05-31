@@ -11,12 +11,19 @@
 # where name is the file name,  type can be one of: 
 #	f	A regular file
 #	d	Directory
+#	s	symlink
+#	h	hardlink
 #	c	Character special device file
 #	b	Block special device file
 #	p	Fifo (named pipe)
 # uid is the user id for the target file, gid is the group id for the
 # target file.  The rest of the entried apply only to device special
 # file.
+# For a symlink or hardlink, specify the target name:
+#	/dev/random	s	urandom	-	-	-	-	-	-	-
+# mode (or the other fields) make no sense with links
+# For a directory, specify the mode, uid and gid
+#	/dev/mtdblock	d	755	0	0	-	-	-	-	-
 
 # When building a target filesystem, it is desirable to not have to
 # become root and then run 'mknod' a thousand times.  Using a device 
@@ -29,10 +36,13 @@
 #
 # Have fun
 # -Erik Andersen <andersen@codepoet.org>
+# extended to support links
+# -Neil Williams <codehelp@debian.org>
 #
+# All lines must have exactly 10 entries, except comments
 
 #<name>		<type>	<mode>	<uid>	<gid>	<major>	<minor>	<start>	<inc>	<count>
-/dev		d	755	0	0	-	-	-	-	-
+/dev	d	755	0	0	-	-	-	-	-
 /dev/mem	c	640	0	0	1	1	0	0	-
 /dev/kmem	c	640	0	0	1	2	0	0	-
 /dev/null	c	640	0	0	1	3	0	0	-
