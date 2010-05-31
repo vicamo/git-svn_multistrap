@@ -6,19 +6,19 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: multistrap 2.1.4\n"
-"POT-Creation-Date: 2010-05-28 22:11+0200\n"
+"POT-Creation-Date: 2010-05-31 19:41+0200\n"
 "PO-Revision-Date: 2010-05-14 20:52+0100\n"
 "Last-Translator: Américo Monteiro <a_monteiro@netcabo.pt>\n"
 "Language-Team: Portuguese <traduz@debianpt.org>\n"
-"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: pt\n"
 "X-Generator: Lokalize 1.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. type: =head1
-#: pod/multistrap:3 device-table.pl:138
+#: pod/multistrap:3 device-table.pl:161
 msgid "Name"
 msgstr "Nome"
 
@@ -29,7 +29,7 @@ msgstr ""
 "multistrap - substituto do debootstrap para suporte a múltiplos repositórios"
 
 #. type: =head1
-#: pod/multistrap:7 device-table.pl:142
+#: pod/multistrap:7 device-table.pl:165
 msgid "Synopsis"
 msgstr "Sinopse"
 
@@ -48,7 +48,7 @@ msgstr ""
 "\n"
 
 #. type: =head1
-#: pod/multistrap:13 device-table.pl:147
+#: pod/multistrap:13 device-table.pl:170
 msgid "Options"
 msgstr "Opções"
 
@@ -1158,17 +1158,21 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: device-table.pl:140
+#: device-table.pl:163
 msgid "device-table.pl - parses simple device tables and passes to mknod"
 msgstr ""
 "device-table.pl - analisa tabelas de dispositivos simples e passa-o para o "
 "mknod"
 
 #. type: verbatim
-#: device-table.pl:144
-#, no-wrap
+#: device-table.pl:167
+#, fuzzy, no-wrap
+#| msgid ""
+#| " device-table.pl [-d DIR] [-f FILE]\n"
+#| " device-table.pl -?|-h|--help|--version\n"
+#| "\n"
 msgid ""
-" device-table.pl [-d DIR] [-f FILE]\n"
+" device-table.pl [-n|--dry-run] [-d DIR] [-f FILE]\n"
 " device-table.pl -?|-h|--help|--version\n"
 "\n"
 msgstr ""
@@ -1177,9 +1181,13 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: device-table.pl:149
+#: device-table.pl:172
+#, fuzzy
+#| msgid ""
+#| "By default, device-table.pl writes out the device nodes in the current "
+#| "working directory. Use the directory option to write out elsewhere."
 msgid ""
-"By default, device-table.pl writes out the device nodes in the current "
+"By default, F<device-table.pl> writes out the device nodes in the current "
 "working directory. Use the directory option to write out elsewhere."
 msgstr ""
 "Por predefinição, device-table.pl escreve os nós de dispositivo no "
@@ -1187,30 +1195,100 @@ msgstr ""
 "sítio."
 
 #. type: textblock
-#: device-table.pl:152
+#: device-table.pl:175
+#, fuzzy
+#| msgid ""
+#| "multistrap contains a default device-table file, use the file option to "
+#| "override the default /usr/share/multistrap/device-table.txt"
 msgid ""
 "multistrap contains a default device-table file, use the file option to "
-"override the default /usr/share/multistrap/device-table.txt"
+"override the default F</usr/share/multistrap/device-table.txt>"
 msgstr ""
 "o multistrap contém um ficheiro device-table predefinido, use a opção file "
 "para sobrepor a predefinição /usr/share/multistrap/device-table.txt"
 
 #. type: textblock
-#: device-table.pl:155
+#: device-table.pl:178
 msgid "Use the dry-run option to see the commands that would be run."
 msgstr "Use  a opção dry-run para ver os comandos que seriam executados."
 
 #. type: textblock
-#: device-table.pl:157
+#: device-table.pl:180
+#, fuzzy
+#| msgid ""
+#| "Device nodes needs fakeroot or another way to use root access. If device-"
+#| "table.pl is already being run under fakeroot or equivalent, use the no-"
+#| "fakeroot option to drop the internal fakeroot usage."
 msgid ""
-"Device nodes needs fakeroot or another way to use root access. If device-"
-"table.pl is already being run under fakeroot or equivalent, use the no-"
-"fakeroot option to drop the internal fakeroot usage."
+"Device nodes need fakeroot or another way to use root access. If F<device-"
+"table.pl> is already being run under fakeroot or equivalent, the existing "
+"fakeroot session will be used, alternatively, use the no-fakeroot option to "
+"drop the internal fakeroot usage."
 msgstr ""
 "Os nós de dispositivo precisam de fakeroot ou outro modo de usar acesso "
 "root. Se o device-table.pl já estiver em execução sob fakeroot ou "
 "equivalente, use a opção no-fakeroot para abandonar a utilização interna do "
 "fakeroot."
+
+#. type: textblock
+#: device-table.pl:185
+msgid ""
+"Note that fakeroot does not support changing the actual ownerships, for "
+"that, run the final packing into a tarball under fakeroot as well, or use "
+"C<sudo> when running F<device-table.pl>"
+msgstr ""
+
+#. type: =head1
+#: device-table.pl:189
+msgid "Device table format"
+msgstr ""
+
+#. type: textblock
+#: device-table.pl:191
+msgid ""
+"Device table files are tab separated value files (TSV). All lines in the "
+"device table must have exactly 10 entries, each separated by a single tab, "
+"except comments - which must start with #"
+msgstr ""
+
+#. type: textblock
+#: device-table.pl:195
+msgid "Device table entries take the form of:"
+msgstr ""
+
+#. type: verbatim
+#: device-table.pl:197
+#, no-wrap
+msgid ""
+" <name> <type> <mode> <uid> <gid> <major> <minor> <start> <inc> <count>\n"
+"\n"
+msgstr ""
+
+#. type: textblock
+#: device-table.pl:199
+msgid "where name is the file name, type can be one of:"
+msgstr ""
+
+#. type: verbatim
+#: device-table.pl:201
+#, no-wrap
+msgid ""
+" f A regular file\n"
+" d Directory\n"
+" s symlink\n"
+" h hardlink\n"
+" c Character special device file\n"
+" b Block special device file\n"
+" p Fifo (named pipe)\n"
+"\n"
+msgstr ""
+
+#. type: textblock
+#: device-table.pl:209
+#, fuzzy
+#| msgid "See also: http://wiki.debian.org/Multistrap"
+msgid "See http://wiki.debian.org/DeviceTableScripting"
+msgstr "Veja também: http://wiki.debian.org/Multistrap"
 
 #~ msgid "Collecting packages from specific codenames/suites."
 #~ msgstr "Colher pacotes de nomes de código/conjuntos específicos."
