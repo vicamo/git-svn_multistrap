@@ -656,7 +656,6 @@ sub tidy_apt
 		my $str = join (" ", @dsclist);
 		print "(cd $sourcedir; apt-get -d $config_str source $str)";
 		system ("(cd $sourcedir; apt-get -d $config_str source $str)");
-		$sourcedir=undef;
 	}
 	unlink ("${dir}etc/apt/sources.list")
 		if (-f "${dir}etc/apt/sources.list");
@@ -694,6 +693,7 @@ sub tidy_apt
 			} else {
 				unlink ("${dir}${cachedir}archives/$file");
 			}
+			$sourcedir=undef;
 		}
 	}
 }
