@@ -98,11 +98,11 @@ foreach $line (@list)
 	next if (not defined $cmd[1]);
 	next if (scalar @cmd != 10);
 	if ($cmd[1] eq "s") {
-		push @seq, "ln -s $cmd[0] $cmd[2]";
+		push @seq, "ln -s $cmd[0] .$cmd[2]";
 		next;
 	}
 	if ($cmd[1] eq "h") {
-		push @seq, "ln $cmd[0] $cmd[2]";
+		push @seq, "ln $cmd[0] .$cmd[2]";
 		next;
 	}
 	if ($cmd[1] eq "d"){
@@ -205,6 +205,14 @@ where name is the file name, type can be one of:
  c Character special device file
  b Block special device file
  p Fifo (named pipe)
+
+symlinks and hardlinks are extensions to the device table, just for
+F<device-table.pl>, other device table parsers might not handle these
+types. The first field of the symlink command is the existing target of
+the symlink, the third field is the full path of the symlink itself.
+e.g.
+
+ /proc/self/fd/0	s	/dev/stdin	-	-	-	-	-	-	-
 
 See http://wiki.debian.org/DeviceTableScripting
 
