@@ -14,8 +14,6 @@ multistrap (2.1.5) unstable; urgency=low
   * Handle fakeroot with native architectures.
   * Extend device table format to support creating symlinks and
     hardlinks.
-  * Download source packages for all binaries, if a source directory is
-    set.
 
  -- Neil Williams <codehelp@debian.org>  Mon, 31 May 2010 20:15:56 +0100
 

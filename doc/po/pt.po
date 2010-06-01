@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: multistrap 2.1.4\n"
-"POT-Creation-Date: 2010-05-31 19:41+0200\n"
+"POT-Creation-Date: 2010-06-01 09:03+0200\n"
 "PO-Revision-Date: 2010-05-14 20:52+0100\n"
 "Last-Translator: Américo Monteiro <a_monteiro@netcabo.pt>\n"
 "Language-Team: Portuguese <traduz@debianpt.org>\n"
@@ -1167,10 +1167,6 @@ msgstr ""
 #. type: verbatim
 #: device-table.pl:167
 #, fuzzy, no-wrap
-#| msgid ""
-#| " device-table.pl [-d DIR] [-f FILE]\n"
-#| " device-table.pl -?|-h|--help|--version\n"
-#| "\n"
 msgid ""
 " device-table.pl [-n|--dry-run] [-d DIR] [-f FILE]\n"
 " device-table.pl -?|-h|--help|--version\n"
@@ -1183,9 +1179,6 @@ msgstr ""
 #. type: textblock
 #: device-table.pl:172
 #, fuzzy
-#| msgid ""
-#| "By default, device-table.pl writes out the device nodes in the current "
-#| "working directory. Use the directory option to write out elsewhere."
 msgid ""
 "By default, F<device-table.pl> writes out the device nodes in the current "
 "working directory. Use the directory option to write out elsewhere."
@@ -1197,9 +1190,6 @@ msgstr ""
 #. type: textblock
 #: device-table.pl:175
 #, fuzzy
-#| msgid ""
-#| "multistrap contains a default device-table file, use the file option to "
-#| "override the default /usr/share/multistrap/device-table.txt"
 msgid ""
 "multistrap contains a default device-table file, use the file option to "
 "override the default F</usr/share/multistrap/device-table.txt>"
@@ -1215,10 +1205,6 @@ msgstr "Use  a opção dry-run para ver os comandos que seriam executados."
 #. type: textblock
 #: device-table.pl:180
 #, fuzzy
-#| msgid ""
-#| "Device nodes needs fakeroot or another way to use root access. If device-"
-#| "table.pl is already being run under fakeroot or equivalent, use the no-"
-#| "fakeroot option to drop the internal fakeroot usage."
 msgid ""
 "Device nodes need fakeroot or another way to use root access. If F<device-"
 "table.pl> is already being run under fakeroot or equivalent, the existing "
@@ -1285,8 +1271,24 @@ msgstr ""
 
 #. type: textblock
 #: device-table.pl:209
+msgid ""
+"symlinks and hardlinks are extensions to the device table, just for F<device-"
+"table.pl>, other device table parsers might not handle these types. The "
+"first field of the symlink command is the existing target of the symlink, "
+"the third field is the full path of the symlink itself.  e.g."
+msgstr ""
+
+#. type: verbatim
+#: device-table.pl:215
+#, no-wrap
+msgid ""
+" /proc/self/fd/0\ts\t/dev/stdin\t-\t-\t-\t-\t-\t-\t-\n"
+"\n"
+msgstr ""
+
+#. type: textblock
+#: device-table.pl:217
 #, fuzzy
-#| msgid "See also: http://wiki.debian.org/Multistrap"
 msgid "See http://wiki.debian.org/DeviceTableScripting"
 msgstr "Veja também: http://wiki.debian.org/Multistrap"
 
