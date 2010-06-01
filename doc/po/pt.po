@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: multistrap 2.1.4\n"
-"POT-Creation-Date: 2010-06-01 09:03+0200\n"
+"POT-Creation-Date: 2010-06-01 09:29+0200\n"
 "PO-Revision-Date: 2010-05-14 20:52+0100\n"
 "Last-Translator: Américo Monteiro <a_monteiro@netcabo.pt>\n"
 "Language-Team: Portuguese <traduz@debianpt.org>\n"
@@ -1282,7 +1282,7 @@ msgstr ""
 #: device-table.pl:215
 #, no-wrap
 msgid ""
-" /proc/self/fd/0\ts\t/dev/stdin\t-\t-\t-\t-\t-\t-\t-\n"
+" /proc/self/fd/0 s /dev/stdin - - - - - - -\n"
 "\n"
 msgstr ""
 

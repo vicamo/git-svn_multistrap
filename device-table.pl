@@ -212,7 +212,7 @@ types. The first field of the symlink command is the existing target of
 the symlink, the third field is the full path of the symlink itself.
 e.g.
 
- /proc/self/fd/0	s	/dev/stdin	-	-	-	-	-	-	-
+ /proc/self/fd/0 s /dev/stdin - - - - - - -
 
 See http://wiki.debian.org/DeviceTableScripting
 
