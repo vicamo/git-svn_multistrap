@@ -693,8 +693,8 @@ sub tidy_apt
 			} else {
 				unlink ("${dir}${cachedir}archives/$file");
 			}
-			$sourcedir=undef;
 		}
+		$sourcedir=undef;
 	}
 }
 
