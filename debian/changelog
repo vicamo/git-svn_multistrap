@@ -1,3 +1,9 @@
+multistrap (2.1.6) unstable; urgency=low
+
+  * [INTL:fr] French manpage translation update (Closes: #584679)
+
+ -- Neil Williams <codehelp@debian.org>  Sat, 05 Jun 2010 18:16:52 +0100
+
 multistrap (2.1.5) unstable; urgency=low
 
   * [INTL:pt] Updated Portuguese program output translation
