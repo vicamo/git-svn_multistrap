@@ -1,4 +1,5 @@
 #!/bin/sh
+
 set -e
 
 #  Copyright 2010 Neil Williams <codehelp@debian.org>
@@ -66,7 +67,9 @@ for pkg in $DEPS; do
 	POLICY=`LC_ALL=C apt-cache policy $name 2>/dev/null|grep Candidate|cut -d':' -f2-3|tr -d ' '`
 	if [ -n "$POLICY" ]; then
 		if [ -n "$VERLIMIT" ]; then
+			set +e
 			CHECK=`dpkg --compare-versions $POLICY "$VERCMP" $VERLIMIT ; echo $?`
+			set -e
 		fi
 	else
 		ERR="$ERR $name "
