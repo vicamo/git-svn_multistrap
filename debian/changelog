@@ -2,8 +2,9 @@ multistrap (2.1.6) unstable; urgency=low
 
   * [INTL:fr] French manpage translation update (Closes: #584679)
   * Allow check-deps.sh to proceed when detecting errors.
+  * Avoid unitialised Priority value.
 
- -- Neil Williams <codehelp@debian.org>  Sun, 20 Jun 2010 17:39:51 +0100
+ -- Neil Williams <codehelp@debian.org>  Tue, 29 Jun 2010 13:47:53 +0100
 
 multistrap (2.1.5) unstable; urgency=low
 
