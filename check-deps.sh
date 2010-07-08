@@ -37,6 +37,10 @@ case "$1" in
 		shift
 		INSTALL=1
 	;;
+	-y|--yes)
+		shift
+		YES=1
+	;;
 	*)
 		echo "Unrecognised option: $1"
 	exit;
@@ -80,7 +84,9 @@ for pkg in $DEPS; do
 			ERR="$ERR $name ($VERCMP $VERLIMIT) "
 		fi
 	fi
-	CMD="$CMD $name"
+	if [ -n "$YES" ]; then
+		CMD="$CMD -y $name"
+	fi
 done
 if [ -n "$ERR" ]; then
 	echo Some packages are not available: $ERR
