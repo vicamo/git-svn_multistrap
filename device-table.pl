@@ -89,8 +89,7 @@ if (not defined $dry) {
 	push @seq, "cd $dir";
 }
 
-foreach $line (@list)
-{
+foreach $line (@list) {
 	chomp ($line);
 	next if ($line =~ /^#/);
 	next if ($line =~ /^$/);
@@ -114,26 +113,19 @@ foreach $line (@list)
 		push @seq, "mknod .$cmd[0] $cmd[1] $cmd[5] $cmd[6]";
 		push @seq, "chmod $cmd[2] .$cmd[0]";
 		push @seq, "chown $cmd[3]:$cmd[4] .$cmd[0]";
-	}
-	else
-	{
-		for ($i = 0; $i < $cmd[9]; $i += $cmd[8])
-		{
+	} else {
+		for ($i = 0; $i < $cmd[9]; $i += $cmd[8]) {
 			push @seq, "mknod .$cmd[0]$i $cmd[1] $cmd[5] $i";
 			push @seq, "chmod $cmd[2] .$cmd[0]$i";
 			push @seq, "chown $cmd[3]:$cmd[4] .$cmd[0]$i";
 		}
 	}
 }
-if (defined $dry)
-{
+if (defined $dry) {
 	print join ("\n", @seq);
 	print "\n";
-}
-else
-{
-	foreach my $node (@seq)
-	{
+} else {
+	foreach my $node (@seq) {
 		system ("$fakeroot $node");
 	}
 }
