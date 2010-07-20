@@ -95,14 +95,11 @@ cascade($file);
 foreach my $inc (@includes)
 {
 	# look for the full filepath or try same directory as current conf.
-	if (not -f $inc )
-	{
+	if (not -f $inc ) {
 		$chk = `realpath $cfgdir/$inc 2>/dev/null`;
 		next if ($chk =~ /^\n?$/);
 		chomp ($chk);
-	}
-	else
-	{
+	} else {
 		$chk = $inc;
 	}
 	printf (_g("%s %s using %s\n"), $progname, $ourversion, $chk);
@@ -110,8 +107,7 @@ foreach my $inc (@includes)
 }
 
 &dump_config if (defined $dryrun);
-if (not defined $dir or not defined $arch)
-{
+if (not defined $dir or not defined $arch) {
 	&dump_config;
 	exit 3;
 }
@@ -120,23 +116,17 @@ if (not defined $dir or not defined $arch)
 printf (_g("%s %s using %s\n"), $progname, $ourversion, $file);
 $host = `dpkg --print-architecture`;
 chomp ($host);
-if ((not defined $arch) or ($arch eq ""))
-{
+if ((not defined $arch) or ($arch eq "")) {
 	$arch = $host;
 	printf (_g("Defaulting architecture to native: %s\n"),$arch);
-}
-elsif ($arch eq $host)
-{
+} elsif ($arch eq $host) {
 	printf (_g("Defaulting architecture to native: %s\n"),$arch);
-}
-else
-{
+} else {
 	printf (_g("Using foreign architecture: %s\n"), $arch);
 }
 $foreign++ if ($host ne $arch);
 
-unless (keys %sources and @aptsources)
-{
+unless (keys %sources and @aptsources) {
 	my $msg = sprintf(_g("No sources defined for a foreign multistrap.
 	Using your existing apt sources. To use different sources,
 	list them with aptsources= in '%s'."), $file);
@@ -147,8 +137,7 @@ unless (keys %sources and @aptsources)
 # Translators: fields are: programname, architecture, host architecture.
 printf (_g("%s building %s multistrap on '%s'\n"), $progname, $arch, $host);
 
-if (not -d "$dir")
-{
+if (not -d "$dir") {
 	my $ret = system ("mkdir -p $dir");
 	$ret /= 256 if (defined $ret);
 	my $msg = sprintf (_g("Unable to create directory '%s'"),$dir);
@@ -207,9 +196,7 @@ if (-l "${dir}lib64" ) {
 		symlink "./lib", "lib64";
 		chdir ("${old}");
 	}
-}
-else
-{
+} else {
 		my $old = `pwd`;
 		chomp ($old);
 		chdir ("$dir");
@@ -223,8 +210,7 @@ unlink ("${dir}etc/apt/sources.list.d/multistrap.sources.list")
 unlink ("${dir}etc/apt/sources.list")
 	if (-f "${dir}etc/apt/sources.list");
 
-foreach $repo (sort keys %suites)
-{
+foreach $repo (sort keys %suites) {
 	if (not -e "${dir}${cachedir}") {
 		mkdir "${dir}${cachedir}";
 	}
@@ -242,30 +228,24 @@ foreach $repo (sort keys %suites)
 	}
 }
 %uniq=();
-foreach my $line (@debootstrap)
-{
+foreach my $line (@debootstrap) {
 	$uniq{$line}++;
 }
 @debootstrap=sort keys %uniq;
 %uniq=();
-foreach my $aptsrc (@debootstrap)
-{
-	if (defined $deflist)
-	{
+foreach my $aptsrc (@debootstrap) {
+	if (defined $deflist) {
 		open (SOURCES, ">>${dir}etc/apt/sources.list.d/multistrap.sources.list") 
 			or die _g("Cannot open sources list"). $!;
 		print SOURCES $deflist;
 		close SOURCES;
-	}
-	elsif (-d "${dir}etc/apt/")
-	{
+	} elsif (-d "${dir}etc/apt/") {
 		open (SOURCES, ">>${dir}etc/apt/sources.list.d/multistrap-${aptsrc}.list") 
 			or die _g("Cannot open sources list"). $!;
 		$mirror = $sources{$aptsrc};
 		$suite = $suites{$aptsrc};
 		$component = (defined $components{$aptsrc}) ? $components{$aptsrc} : "main";
-		if (defined $mirror and defined $suite)
-		{
+		if (defined $mirror and defined $suite) {
 			print SOURCES "deb $mirror $suite $component\n";
 			print SOURCES "deb-src $mirror $suite $component\n" if (not defined $omitdebsrc{$aptsrc});
 			close SOURCES;
@@ -273,16 +253,14 @@ foreach my $aptsrc (@debootstrap)
 	}
 }
 my $k;
-foreach my $pkg (values %keyrings)
-{
+foreach my $pkg (values %keyrings) {
 	next if (not defined $pkg);
 	next if ("" eq "$pkg");
 	my $status = `LC_ALL=C dpkg -s $pkg`;
 	next if $status =~ /Status: install ok installed/;
 	$k .= "$pkg ";
 }
-if (defined $k)
-{
+if (defined $k) {
 	my $e=`LC_ALL=C printenv`;
 	if ($e !~ /\nFAKEROOTKEY=[0-9]+\n/) {
 		my $str = "";
@@ -313,23 +291,19 @@ die (sprintf (_g("apt update failed. Exit value: %d\n"), ($retval/256)))
 	if ($retval != 0);
 my @s = ();
 $str = "";
-if ((not defined $omitrequired) or ($omitrequired eq "false"))
-{
+if ((not defined $omitrequired) or ($omitrequired eq "false")) {
 	print _g("I: Calculating required packages.\n");
 	&get_required_debs;
 	$str .= join (' ', keys %required);
 	chomp($str);
 }
 $str .= " ";
-foreach my $sect (sort keys %packages)
-{
+foreach my $sect (sort keys %packages) {
 	my @list = split (' ', $sect);
-	foreach my $pkg (@list)
-	{
+	foreach my $pkg (@list) {
 		next if ($packages{$pkg} =~ /^\s*$/);
 		my @long=split (/ /, $packages{$sect});
-		foreach my $l (@long)
-		{
+		foreach my $l (@long) {
 			chomp ($l);
 			if (defined $explicit_suite) {
 				# instruct apt to get packages from the specified
@@ -346,8 +320,7 @@ $str .= " " . join (' ', values %keyrings) . " ";
 chomp($str);
 %uniq=();
 @s = split (/ /, $str);
-foreach my $a (@s)
-{
+foreach my $a (@s) {
 	$uniq{$a}++;
 }
 $str = join (' ', sort keys %uniq);
@@ -360,7 +333,7 @@ die (sprintf (_g("apt download failed. Exit value: %d\n"),($retval/256)))
 	if ($retval != 0);
 &force_unpack if ($unpack eq "true");
 system ("touch ${dir}${libdir}lists/lock");
-system ("$setupsh $dir $arch") if ((defined $setupsh) and (-f $setupsh));
+system ("$setupsh $dir $arch") if ((defined $setupsh) and (-x $setupsh));
 &native if (not defined ($foreign));
 &add_extra_packages;
 system ("cp $configsh $dir/") if ((defined $configsh) and (-f $configsh));
@@ -380,36 +353,29 @@ opendir (LISTS, "${dir}etc/apt/sources.list.d/")
 	or die (_g("Cannot read apt sources list directory.\n"));
 my @sources=grep(!m:\.\.?$:, readdir LISTS);
 closedir (LISTS);
-foreach my $filelist (@sources)
-{
+foreach my $filelist (@sources) {
 	next if (-d $filelist);
 	unlink ("${dir}etc/apt/sources.list.d/$filelist");
 }
 %uniq=();
-foreach my $line (@aptsources)
-{
+foreach my $line (@aptsources) {
 	$uniq{$line}++;
 }
 @aptsources=sort keys %uniq;
 %uniq=();
-foreach my $aptsrc (@aptsources)
-{
-	if (defined $deflist)
-	{
+foreach my $aptsrc (@aptsources) {
+	if (defined $deflist) {
 		open (SOURCES, ">>${dir}etc/apt/sources.list.d/multistrap.sources.list") 
 			or die _g("Cannot open sources list"). $!;
 		print SOURCES $deflist;
 		close SOURCES;
-	}
-	elsif (-d "${dir}etc/apt/")
-	{
+	} elsif (-d "${dir}etc/apt/") {
 		open (SOURCES, ">>${dir}etc/apt/sources.list.d/multistrap-${aptsrc}.list") 
 			or die _g("Cannot open sources list"). $!;
 		$mirror = $sources{$aptsrc};
 		$suite = $suites{$aptsrc};
 		$component = (defined $components{$aptsrc}) ? $components{$aptsrc} : "main";
-		if (defined $mirror and defined $suite)
-		{
+		if (defined $mirror and defined $suite) {
 			print SOURCES "deb $mirror $suite $component\n";
 			print SOURCES "deb-src $mirror $suite $component\n" if (not defined $omitdebsrc{$aptsrc});
 			close SOURCES;
@@ -419,15 +385,13 @@ foreach my $aptsrc (@aptsources)
 # altered the sources, so get apt to update.
 (not defined $tidy) ? system ("apt-get $config_str update") : &tidy_apt;
 printf (_g("\nMultistrap system installed successfully in %s.\n"), $dir);
-if (defined $tgzname)
-{
+if (defined $tgzname) {
 	printf (_g("\nCompressing multistrap system in '%s' to a tarball called: '%s'.\n"), $dir, $tgzname);
 	chdir ("$dir");
 	unlink $tgzname if (-f $tgzname);
 	my $retval = system ("tar -czf ../$tgzname .");
 	$retval /= 256;
-	if ($retval == 0)
-	{
+	if ($retval == 0) {
 		printf (_g("\nRemoving build directory: '%s'\n"), $dir);
 		system ("rm -rf $dir/*");
 	}
@@ -443,11 +407,9 @@ sub our_version {
 	(defined $query) ? return $query : return "2.1.5";
 }
 
-sub add_extra_packages
-{
+sub add_extra_packages {
 	$str = join (' ', @extrapkgs);
-	if (@extrapkgs)
-	{
+	if (@extrapkgs) {
 		print "apt-get -y $config_str install $str\n";
 		$retval = system ("apt-get -y $config_str install $str");
 		&force_unpack (@extrapkgs) if ($unpack eq "true");
@@ -456,8 +418,7 @@ sub add_extra_packages
 	}
 }
 
-sub force_unpack
-{
+sub force_unpack {
 	my (@limits) = @_;
 	my %unpack=();
 	my %filter = ();
@@ -465,14 +426,10 @@ sub force_unpack
 		or die (_g("Cannot read apt archives directory.\n"));
 	@archives=grep(/.*\.deb$/, readdir DEBS);
 	closedir (DEBS);
-	if (@limits)
-	{
-		foreach my $l (@limits)
-		{
-			foreach my $file (@archives)
-			{
-				if ($file =~ m:$l:)
-				{
+	if (@limits) {
+		foreach my $l (@limits) {
+			foreach my $file (@archives) {
+				if ($file =~ m:$l:) {
 					$filter{$l} = "$file";
 				}
 			}
@@ -480,36 +437,30 @@ sub force_unpack
 		@archives = sort values %filter;
 	}
 	print _g("I: Calculating obsolete packages\n");
-	foreach $deb (sort @archives)
-	{
+	foreach $deb (sort @archives) {
 		my $version = `LC_ALL=C dpkg -f ${dir}${cachedir}archives/$deb Version`;
 		my $package = `LC_ALL=C dpkg -f ${dir}${cachedir}archives/$deb Package`;
 		chomp ($version);
 		chomp ($package);
-		if (exists $unpack{$package})
-		{
+		if (exists $unpack{$package}) {
 			my $test=system("dpkg --compare-versions $unpack{$package} '<<' $version");
 			$test /= 256;
 			# unlink version in $unpack if 0
 			# unlink $deb (current one) if 1
-			if ($test == 0)
-			{
+			if ($test == 0) {
 				my $old = $deb;
 				$old =~ s/$version/$unpack{$package}/;
 				printf (_g("I: Removing %s\n"), $old);
 				unlink "${dir}${cachedir}archives/$old";
 				next;
-			}
-			else
-			{
+			} else {
 				printf (_g("I: Removing %s\n"), $deb);
 				unlink "${dir}${cachedir}archives/$deb";
 			}
 		}
 		$unpack{$package}=$version;
 	}
-	if (not @limits)
-	{
+	if (not @limits) {
 		open (LOCK, ">${dir}${libdir}lists/lock");
 		close (LOCK);
 		opendir (DEBS, "${dir}${cachedir}archives/")
@@ -521,8 +472,7 @@ sub force_unpack
 	chomp ($old);
 	chdir ("${dir}");
 	printf (_g("Using directory %s for unpacking operations\n"), $dir);
-	foreach $deb (sort @archives)
-	{
+	foreach $deb (sort @archives) {
 		printf (_g("I: Extracting %s...\n"), $deb);
 		my $ver=`LC_ALL=C dpkg -f ./${cachedir}archives/$deb Version`;
 		my $pkg=`LC_ALL=C dpkg -f ./${cachedir}archives/$deb Package`;
@@ -534,15 +484,13 @@ sub force_unpack
 		my $datatar = `LC_ALL=C dpkg -X ./${cachedir}archives/$deb ${dir}`;
 		my $exit = `echo $?`;
 		chomp ($exit);
-		if ($exit ne "0")
-		{
+		if ($exit ne "0") {
 			printf(_g("dpkg -X failed with error code %s\nSkipping...\n"), $exit);
 			next;
 		}
 		my @lines = split("\n", $datatar);
 		open (LIST, ">>./${dpkgdir}info/${pkg}.list");
-		foreach my $l (@lines)
-		{
+		foreach my $l (@lines) {
 			chomp ($l);
 			$l =~ s:^\.::;
 			$l =~ s:^/$:/\.:;
@@ -556,11 +504,9 @@ sub force_unpack
 		closedir (MAINT);
 		open (AVAIL, ">>./${dpkgdir}available");
 		open (STATUS, ">>./${dpkgdir}status");
-		foreach my $mscript (@maint)
-		{
+		foreach my $mscript (@maint) {
 			rename "./${tmpdir}/$mscript", "./${dpkgdir}info/$pkg.$mscript";
-			if ( $mscript eq "control" )
-			{
+			if ( $mscript eq "control" ) {
 				open (MSCRIPT, "./${dpkgdir}info/$pkg.$mscript");
 				my @scr=<MSCRIPT>;
 				close (MSCRIPT);
@@ -573,15 +519,13 @@ sub force_unpack
 			}
 		}
 		close (AVAIL);
-		if ( -f "./${dpkgdir}info/$pkg.conffiles")
-		{
+		if ( -f "./${dpkgdir}info/$pkg.conffiles") {
 			print STATUS "Conffiles:\n";
 			printf (_g(" -> Processing conffiles for %s\n"), $pkg);
 			open (CONF, "./${dpkgdir}info/$pkg.conffiles");
 			my @lines=<CONF>;
 			close (CONF);
-			foreach my $line (@lines)
-			{
+			foreach my $line (@lines) {
 				chomp ($line);
 				my $md5=`LC_ALL=C md5sum ./$line | cut -d" " -f1`;
 				chomp ($md5);
@@ -593,8 +537,7 @@ sub force_unpack
 		system ("rm -rf ./${tmpdir}");
 		if (-l "${dir}lib64" ) {
 			my $r = readlink "${dir}lib64";
-			if ($r =~ m:^/:)
-			{
+			if ($r =~ m:^/:) {
 				my $old = `pwd`;
 				chomp ($old);
 				printf (_g("ERR: lib64 -> ./lib symbolic link clobbered by %s\n"), $pkg);
@@ -610,8 +553,7 @@ sub force_unpack
 	print _g("I: Unpacking complete.\n");
 }
 
-sub check_bin_sh
-{
+sub check_bin_sh {
 	$dir = shift;
 	my $old = `pwd`;
 	chomp ($old);
@@ -620,37 +562,29 @@ sub check_bin_sh
 	# (works OK in subsequent upgrades.) #546528
 	unlink ("$dir/var/lib/dpkg/info/dash.postinst");
 	# now ensure that a usable shell is available as /bin/sh
-	if (not -l "$dir/bin/sh")
-	{
+	if (not -l "$dir/bin/sh") {
 		print (_g("ERR: ./bin/sh symbolic link does not exist.\n"));
-		if (-f "$dir/bin/dash")
-		{
+		if (-f "$dir/bin/dash") {
 			print (_g("INF: Setting ./bin/sh -> ./bin/dash\n"));
 			chdir ("$dir/bin");
 			symlink ("dash", "sh");
 			chdir ("$old");
-		}
-		elsif (-f "$dir/bin/bash")
-		{
+		} elsif (-f "$dir/bin/bash") {
 			print (_g("INF: ./bin/dash not found. Setting ./bin/sh -> ./bin/bash\n"));
 			chdir ("$dir/bin");
 			symlink ("bash", "sh");
 			chdir ("$old");
 		}
 	}
-	if (-l "$dir/bin/sh")
-	{
+	if (-l "$dir/bin/sh") {
 		print ("${dir}bin/sh found OK:\n");
 		system ("(cd $dir ; ls -lh bin/sh)");
-	}
-	else
-	{
+	} else {
 		die ("No shell in $dir.");
 	}
 }
 
-sub tidy_apt
-{
+sub tidy_apt {
 	print _g("I: Tidying up apt cache and list data.\n");
 	if (defined $sourcedir) {
 		my $str = join (" ", @dsclist);
@@ -663,8 +597,7 @@ sub tidy_apt
 		or die (_g("Cannot read apt lists directory.\n"));
 	my @lists=grep(!m:\.\.?$:, readdir DEBS);
 	closedir (DEBS);
-	foreach my $file (@lists)
-	{
+	foreach my $file (@lists) {
 		next if (-d $file);
 		unlink ("${dir}${libdir}lists/$file");
 	}
@@ -672,20 +605,17 @@ sub tidy_apt
 		or die (_g("Cannot read apt cache directory.\n"));
 	my @files=grep(!m:\.\.?$:, readdir DEBS);
 	closedir (DEBS);
-	foreach my $file (@files)
-	{
+	foreach my $file (@files) {
 		next if (-d $file);
 		next unless ($file =~ /\.bin$/);
 		unlink ("${dir}${cachedir}$file");
 	}
-	if ($unpack eq "true")
-	{
+	if ($unpack eq "true") {
 		opendir (DEBS, "${dir}${cachedir}/archives/")
 			or die (_g("Cannot read apt archives directory.\n"));
 		my @files=grep(!m:\.\.?$:, readdir DEBS);
 		closedir (DEBS);
-		foreach my $file (@files)
-		{
+		foreach my $file (@files) {
 			next if (-d $file);
 			next unless ($file =~ /\.deb$/);
 			if (defined $sourcedir) {
@@ -699,8 +629,7 @@ sub tidy_apt
 }
 
 # if native arch, do a few tasks just because we can and probably should.
-sub native
-{
+sub native {
 	my $e=`LC_ALL=C printenv`;
 	my $env = "DEBIAN_FRONTEND=noninteractive ".
 	"DEBCONF_NONINTERACTIVE_SEEN=true ".
@@ -723,8 +652,7 @@ sub native
 	closedir (PRI);
 	printf (_g("I: Running preinst scripts with 'upgrade' argument.\n"));
 	my $f = join (" ", @reinstall);
-	foreach my $script (sort @preinsts)
-	{
+	foreach my $script (sort @preinsts) {
 		my $t = $script;
 		$t =~ s/\.preinst//;
 		next if ($t =~ /$f/);
@@ -732,14 +660,12 @@ sub native
 		system ("$str $env chroot $dir /var/lib/dpkg/info/$script upgrade");
 	}
 	# reinstall set
-	foreach my $reinst (sort @reinstall)
-	{
+	foreach my $reinst (sort @reinstall) {
 		system ("$str $env chroot $dir apt-get --reinstall -y install $reinst");
 	}
 }
 
-sub get_required_debs
-{
+sub get_required_debs {
 	# emulate required="$(get_debs Priority: required)"
 	# from debootstrap/functions
 	# needs to be run after the first apt-get install so that
@@ -751,20 +677,16 @@ sub get_required_debs
 			"${dir}${libdir}lists/", $!);
 	my @lists=grep(/_Packages$/, readdir (PKGS));
 	closedir (PKGS);
-	foreach my $strap (@debootstrap)
-	{
+	foreach my $strap (@debootstrap) {
 		my $s = lc($strap);
-		foreach my $l (@lists)
-		{
+		foreach my $l (@lists) {
 			$listfiles{$l}++;
 		}
 	}
-	foreach my $file (keys %listfiles)
-	{
+	foreach my $file (keys %listfiles) {
 		my $fh = IO::File->new("${dir}${libdir}lists/$file");
 		my $parser = Parse::Debian::Packages->new( $fh );
-		while (my %package = $parser->next)
-		{
+		while (my %package = $parser->next) {
 			if (not defined $package{'Priority'} and (defined $package{'Essential'})) {
 				$required{$package{'Package'}}++;
 				continue;
@@ -777,8 +699,7 @@ sub get_required_debs
 }
 
 # inherited from apt-cross
-sub prepare_sources_list
-{
+sub prepare_sources_list {
 	my @source_list=();
 	# collate all available/configured sources into one list
 	if (-e "/etc/apt/sources.list") {
@@ -875,20 +796,16 @@ will be created - it is not packed into a .tgz once complete.
 	or die ("$progname: ". _g("failed to write usage:") . "$!\n");
 }
 
-sub cascade
-{
+sub cascade {
 	$file = shift;
 	$config = Config::Auto::parse($file);
-	foreach $key (%$config)
-	{
+	foreach $key (%$config) {
 		$type = lc($key) if (ref $key ne "HASH");
 		$value = $key if (ref $key eq "HASH");
 		$keys{$type} = $value;
 	}
-	foreach $section (sort keys %keys)
-	{
-		if ($section eq "general")
-		{
+	foreach $section (sort keys %keys) {
+		if ($section eq "general") {
 			$arch = $keys{$section}{'arch'}
 				if (defined $keys{$section}{'arch'} and (not defined $arch));
 			$dir = $keys{$section}{'directory'}
@@ -926,9 +843,7 @@ sub cascade
 			push @aptsources, @a;
 			my @i = split (' ', lc($keys{$section}{'include'}));
 			push @includes, @i;
-		}
-		else
-		{
+		} else {
 			$sources{$section}=$keys{$section}{'source'} if (not exists $source{$section});
 			$packages{$section}=$keys{$section}{'packages'} if (not exists $packages{$section});
 			$suites{$section}=$keys{$section}{'suite'} if (not exists $suites{$section});
@@ -977,8 +892,7 @@ sub _g {
 }
 
 sub dump_config {
-	if (not defined $dir or not defined $arch)
-	{
+	if (not defined $dir or not defined $arch) {
 		my $msg = sprintf(_g("The supplied configuration file '%s'".
 		" cannot be parsed correctly."), $file);
 		warn ("\n$msg\n");
@@ -992,8 +906,7 @@ sub dump_config {
 	push @check, @debootstrap;
 	push @check, @aptsources;
 	foreach my $sect (@check) { $uniq{$sect}++; }
-	foreach my $sect (sort keys %uniq)
-	{
+	foreach my $sect (sort keys %uniq) {
 		if (not exists $keys{$sect}) {
 			$msg .= sprintf (_g("ERR: The '%s' section is not defined.\n"), $sect);
 		}
@@ -1005,11 +918,9 @@ sub dump_config {
 	}
 	print "source:  \tSources: ".join (", ", sort values %sources)."\n";
 	my @long=();
-	foreach my $sect (sort keys %packages)
-	{
+	foreach my $sect (sort keys %packages) {
 		my @list = split (' ', $sect);
-		foreach my $pkg (@list)
-		{
+		foreach my $pkg (@list) {
 			next if ($packages{$pkg} =~ /^\s*$/);
 			@long=split (/ /, $packages{$sect});
 		}
