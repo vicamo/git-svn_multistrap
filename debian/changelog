@@ -3,8 +3,10 @@ multistrap (2.1.6) unstable; urgency=low
   * [INTL:fr] French manpage translation update (Closes: #584679)
   * Allow check-deps.sh to proceed when detecting errors.
   * Avoid unitialised Priority value.
+  * Call dpkg --print-architecture for determination of host
+    architecture. (Closes: #589713)
 
- -- Neil Williams <codehelp@debian.org>  Tue, 29 Jun 2010 13:47:53 +0100
+ -- Neil Williams <codehelp@debian.org>  Tue, 20 Jul 2010 10:59:20 +0100
 
 multistrap (2.1.5) unstable; urgency=low
 

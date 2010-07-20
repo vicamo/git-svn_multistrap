@@ -118,7 +118,7 @@ if (not defined $dir or not defined $arch)
 
 # Translators: fields are: programname, versionstring, configfile.
 printf (_g("%s %s using %s\n"), $progname, $ourversion, $file);
-$host = `dpkg-architecture -qDEB_BUILD_ARCH`;
+$host = `dpkg --print-architecture`;
 chomp ($host);
 if ((not defined $arch) or ($arch eq ""))
 {
