@@ -7,17 +7,18 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: multistrap 2.1.4\n"
-"POT-Creation-Date: 2010-06-05 18:18+0200\n"
+"POT-Creation-Date: 2010-07-20 23:00+0200\n"
 "PO-Revision-Date: 2010-05-30 11:24+0100\n"
 "Last-Translator: Alexandre Normand <aj.normand@free.fr>\n"
 "Language-Team: French <debian-l10n-french@lists.debian.org>\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-Bookmarks: 138,-1,-1,-1,-1,-1,-1,-1,-1,-1\n"
 
 #. type: =head1
-#: pod/multistrap:3 device-table.pl:161
+#: pod/multistrap:3 device-table.pl:153
 msgid "Name"
 msgstr "Nom"
 
@@ -29,7 +30,7 @@ msgstr ""
 "capacité de gérer plusieurs dépôts"
 
 #. type: =head1
-#: pod/multistrap:7 device-table.pl:165
+#: pod/multistrap:7 device-table.pl:157
 msgid "Synopsis"
 msgstr "Synopsis"
 
@@ -48,7 +49,7 @@ msgstr ""
 "\n"
 
 #. type: =head1
-#: pod/multistrap:13 device-table.pl:170
+#: pod/multistrap:13 device-table.pl:162
 msgid "Options"
 msgstr "Options"
 
@@ -296,9 +297,9 @@ msgid ""
 "'Architecture' and 'directory' can be overridden on the command line.  Some "
 "other general options also have command line options."
 msgstr ""
-"« Architecture » et « directory » peuvent être modifiés en ligne de commande. "
-"D'autres options générales peuvent aussi être indiquées en ligne de "
-"commande, sauf debootstrap."
+"« Architecture » et « directory » peuvent être modifiés en ligne de "
+"commande. D'autres options générales peuvent aussi être indiquées en ligne "
+"de commande, sauf debootstrap."
 
 #. type: =head1
 #: pod/multistrap:97
@@ -370,8 +371,8 @@ msgid ""
 "'directory' specifies the top level directory where the bootstrap will be "
 "created - it is not packed into a .tgz once complete."
 msgstr ""
-"« directory » indique le répertoire de haut niveau dans lequel le debootstrap "
-"sera créé - il n'est pas empaqueté en un .tgz une fois complété."
+"« directory » indique le répertoire de haut niveau dans lequel le "
+"debootstrap sera créé - il n'est pas empaqueté en un .tgz une fois complété."
 
 #. type: textblock
 #: pod/multistrap:123
@@ -1240,14 +1241,14 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: device-table.pl:163
+#: device-table.pl:155
 msgid "device-table.pl - parses simple device tables and passes to mknod"
 msgstr ""
 "device-table.pl - analyse des tables de périphériques simples et passe la "
 "sortie à mknod"
 
 #. type: verbatim
-#: device-table.pl:167
+#: device-table.pl:159
 #, fuzzy, no-wrap
 #| msgid ""
 #| " device-table.pl [-d DIR] [-f FILE]\n"
@@ -1263,7 +1264,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: device-table.pl:172
+#: device-table.pl:164
 #, fuzzy
 #| msgid ""
 #| "By default, device-table.pl writes out the device nodes in the current "
@@ -1277,7 +1278,7 @@ msgstr ""
 "écrire vers un autre emplacement."
 
 #. type: textblock
-#: device-table.pl:175
+#: device-table.pl:167
 #, fuzzy
 #| msgid ""
 #| "multistrap contains a default device-table file, use the file option to "
@@ -1291,14 +1292,14 @@ msgstr ""
 "device-table.txt"
 
 #. type: textblock
-#: device-table.pl:178
+#: device-table.pl:170
 msgid "Use the dry-run option to see the commands that would be run."
 msgstr ""
 "Il faut utiliser l'option dry-run pour voir les commandes qui seraient "
 "exécutées."
 
 #. type: textblock
-#: device-table.pl:180
+#: device-table.pl:172
 #, fuzzy
 #| msgid ""
 #| "Device nodes needs fakeroot or another way to use root access. If device-"
@@ -1316,7 +1317,7 @@ msgstr ""
 "no-fakeroot pour abandonner l'utilisation interne de fakeroot."
 
 #. type: textblock
-#: device-table.pl:185
+#: device-table.pl:177
 msgid ""
 "Note that fakeroot does not support changing the actual ownerships, for "
 "that, run the final packing into a tarball under fakeroot as well, or use "
@@ -1324,12 +1325,12 @@ msgid ""
 msgstr ""
 
 #. type: =head1
-#: device-table.pl:189
+#: device-table.pl:181
 msgid "Device table format"
 msgstr ""
 
 #. type: textblock
-#: device-table.pl:191
+#: device-table.pl:183
 msgid ""
 "Device table files are tab separated value files (TSV). All lines in the "
 "device table must have exactly 10 entries, each separated by a single tab, "
@@ -1337,12 +1338,12 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: device-table.pl:195
+#: device-table.pl:187
 msgid "Device table entries take the form of:"
 msgstr ""
 
 #. type: verbatim
-#: device-table.pl:197
+#: device-table.pl:189
 #, no-wrap
 msgid ""
 " <name> <type> <mode> <uid> <gid> <major> <minor> <start> <inc> <count>\n"
@@ -1350,12 +1351,12 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: device-table.pl:199
+#: device-table.pl:191
 msgid "where name is the file name, type can be one of:"
 msgstr ""
 
 #. type: verbatim
-#: device-table.pl:201
+#: device-table.pl:193
 #, no-wrap
 msgid ""
 " f A regular file\n"
@@ -1369,7 +1370,7 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: device-table.pl:209
+#: device-table.pl:201
 msgid ""
 "symlinks and hardlinks are extensions to the device table, just for F<device-"
 "table.pl>, other device table parsers might not handle these types. The "
@@ -1378,7 +1379,7 @@ msgid ""
 msgstr ""
 
 #. type: verbatim
-#: device-table.pl:215
+#: device-table.pl:207
 #, no-wrap
 msgid ""
 " /proc/self/fd/0 s /dev/stdin - - - - - - -\n"
@@ -1386,7 +1387,7 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: device-table.pl:217
+#: device-table.pl:209
 #, fuzzy
 #| msgid "See also: http://wiki.debian.org/Multistrap"
 msgid "See http://wiki.debian.org/DeviceTableScripting"
@@ -2058,8 +2059,8 @@ msgstr "Voir aussi : http://wiki.debian.org/Multistrap"
 #~ "Adds \"export DEBCONF_USE_CDEBCONF=true\" to $TARGET/etc/profile for "
 #~ "cdebconf support."
 #~ msgstr ""
-#~ "Ajoute « export DEBCONF_USE_CDEBCONF=true » au fichier $TARGET/etc/profile "
-#~ "pour activer l'assistance de cdebconf."
+#~ "Ajoute « export DEBCONF_USE_CDEBCONF=true » au fichier $TARGET/etc/"
+#~ "profile pour activer l'assistance de cdebconf."
 
 #~ msgid "symlink_rcS"
 #~ msgstr "symlink_rcS"

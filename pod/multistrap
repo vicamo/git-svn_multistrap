@@ -2,7 +2,7 @@
 
 =head1 Name
 
-multistrap - debootstrap replacement for multiple repository support
+multistrap - multiple repository bootstraps
 
 =head1 Synopsis
 
@@ -74,13 +74,20 @@ Example configuration:
  suite=lenny
 
 This will result in a completely normal debootstrap of Debian lenny from
-the specified mirror, for armel in '/opt/multistrap/'.
+the specified mirror, for armel in '/opt/multistrap/'. (This configuration
+is retained in the package as F</usr/share/multistrap/lenny.conf>)
 
 Specify a package to extend the multistrap to include that package and
-all dependencies.
+all dependencies of that package.
 
-Specify more bootstraps by adding new sections. Section names are used
-in the bootstrap general option.
+Specify more repositories for the bootstrap by adding new sections.
+Section names need to be listed in the bootstrap general option for the
+packages to be included in the bootstrap.
+
+Specify which repositories will be available to the final system at
+boot by listing the section names in the aptsources general option,
+e.g. to exclude some internal sources or when using a local mirror when
+building the rootfs.
 
 Section names are case-insensitive.
 
@@ -89,7 +96,8 @@ repositories, to use only the most recent and most suitable
 dependencies. Note that multistrap turns off Install-Recommends
 so if the multistrap needs a package that is only a Recommended
 dependency, the recommended package needs to be specified in the
-packages line explicitly.
+packages line explicitly. See C<Explicit suite specification> for
+more information on getting specific packages from specific suites.
 
 'Architecture' and 'directory' can be overridden on the command line.
 Some other general options also have command line options.
@@ -147,7 +155,8 @@ a tarball.
 Note that multistrap ignores any unrecognised options in the config
 file - this allows for backwards-compatible behaviour as well as
 overloading the multistrap config files to support other tools
-(like pbuilder).
+(like pbuilder). Use the C<--simulate> option to see the combined
+configuration settings.
 
 =head1 Section settings
 
@@ -157,10 +166,10 @@ overloading the multistrap config files to support other tools
  keyring=debian-archive-keyring
  suite=lenny
 
-The section name (in [] brackets) needs to be unique for this configuration
-file and any configuration files which this file includes. Section names
-are case insensitive (all comparisons happen after conversion to lower
-case).
+The section name (in [] brackets) needs to be unique for this
+configuration file and any configuration files which this file
+includes. Section names are case insensitive (all comparisons happen
+after conversion to lower case).
 
 'packages' is the list of packages to be added when this Section
 is listed in C<bootstrap>.
@@ -186,15 +195,15 @@ The codename (etch, lenny, squeeze, sid) does not change.
 
 To use authenticated apt repositories, multistrap either needs to be
 able to install an appropriate keyring package from the existing apt
-sources *outside the multistrap environment* or have the relevant keys
-already configured using apt-key *on the host system*.
+sources B<outside the multistrap environment> or have the relevant keys
+already configured using apt-key B<on the host system>.
 
 If relevant packages exist, specify them in the 'keyring' option for
 each repository. multistrap will then check that apt has already
 installed this package so that the repository can be authenticated
 before any packages are downloaded from it.
 
-Note that *all* repositories to be used with multistrap must be
+Note that B<all> repositories to be used with multistrap must be
 authenticated or apt will fail. Similarly, secure apt can only be
 disabled for all repositories (by using the --no-auth command line
 option or setting the general noauth option in the configuration
@@ -213,7 +222,7 @@ running multistrap itself.
 multistrap is stateless - if the directory exists, it will simply
 proceed as normal and apt will try to pick up where it left off.
 
-=head1 Configuration
+=head1 Root Filesystem Configuration
 
 multistrap unpacks the downloaded packages but other stages of
 system configuration are not attempted. Examples include:
@@ -228,13 +237,11 @@ system configuration are not attempted. Examples include:
  /etc/init.d
  /etc/dhcp3 
 
-Any device-specific device nodes will also need to be created
-using MAKEDEV.
-
-As an alternative, multistrap includes a device-table.pl helper
-script that can work around some of the issues with MAKEDEV.
-device-table.pl requires a device table file along the lines of
-the one in the mtd-utils source package.
+Any device-specific device nodes will also need to be created using
+MAKEDEV or C<device-table.pl> - a helper script that can work around
+some of the issues with MAKEDEV. F<device-table.pl> requires a device
+table file along the lines of the one in the mtd-utils source package.
+See F</usr/share/doc/multistrap/examples/device_table.txt>
 
 Once multistrap has successfully created the basic file and
 directory layout, other device-specific scripts are needed before
@@ -368,6 +375,10 @@ added - whilst useful, this option can easily lead to a useless
 rootfs. Only the packages specified manually in the configuration
 files will be used in the calculations - dependencies of those packages
 will be added but no others.
+
+Packages with Priority: important or standard are never included by
+C<multistrap> unless specifically included in a C<packages=> option in
+a section specified in the C<bootstrap> general option.
 
 =head1 Recommends behaviour
 
