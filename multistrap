@@ -689,7 +689,7 @@ sub get_required_debs {
 		while (my %package = $parser->next) {
 			if (not defined $package{'Priority'} and (defined $package{'Essential'})) {
 				$required{$package{'Package'}}++;
-				continue;
+				next;
 			}
 			next if (not defined $package{'Priority'});
 			next unless $package{'Priority'} eq "required";

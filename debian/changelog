@@ -5,8 +5,9 @@ multistrap (2.1.6) unstable; urgency=low
   * Avoid unitialised Priority value.
   * Call dpkg --print-architecture for determination of host
     architecture. (Closes: #589713)
+  * Add aptitude to crosschroot configs as pbuilder now requires it.
 
- -- Neil Williams <codehelp@debian.org>  Tue, 20 Jul 2010 10:59:20 +0100
+ -- Neil Williams <codehelp@debian.org>  Mon, 26 Jul 2010 22:53:39 +0100
 
 multistrap (2.1.5) unstable; urgency=low
 
