@@ -42,8 +42,8 @@ case "$1" in
 		YES=1
 	;;
 	*)
-		echo "Unrecognised option: $1"
-	exit;
+		FILE=$1
+		shift
 	;;
 esac
 done
@@ -63,6 +63,14 @@ for pkg in $DEPS; do
 	if [ "apt" = "$name" ]; then
 		continue
 	fi
+	orlist=$(echo $pkg|grep "|" || true)
+	while [ -n "$orlist" ]; do
+		ORPKG=`echo $pkg|cut -d'|' -f2|sed -e 's/^ //'`
+		ALTERNATE="$ALTERNATE $ORPKG"
+		orlist=$(echo $orlist | sed -e "s/.*$ORPKG//;s/^ *//;s/ *$//")
+		ALTERNATE=$(echo $ALTERNATE|sed -e 's/^ *//;s/ *$//')
+		pkg=$(echo $pkg|sed -e "s/|//;s/$ORPKG//;s/^ *//;s/ *$//")
+	done
 	if [ -n `echo $pkg|grep '('` ]; then
 		VERLIMIT=`echo $pkg|cut -d'(' -f2|tr -d ')'|tr -d '\n'|grep -v $name || true`
 		VERCMP=`echo $VERLIMIT|sed -e 's/\(.*\) \(.*\)/\1/'`
@@ -74,6 +82,24 @@ for pkg in $DEPS; do
 			set +e
 			CHECK=`dpkg --compare-versions $POLICY "$VERCMP" $VERLIMIT ; echo $?`
 			set -e
+		fi
+		if [ -z "$CHECK" ]; then
+			VERLIMIT=
+			VERCMP=
+			name=$(echo $ALTERNATE|sed -e 's/^ //'|cut -d' ' -f1)
+			if [ -n `echo $ALTERNATE|grep '('` ]; then
+				VERLIMIT=`echo $ALTERNATE|cut -d'(' -f2|tr -d ')'|tr -d '\n'|grep -v $name || true`
+				VERCMP=`echo $VERLIMIT|sed -e 's/\(.*\) \(.*\)/\1/'`
+				VERLIMIT=`echo $VERLIMIT|sed -e 's/\(.*\) \(.*\)/\2/'`
+			fi
+			POLICY=`LC_ALL=C apt-cache policy $name 2>/dev/null|grep Candidate|cut -d':' -f2-3|tr -d ' '`
+			if [ -n "$POLICY" ]; then
+				if [ -n "$VERLIMIT" ]; then
+					set +e
+					CHECK=`dpkg --compare-versions $POLICY "$VERCMP" $VERLIMIT ; echo $?`
+					set -e
+				fi
+			fi
 		fi
 	else
 		ERR="$ERR $name "
@@ -95,6 +121,6 @@ fi
 if [ -n "$INSTALL" ]; then
 	eval apt-get install "$CMD"
 	dpkg -i $FILE
-else
-	echo apt-get install $CMD
+elif [ -n "$CMD" ]; then
+	echo apt-get install ${CMD}
 fi
