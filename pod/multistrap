@@ -28,7 +28,9 @@ as noauth=true
 --sourcedir DIR - move the contents of var/cache/apt/archives/ from
 inside the chroot to the specified external directory, then add the
 Debian source packages for each used binary. Same as retainsources=DIR
-If the specified directory does not exist, nothing is done.
+If the specified directory does not exist, nothing is done. Requires
+--tidy-up in order to calculate the full list of source packages, 
+including dependencies.
 
 =head1 Description
 

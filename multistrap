@@ -478,6 +478,7 @@ sub force_unpack {
 		my $pkg=`LC_ALL=C dpkg -f ./${cachedir}archives/$deb Package`;
 		chomp ($ver);
 		chomp ($pkg);
+		push @dsclist, $pkg;
 		mkdir ("./tmp");
 		my $tmpdir = `mktemp -p ./tmp -d -t multistrap.XXXXXX`;
 		chomp ($tmpdir);
@@ -587,7 +588,11 @@ sub check_bin_sh {
 sub tidy_apt {
 	print _g("I: Tidying up apt cache and list data.\n");
 	if (defined $sourcedir) {
-		my $str = join (" ", @dsclist);
+		my %uniqdsc=();
+		foreach my $a (@dsclist) {
+			$uniqdsc{$a}++;
+		}
+		my $str = join (" ", sort keys %uniqdsc);
 		print "(cd $sourcedir; apt-get -d $config_str source $str)";
 		system ("(cd $sourcedir; apt-get -d $config_str source $str)");
 	}
