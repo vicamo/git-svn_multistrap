@@ -2,8 +2,9 @@ multistrap (2.1.7) unstable; urgency=low
 
   * Add all packages to the source dir, including calculated
     dependencies.
+  * Improve the omitdebsrc handling for detection of 'true'.
 
- -- Neil Williams <codehelp@debian.org>  Mon, 02 Aug 2010 17:49:09 -0400
+ -- Neil Williams <codehelp@debian.org>  Thu, 05 Aug 2010 19:24:16 -0400
 
 multistrap (2.1.6) unstable; urgency=low
 

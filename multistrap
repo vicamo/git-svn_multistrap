@@ -779,7 +779,7 @@ bootstrap=Debian
 
 [Debian]
 packages=
-source=http://ftp.uk.debian.org/debian
+source=http://cdn.debian.net/debian
 keyring=debian-archive-keyring
 suite=lenny
 
@@ -853,7 +853,8 @@ sub cascade {
 			$packages{$section}=$keys{$section}{'packages'} if (not exists $packages{$section});
 			$suites{$section}=$keys{$section}{'suite'} if (not exists $suites{$section});
 			$components{$section}=$keys{$section}{'components'} if (not exists $components{$section});
-			$omitdebsrc{$section}=$keys{$section}{'omitdebsrc'} if (not exists $omitdebsrc{$section});
+			$omitdebsrc{$section}=$section if ((defined $keys{$section}{'omitdebsrc'})
+				and ($keys{$section}{'omitdebsrc'} eq "true"));
 			push @reinstall, split (/ /, lc($keys{$section}{'reinstall'}));
 			$components{$section}='main' if (not defined $components{$section});
 			$keyrings{$section}=$keys{$section}{'keyring'} if (not exists $keyrings{$section});
