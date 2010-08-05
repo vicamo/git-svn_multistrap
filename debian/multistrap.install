@@ -5,6 +5,9 @@ examples/multistrap-example.conf ./usr/share/doc/multistrap/examples/
 examples/sid.conf ./usr/share/multistrap/
 examples/squeeze.conf ./usr/share/multistrap/
 examples/lenny.conf ./usr/share/multistrap/
+examples/grip-sid.conf ./usr/share/multistrap/
+examples/grip-squeeze.conf ./usr/share/multistrap/
+examples/grip-lenny.conf ./usr/share/multistrap/
 examples/setup.sh ./usr/share/doc/multistrap/examples/
 examples/config.sh ./usr/share/doc/multistrap/examples/
 check-deps.sh ./usr/share/multistrap/

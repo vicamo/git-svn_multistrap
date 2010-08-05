@@ -3,8 +3,9 @@ multistrap (2.1.7) unstable; urgency=low
   * Add all packages to the source dir, including calculated
     dependencies.
   * Improve the omitdebsrc handling for detection of 'true'.
+  * Add examples for Grip.
 
- -- Neil Williams <codehelp@debian.org>  Thu, 05 Aug 2010 19:24:16 -0400
+ -- Neil Williams <codehelp@debian.org>  Thu, 05 Aug 2010 19:24:38 -0400
 
 multistrap (2.1.6) unstable; urgency=low
 
