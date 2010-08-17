@@ -4,8 +4,9 @@ multistrap (2.1.7) unstable; urgency=low
     dependencies.
   * Improve the omitdebsrc handling for detection of 'true'.
   * Add examples for Grip.
+  * Add more synopsis information to manual page. (Closes: #592621)
 
- -- Neil Williams <codehelp@debian.org>  Thu, 05 Aug 2010 19:24:38 -0400
+ -- Neil Williams <codehelp@debian.org>  Tue, 17 Aug 2010 18:24:30 +0100
 
 multistrap (2.1.6) unstable; urgency=low
 

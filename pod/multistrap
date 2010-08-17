@@ -12,12 +12,20 @@ multistrap - multiple repository bootstraps
 
 =head1 Options
 
+-?|-h|--help|--version - output the help text and exit successfully.
+
 --dry-run - collate all the configuration settings and output a
 bare summary.
 
 --simulate - same as --dry-run
 
 (The following options can also be set in the configuration file.)
+
+-a|--arch - architecture of the packages to put into the multistrap.
+
+-d|--dir - directory into which the bootstrap will be installed.
+
+-f|--file - configuration file for multistrap [required]
 
 --tidy-up - remove apt cache data, downloaded Packages files and
 the apt package cache. Same as cleanup=true.
