@@ -205,8 +205,7 @@ if (-l "${dir}lib64" ) {
 		chdir ("${old}");
 }
 
-unlink ("${dir}etc/apt/sources.list.d/multistrap.sources.list")
-	if (-f "${dir}etc/apt/sources.list.d/multistrap.sources.list");
+system ("rm -rf ${dir}etc/apt/sources.list.d/*");
 unlink ("${dir}etc/apt/sources.list")
 	if (-f "${dir}etc/apt/sources.list");
 
