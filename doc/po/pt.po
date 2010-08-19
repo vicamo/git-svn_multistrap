@@ -6,14 +6,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: multistrap 2.1.4\n"
-"POT-Creation-Date: 2010-08-17 18:39+0200\n"
+"POT-Creation-Date: 2010-08-19 10:39+0200\n"
 "PO-Revision-Date: 2010-05-14 20:52+0100\n"
 "Last-Translator: Américo Monteiro <a_monteiro@netcabo.pt>\n"
 "Language-Team: Portuguese <traduz@debianpt.org>\n"
-"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: pt\n"
 "X-Generator: Lokalize 1.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
@@ -25,7 +25,6 @@ msgstr "Nome"
 #. type: textblock
 #: pod/multistrap:5
 #, fuzzy
-#| msgid "multistrap - debootstrap replacement for multiple repository support"
 msgid "multistrap - multiple repository bootstraps"
 msgstr ""
 "multistrap - substituto do debootstrap para suporte a múltiplos repositórios"
@@ -115,13 +114,13 @@ msgstr ""
 #: pod/multistrap:36
 #, fuzzy
 msgid ""
-"--sourcedir DIR - move the contents of var/cache/apt/archives/ from inside "
+"--source-dir DIR - move the contents of var/cache/apt/archives/ from inside "
 "the chroot to the specified external directory, then add the Debian source "
 "packages for each used binary. Same as retainsources=DIR If the specified "
 "directory does not exist, nothing is done. Requires --tidy-up in order to "
 "calculate the full list of source packages, including dependencies."
 msgstr ""
-"--sourcedir DIRECTÓRIO - move o conteúdo de var/cache/apt/archives/ de "
+"--source-dir DIRECTÓRIO - move o conteúdo de var/cache/apt/archives/ de "
 "dentro da chroot para o directório externo especificado. O mesmo que "
 "retainsources=DIRECTÓRIO"
 
@@ -230,9 +229,6 @@ msgstr ""
 #. type: textblock
 #: pod/multistrap:86
 #, fuzzy
-#| msgid ""
-#| "This will result in a completely normal debootstrap of Debian lenny from "
-#| "the specified mirror, for armel in '/opt/multistrap/'."
 msgid ""
 "This will result in a completely normal debootstrap of Debian lenny from the "
 "specified mirror, for armel in '/opt/multistrap/'. (This configuration is "
@@ -244,9 +240,6 @@ msgstr ""
 #. type: textblock
 #: pod/multistrap:90
 #, fuzzy
-#| msgid ""
-#| "Specify a package to extend the multistrap to include that package and "
-#| "all dependencies."
 msgid ""
 "Specify a package to extend the multistrap to include that package and all "
 "dependencies of that package."
@@ -257,9 +250,6 @@ msgstr ""
 #. type: textblock
 #: pod/multistrap:93
 #, fuzzy
-#| msgid ""
-#| "Specify more bootstraps by adding new sections. Section names are used in "
-#| "the bootstrap general option."
 msgid ""
 "Specify more repositories for the bootstrap by adding new sections.  Section "
 "names need to be listed in the bootstrap general option for the packages to "
@@ -284,12 +274,6 @@ msgstr "Os nomes das secções são insensíveis a maiúsculas/minúsculas."
 #. type: textblock
 #: pod/multistrap:104
 #, fuzzy
-#| msgid ""
-#| "All dependencies are resolved only by apt, using all bootstrap "
-#| "repositories, to use only the most recent and most suitable dependencies. "
-#| "Note that multistrap turns off Install-Recommends so if the multistrap "
-#| "needs a package that is only a Recommended dependency, the recommended "
-#| "package needs to be specified in the packages line explicitly."
 msgid ""
 "All dependencies are resolved only by apt, using all bootstrap repositories, "
 "to use only the most recent and most suitable dependencies. Note that "
@@ -519,11 +503,6 @@ msgstr "Segurança do Apt"
 #. type: textblock
 #: pod/multistrap:206
 #, fuzzy
-#| msgid ""
-#| "To use authenticated apt repositories, multistrap either needs to be able "
-#| "to install an appropriate keyring package from the existing apt sources "
-#| "*outside the multistrap environment* or have the relevant keys already "
-#| "configured using apt-key *on the host system*."
 msgid ""
 "To use authenticated apt repositories, multistrap either needs to be able to "
 "install an appropriate keyring package from the existing apt sources "
@@ -551,13 +530,6 @@ msgstr ""
 #. type: textblock
 #: pod/multistrap:216
 #, fuzzy
-#| msgid ""
-#| "Note that *all* repositories to be used with multistrap must be "
-#| "authenticated or apt will fail. Similarly, secure apt can only be "
-#| "disabled for all repositories (by using the --no-auth command line option "
-#| "or setting the general noauth option in the configuration file), even if "
-#| "only one repository does not have a suitable keyring available. Not all "
-#| "packages need keyring packages, if you configure apt-key appropriately."
 msgid ""
 "Note that B<all> repositories to be used with multistrap must be "
 "authenticated or apt will fail. Similarly, secure apt can only be disabled "
@@ -609,7 +581,6 @@ msgstr ""
 #. type: =head1
 #: pod/multistrap:235
 #, fuzzy
-#| msgid "Configuration"
 msgid "Root Filesystem Configuration"
 msgstr "Configuração"
 
@@ -651,11 +622,6 @@ msgstr ""
 #. type: textblock
 #: pod/multistrap:250
 #, fuzzy
-#| msgid ""
-#| "As an alternative, multistrap includes a device-table.pl helper script "
-#| "that can work around some of the issues with MAKEDEV.  device-table.pl "
-#| "requires a device table file along the lines of the one in the mtd-utils "
-#| "source package."
 msgid ""
 "Any device-specific device nodes will also need to be created using MAKEDEV "
 "or C<device-table.pl> - a helper script that can work around some of the "
