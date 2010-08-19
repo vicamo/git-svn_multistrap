@@ -33,7 +33,7 @@ the apt package cache. Same as cleanup=true.
 --no-auth - allow the use of unauthenticated repositories. Same
 as noauth=true
 
---sourcedir DIR - move the contents of var/cache/apt/archives/ from
+--source-dir DIR - move the contents of var/cache/apt/archives/ from
 inside the chroot to the specified external directory, then add the
 Debian source packages for each used binary. Same as retainsources=DIR
 If the specified directory does not exist, nothing is done. Requires
