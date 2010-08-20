@@ -301,7 +301,7 @@ foreach my $sect (sort keys %packages) {
 	my @list = split (' ', $sect);
 	foreach my $pkg (@list) {
 		next if ($packages{$pkg} =~ /^\s*$/);
-		next if (!(grep(/$sect/, @debootstrap)));
+		next if (!(grep(/^$sect$/i, @debootstrap)));
 		my @long=split (/ /, $packages{$sect});
 		foreach my $l (@long) {
 			chomp ($l);
@@ -925,7 +925,7 @@ sub dump_config {
 	print "source:  \tSources: ".join (", ", sort values %sources)."\n";
 	my @long=();
 	foreach my $sect (sort keys %packages) {
-		next if (!grep(/$sect/, @debootstrap));
+		next if (!grep(/^$sect$/i, @debootstrap));
 		my @list = split (' ', $sect);
 		foreach my $pkg (@list) {
 			next if ($packages{$pkg} =~ /^\s*$/);
