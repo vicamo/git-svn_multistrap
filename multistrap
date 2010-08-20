@@ -923,7 +923,7 @@ sub dump_config {
 		printf ("include:\t"._g("No included configuration files.\n"));
 	}
 	my @srcdump=();
-	foreach my $src (sort keys %sources) {
+	foreach my $src (keys %sources) {
 		next if ((!grep(/^$src$/i, @aptsources)) or (!grep(/^$src$/i, @debootstrap)));
 		push @srcdump, $sources{$src};
 	}
@@ -938,8 +938,8 @@ sub dump_config {
 		}
 	}
 	print "packages:\tPackages: ".join (", ", sort @long)."\n";
-	print "suites:  \tSuites: ".join (", ", sort values %suites)."\n";
-	print "components\tComponents: ".join (", ", sort values %components)."\n";
+	print "suites:  \tSuites: ".join (", ", values %suites)."\n";
+	print "components\tComponents: ".join (", ", values %components)."\n";
 	my $msg="omitdebsrc\t"._g("Omit deb-src from sources.list for sections:");
 	foreach my $omit (sort keys %omitdebsrc) {
 		$msg .= $omitdebsrc{$omit} if (defined $omitdebsrc{$omit});
