@@ -945,6 +945,7 @@ sub dump_config {
 		$msg .= $omitdebsrc{$omit} if (defined $omitdebsrc{$omit});
 	}
 	print "$msg\n";
+        $msg="";
 	if (defined $explicit_suite) {
 		printf("explicitsuite:\t"._g("Explicit suite selection: Yes\n"));
 	} else {
