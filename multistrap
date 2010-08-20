@@ -922,7 +922,12 @@ sub dump_config {
 	} else {
 		printf ("include:\t"._g("No included configuration files.\n"));
 	}
-	print "source:  \tSources: ".join (", ", sort values %sources)."\n";
+	my @srcdump=();
+	foreach my $src (sort keys %sources) {
+		next if ((!grep(/^$src$/i, @aptsources)) or (!grep(/^$src$/i, @debootstrap)));
+		push @srcdump, $sources{$src};
+	}
+	print "source:  \tSources: ".join(", ", @srcdump)."\n";
 	my @long=();
 	foreach my $sect (sort keys %packages) {
 		next if (!grep(/^$sect$/i, @debootstrap));
