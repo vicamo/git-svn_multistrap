@@ -32,7 +32,7 @@ use vars qw/ $progname $ourversion $dstrap $extra @aptsources $mirror
  $type $file $config $tidy $noauth $keyring %keyrings $deflist $cfgdir
  @extrapkgs @includes %source $setupsh $configsh $omitrequired $dryrun
  $omitpreinst @reinstall $tgzname %uniq %required $check @check %uniq
- $explicit_suite $allow_recommends %omitdebsrc @dsclist /;
+ $explicit_suite $allow_recommends %omitdebsrc @dsclist @sectoutput /;
 
 setlocale(LC_MESSAGES, "");
 textdomain("multistrap");
@@ -105,6 +105,16 @@ foreach my $inc (@includes)
 	printf (_g("%s %s using %s\n"), $progname, $ourversion, $chk);
 	cascade($chk);
 }
+%uniq=();
+foreach my $line (@debootstrap) {
+	$uniq{$line}++;
+}
+@debootstrap=sort keys %uniq;
+%uniq=();
+foreach my $line (@aptsources) {
+	$uniq{$line}++;
+}
+@aptsources=sort keys %uniq;
 
 &dump_config if (defined $dryrun);
 if (not defined $dir or not defined $arch) {
@@ -226,12 +236,6 @@ foreach $repo (sort keys %suites) {
 		mkdir "$dir/${cachedir}archives/partial";
 	}
 }
-%uniq=();
-foreach my $line (@debootstrap) {
-	$uniq{$line}++;
-}
-@debootstrap=sort keys %uniq;
-%uniq=();
 foreach my $aptsrc (@debootstrap) {
 	if (defined $deflist) {
 		open (SOURCES, ">>${dir}etc/apt/sources.list.d/multistrap.sources.list") 
@@ -357,12 +361,6 @@ foreach my $filelist (@sources) {
 	next if (-d $filelist);
 	unlink ("${dir}etc/apt/sources.list.d/$filelist");
 }
-%uniq=();
-foreach my $line (@aptsources) {
-	$uniq{$line}++;
-}
-@aptsources=sort keys %uniq;
-%uniq=();
 foreach my $aptsrc (@aptsources) {
 	if (defined $deflist) {
 		open (SOURCES, ">>${dir}etc/apt/sources.list.d/multistrap.sources.list") 
@@ -922,24 +920,30 @@ sub dump_config {
 	} else {
 		printf ("include:\t"._g("No included configuration files.\n"));
 	}
+	# explain the bootstrap section details explicitly and just refer to
+	# those for the apt sources.
+	foreach my $sect_name (@debootstrap) {
+		printf ("Section:\t$sect_name\n");
+		print "\tsource:  \t$sources{$sect_name}\n";
+		my @sorted = split(/ /, $packages{$sect_name});
+		%uniq=();
+		foreach my $pkg (@sorted) {
+			$uniq{$pkg}++;
+		}
+		@sorted = sort keys %uniq;
+		%uniq=();
+		print "\tsuite:  \t$suites{$sect_name}\n";
+		print "\tcomponent\t$components{$sect_name}\n";
+		# only packages can have a list
+		print "\tBootstrap:\tpackages: ".join(" ", @sorted)."\n";
+	}
+	printf ("Bootstrap:\t%s: %s\n", _g("Sections"), join(" ", sort @debootstrap));
+	printf ("AptSources:\t%s: %s\n", _g("Sections"), join(" ", sort @aptsources));
 	my @srcdump=();
 	foreach my $src (sort keys %sources) {
 		next if ((!grep(/^$src$/i, @aptsources)) or (!grep(/^$src$/i, @debootstrap)));
 		push @srcdump, $sources{$src};
 	}
-	print "source:  \tSources: ".join(", ", @srcdump)."\n";
-	my @long=();
-	foreach my $sect (sort keys %packages) {
-		next if (!grep(/^$sect$/i, @debootstrap));
-		my @list = split (' ', $sect);
-		foreach my $pkg (@list) {
-			next if ($packages{$pkg} =~ /^\s*$/);
-			@long=split (/ /, $packages{$sect});
-		}
-	}
-	print "packages:\tPackages: ".join (", ", sort @long)."\n";
-	print "suites:  \tSuites: ".join (", ", sort values %suites)."\n";
-	print "components\tComponents: ".join (", ", sort values %components)."\n";
 	my $srcmsg="omitdebsrc\t"._g("Omit deb-src from sources.list for sections:");
 	foreach my $omit (sort keys %omitdebsrc) {
 		$srcmsg .= $omitdebsrc{$omit} if (defined $omitdebsrc{$omit});
