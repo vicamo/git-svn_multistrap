@@ -32,7 +32,8 @@ use vars qw/ $progname $ourversion $dstrap $extra @aptsources $mirror
  $type $file $config $tidy $noauth $keyring %keyrings $deflist $cfgdir
  @extrapkgs @includes %source $setupsh $configsh $omitrequired $dryrun
  $omitpreinst @reinstall $tgzname %uniq %required $check @check %uniq
- $explicit_suite $allow_recommends %omitdebsrc @dsclist @sectoutput /;
+ $explicit_suite $allow_recommends %omitdebsrc @dsclist @sectoutput
+ %flatfile /;
 
 setlocale(LC_MESSAGES, "");
 textdomain("multistrap");
@@ -931,7 +932,7 @@ sub dump_config {
 		@sorted = sort keys %uniq;
 		%uniq=();
 		print "\tsuite:  \t$suites{$sect_name}\n";
-		print "\tcomponent\t$components{$sect_name}\n";
+		print "\tcomponents:\t$components{$sect_name}\n";
 		# only packages can have a list
 		next if (not grep(/^$sect_name$/i, @debootstrap));
 		print "\tBootstrap:\tpackages: ".join(" ", @sorted)."\n";
@@ -973,9 +974,9 @@ sub dump_config {
 		$msg .= sprintf(_g("Cannot determine directory from '%s'.\n"), $file);
 	}
 	printf ("unpack:   \t"._g("extract all downloaded archives: %s\n"), $unpack) if (defined $unpack);
-	print "configscript\t: $configsh\n" if (defined $configsh);
-	print "setupscript\t: $setupsh\n" if (defined $setupsh);
-	print "omitrequired\t: $omitrequired\n" if (defined $omitrequired);
+	print "configscript:\t$configsh\n" if (defined $configsh);
+	print "setupscript:\t$setupsh\n" if (defined $setupsh);
+	print "omitrequired:\t$omitrequired\n" if (defined $omitrequired);
 	if (defined $tidy) {
 		printf ("cleanup: \t"._g("remove apt cache data: true\n"));
 	} else {
