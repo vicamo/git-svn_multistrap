@@ -7,14 +7,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: multistrap 2.1.4\n"
-"POT-Creation-Date: 2010-08-19 10:39+0200\n"
+"POT-Creation-Date: 2010-08-25 21:29+0200\n"
 "PO-Revision-Date: 2010-05-30 11:24+0100\n"
 "Last-Translator: Alexandre Normand <aj.normand@free.fr>\n"
 "Language-Team: French <debian-l10n-french@lists.debian.org>\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr\n"
 "X-Poedit-Bookmarks: 138,-1,-1,-1,-1,-1,-1,-1,-1,-1\n"
 
 #. type: =head1
@@ -300,9 +300,9 @@ msgid ""
 "'Architecture' and 'directory' can be overridden on the command line.  Some "
 "other general options also have command line options."
 msgstr ""
-"« Architecture » et « directory » peuvent être modifiés en ligne de commande. "
-"D'autres options générales peuvent aussi être indiquées en ligne de "
-"commande, sauf debootstrap."
+"« Architecture » et « directory » peuvent être modifiés en ligne de "
+"commande. D'autres options générales peuvent aussi être indiquées en ligne "
+"de commande, sauf debootstrap."
 
 #. type: =head1
 #: pod/multistrap:115
@@ -371,8 +371,8 @@ msgid ""
 "'directory' specifies the top level directory where the bootstrap will be "
 "created - it is not packed into a .tgz once complete."
 msgstr ""
-"« directory » indique le répertoire de haut niveau dans lequel le debootstrap "
-"sera créé - il n'est pas empaqueté en un .tgz une fois complété."
+"« directory » indique le répertoire de haut niveau dans lequel le "
+"debootstrap sera créé - il n'est pas empaqueté en un .tgz une fois complété."
 
 #. type: textblock
 #: pod/multistrap:141
@@ -2024,8 +2024,8 @@ msgstr "Voir aussi : http://wiki.debian.org/Multistrap"
 #~ "Adds \"export DEBCONF_USE_CDEBCONF=true\" to $TARGET/etc/profile for "
 #~ "cdebconf support."
 #~ msgstr ""
-#~ "Ajoute « export DEBCONF_USE_CDEBCONF=true » au fichier $TARGET/etc/profile "
-#~ "pour activer l'assistance de cdebconf."
+#~ "Ajoute « export DEBCONF_USE_CDEBCONF=true » au fichier $TARGET/etc/"
+#~ "profile pour activer l'assistance de cdebconf."
 
 #~ msgid "symlink_rcS"
 #~ msgstr "symlink_rcS"
