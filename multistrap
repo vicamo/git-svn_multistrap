@@ -901,16 +901,14 @@ sub dump_config {
 		" cannot be parsed correctly."), $file);
 		warn ("\n$msg\n");
 	}
-	# Translators: followed by a list of section names from the config file.
-	printf ("bootstrap:\t"._g("Sections specifying packages for downloading in the bootstrap: ").join (", ", sort @debootstrap)."\n");
-	# Translators: followed by a list of section names from the config file.
-	printf ("aptsources:\t"._g("Sections specifying apt sources in the final system: ").join (", ", sort @aptsources)."\n");
 	@check=();
 	%uniq=();
 	push @check, @debootstrap;
 	push @check, @aptsources;
 	foreach my $sect (@check) { $uniq{$sect}++; }
-	foreach my $sect (sort keys %uniq) {
+	@check = sort keys %uniq;
+	%uniq=();
+	foreach my $sect (@check) {
 		if (not exists $keys{$sect}) {
 			$msg .= sprintf (_g("ERR: The '%s' section is not defined.\n"), $sect);
 		}
@@ -922,7 +920,7 @@ sub dump_config {
 	}
 	# explain the bootstrap section details explicitly and just refer to
 	# those for the apt sources.
-	foreach my $sect_name (@debootstrap) {
+	foreach my $sect_name (@check) {
 		printf ("Section:\t$sect_name\n");
 		print "\tsource:  \t$sources{$sect_name}\n";
 		my @sorted = split(/ /, $packages{$sect_name});
@@ -935,6 +933,7 @@ sub dump_config {
 		print "\tsuite:  \t$suites{$sect_name}\n";
 		print "\tcomponent\t$components{$sect_name}\n";
 		# only packages can have a list
+		next if (not grep(/^$sect_name$/i, @debootstrap));
 		print "\tBootstrap:\tpackages: ".join(" ", @sorted)."\n";
 	}
 	printf ("Bootstrap:\t%s: %s\n", _g("Sections"), join(" ", sort @debootstrap));
