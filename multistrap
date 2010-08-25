@@ -940,12 +940,11 @@ sub dump_config {
 	print "packages:\tPackages: ".join (", ", sort @long)."\n";
 	print "suites:  \tSuites: ".join (", ", sort values %suites)."\n";
 	print "components\tComponents: ".join (", ", sort values %components)."\n";
-	my $msg="omitdebsrc\t"._g("Omit deb-src from sources.list for sections:");
+	my $srcmsg="omitdebsrc\t"._g("Omit deb-src from sources.list for sections:");
 	foreach my $omit (sort keys %omitdebsrc) {
-		$msg .= $omitdebsrc{$omit} if (defined $omitdebsrc{$omit});
+		$srcmsg .= $omitdebsrc{$omit} if (defined $omitdebsrc{$omit});
 	}
-	print "$msg\n";
-	$msg="";
+	print "$srcmsg\n";
 	if (defined $explicit_suite) {
 		printf("explicitsuite:\t"._g("Explicit suite selection: Yes\n"));
 	} else {
