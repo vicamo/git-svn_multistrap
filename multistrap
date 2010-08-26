@@ -247,8 +247,9 @@ foreach my $aptsrc (@debootstrap) {
 		open (SOURCES, ">>${dir}etc/apt/sources.list.d/multistrap-${aptsrc}.list") 
 			or die _g("Cannot open sources list"). $!;
 		$mirror = $sources{$aptsrc};
-		$suite = $suites{$aptsrc};
-		$component = (defined $components{$aptsrc}) ? $components{$aptsrc} : "main";
+		$suite = (exists $flatfile{$aptsrc}) ? $suites{$aptsrc} : "";
+		$component = (defined $components{$aptsrc}) ? $components{$aptsrc}
+			: (exists $flatfile{$aptsrc}) ? "" : "main";
 		if (defined $mirror and defined $suite) {
 			print SOURCES "deb $mirror $suite $component\n";
 			print SOURCES "deb-src $mirror $suite $component\n" if (not defined $omitdebsrc{$aptsrc});
@@ -372,8 +373,9 @@ foreach my $aptsrc (@aptsources) {
 		open (SOURCES, ">>${dir}etc/apt/sources.list.d/multistrap-${aptsrc}.list") 
 			or die _g("Cannot open sources list"). $!;
 		$mirror = $sources{$aptsrc};
-		$suite = $suites{$aptsrc};
-		$component = (defined $components{$aptsrc}) ? $components{$aptsrc} : "main";
+		$suite = (exists $flatfile{$aptsrc}) ? $suites{$aptsrc} : "";
+		$component = (defined $components{$aptsrc}) ? $components{$aptsrc}
+			: (exists $flatfile{$aptsrc}) ? "" : "main";
 		if (defined $mirror and defined $suite) {
 			print SOURCES "deb $mirror $suite $component\n";
 			print SOURCES "deb-src $mirror $suite $component\n" if (not defined $omitdebsrc{$aptsrc});
@@ -849,9 +851,13 @@ sub cascade {
 			push @includes, @i;
 		} else {
 			$sources{$section}=$keys{$section}{'source'} if (not exists $source{$section});
+			# don't set suite or component if URL is of apt-ftparchive trailing-slash form
+			$flatfile{$section}++ if (($sources{$section} =~ /.* .*\/$/));
 			$packages{$section}=$keys{$section}{'packages'} if (not exists $packages{$section});
-			$suites{$section}=$keys{$section}{'suite'} if (not exists $suites{$section});
-			$components{$section}=$keys{$section}{'components'} if (not exists $components{$section});
+			$suites{$section}=$keys{$section}{'suite'}
+				if (not exists $suites{$section} and not exists $flatfile{$section});
+			$components{$section}=$keys{$section}{'components'}
+				if (not exists $components{$section} and not exists $flatfile{$section});
 			$omitdebsrc{$section}=$section if ((defined $keys{$section}{'omitdebsrc'})
 				and ($keys{$section}{'omitdebsrc'} eq "true"));
 			push @reinstall, split (/ /, lc($keys{$section}{'reinstall'}));
@@ -931,8 +937,8 @@ sub dump_config {
 		}
 		@sorted = sort keys %uniq;
 		%uniq=();
-		print "\tsuite:  \t$suites{$sect_name}\n";
-		print "\tcomponents:\t$components{$sect_name}\n";
+		print "\tsuite:  \t$suites{$sect_name}\n" if (not exists $flatfile{$sect_name});
+		print "\tcomponents:\t$components{$sect_name}\n" if (not exists $flatfile{$sect_name});
 		# only packages can have a list
 		next if (not grep(/^$sect_name$/i, @debootstrap));
 		print "\tBootstrap:\tpackages: ".join(" ", @sorted)."\n";
