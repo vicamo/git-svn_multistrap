@@ -5,6 +5,7 @@ multistrap (2.1.7) unstable; urgency=low
   * Improve the omitdebsrc handling for detection of 'true'.
   * Add examples for Grip.
   * Add more synopsis information to manual page. (Closes: #592621)
+  * Add support for 'flat' apt-ftparchive-style URLs
 
  -- Neil Williams <codehelp@debian.org>  Tue, 17 Aug 2010 18:24:30 +0100
 
