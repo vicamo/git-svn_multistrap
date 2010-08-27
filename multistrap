@@ -247,9 +247,9 @@ foreach my $aptsrc (@debootstrap) {
 		open (SOURCES, ">>${dir}etc/apt/sources.list.d/multistrap-${aptsrc}.list") 
 			or die _g("Cannot open sources list"). $!;
 		$mirror = $sources{$aptsrc};
-		$suite = (exists $flatfile{$aptsrc}) ? $suites{$aptsrc} : "";
-		$component = (defined $components{$aptsrc}) ? $components{$aptsrc}
-			: (exists $flatfile{$aptsrc}) ? "" : "main";
+		$suite = (exists $flatfile{$aptsrc}) ? "" : $suites{$aptsrc};
+		$component = (exists $flatfile{$aptsrc}) ? "" 
+			: (defined $components{$aptsrc}) ? $components{$aptsrc} : "main";
 		if (defined $mirror and defined $suite) {
 			print SOURCES "deb $mirror $suite $component\n";
 			print SOURCES "deb-src $mirror $suite $component\n" if (not defined $omitdebsrc{$aptsrc});
@@ -285,8 +285,10 @@ $config_str .= " -o Apt::Get::Download-Only=true";
 $config_str .= " -o Apt::Install-Recommends=false";
 $config_str .= " -o Dir=$dir";
 $config_str .= " -o Dir::Etc=${dir}${etcdir}";
-$sourcesname = "sources.list.d/multistrap.sources.list";
-$config_str .= " -o Dir::Etc::SourceList=${dir}${etcdir}$sourcesname";
+if (defined $deflist) {
+	$sourcesname = "sources.list.d/multistrap.sources.list";
+        $config_str .= " -o Dir::Etc::SourceList=${dir}${etcdir}$sourcesname";
+}
 $config_str .= " -o Dir::State=${dir}${libdir}";
 $config_str .= " -o Dir::State::Status=${dir}${dpkgdir}status";
 $config_str .= " -o Dir::Cache=${dir}${cachedir}";
@@ -311,7 +313,7 @@ foreach my $sect (sort keys %packages) {
 		my @long=split (/ /, $packages{$sect});
 		foreach my $l (@long) {
 			chomp ($l);
-			if (defined $explicit_suite) {
+			if (defined $explicit_suite and $suites{$sect}) {
 				# instruct apt to get packages from the specified
 				# suites (when the package exists in more than one).
 				$str .= " $l/$suites{$sect}" if ((defined $l) and ($l !~ /^\s*$/));
@@ -373,7 +375,7 @@ foreach my $aptsrc (@aptsources) {
 		open (SOURCES, ">>${dir}etc/apt/sources.list.d/multistrap-${aptsrc}.list") 
 			or die _g("Cannot open sources list"). $!;
 		$mirror = $sources{$aptsrc};
-		$suite = (exists $flatfile{$aptsrc}) ? $suites{$aptsrc} : "";
+		$suite = (exists $flatfile{$aptsrc}) ? "" : $suites{$aptsrc};
 		$component = (defined $components{$aptsrc}) ? $components{$aptsrc}
 			: (exists $flatfile{$aptsrc}) ? "" : "main";
 		if (defined $mirror and defined $suite) {
@@ -852,7 +854,8 @@ sub cascade {
 		} else {
 			$sources{$section}=$keys{$section}{'source'} if (not exists $source{$section});
 			# don't set suite or component if URL is of apt-ftparchive trailing-slash form
-			$flatfile{$section}++ if (($sources{$section} =~ /.* .*\/$/));
+		        # regexp is: optional string in '[]', string without '[' or ']', string ending in '/'
+			$flatfile{$section}++ if (($sources{$section} =~ /^(\[.*\] )*[^\[\]]+ .+\/$/));
 			$packages{$section}=$keys{$section}{'packages'} if (not exists $packages{$section});
 			$suites{$section}=$keys{$section}{'suite'}
 				if (not exists $suites{$section} and not exists $flatfile{$section});
