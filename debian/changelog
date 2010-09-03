@@ -1,13 +1,15 @@
-multistrap (2.1.7) unstable; urgency=low
+multistrap (2.1.8) experimental; urgency=low
 
   * Add all packages to the source dir, including calculated
     dependencies.
   * Improve the omitdebsrc handling for detection of 'true'.
   * Add examples for Grip.
   * Add more synopsis information to manual page. (Closes: #592621)
+  * Aim 2.1.8 at experimental as squeeze is frozen and this version
+    includes possibly disruptive changes. 
   * Add support for 'flat' apt-ftparchive-style URLs
 
- -- Neil Williams <codehelp@debian.org>  Tue, 17 Aug 2010 18:24:30 +0100
+ -- Neil Williams <codehelp@debian.org>  Wed, 25 Aug 2010 22:59:47 +0100
 
 multistrap (2.1.6) unstable; urgency=low
 
