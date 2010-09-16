@@ -439,6 +439,12 @@ Compare with
 
  $ sudo apt-get install apt/lenny
 
+When using explicitsuite, take care in using stable-proposed-updates
+or other temporary locations - if the package migrates into another
+suite and is removed from the temporary suite (as with 
+*-proposed-updates), multistrap will not be able to find the
+package.
+
 =cut
 
 =head1 Omitting deb-src listings
