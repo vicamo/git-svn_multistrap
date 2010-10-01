@@ -26,6 +26,11 @@ if [ -z "$dir" ]; then
 	exit 1
 fi
 
+#run chroot script to ensure no unwanted system interactions (e.g. startup scripts)
+if [ -x /usr/share/multistrap/chroot.sh ]; then
+   /usr/share/multistrap/chroot.sh $dir $hostarch
+fi
+
 cfg="/etc/pdebuild-cross/pdebuild-cross.rc"
 if [ -f $cfg ]; then
 	. $cfg
