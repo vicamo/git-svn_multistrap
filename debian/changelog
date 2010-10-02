@@ -1,21 +1,36 @@
 multistrap (2.1.8) experimental; urgency=low
 
-  * Add all packages to the source dir, including calculated
-    dependencies.
+  [ Neil Williams ]
   * Improve the omitdebsrc handling for detection of 'true'.
   * Add examples for Grip.
   * Add more synopsis information to manual page. (Closes: #592621)
   * Aim 2.1.8 at experimental as squeeze is frozen and this version
     includes possibly disruptive changes.
 
- -- Neil Williams <codehelp@debian.org>  Wed, 25 Aug 2010 22:59:47 +0100
-
+  [Wookey]
   * Add support for 'flat' apt-ftparchive-style URLs
   * Include chroot.sh preventing services being started during chroot creation
   * Always use the host apt keyring when bootstrapping, since we don't
     have one yet in the target root.
 
- -- Wookey <wookey@debian.org>  Fri, 30 Sep 2010 02:21:21 +0100
+ -- Neil Williams <codehelp@debian.org>  Sat, 02 Oct 2010 16:53:47 +0100
+
+multistrap (2.1.7) unstable; urgency=low
+
+  * Add all packages to the source dir, including calculated
+    dependencies.
+  * [INTL:pt] Updated Portuguese translation for manpages
+    (Closes: #595308)
+  * [INTL:da] Danish translation of multistrap (Closes: #595391)
+  * [INTL:pt] Updated Portuguese translation for program messages
+    (Closes: #597144)
+  * [INTL:fr] French manpage translation (Closes: #597385)
+  * [INTL:de] german manpage translation (Closes: #597505)
+  * [INTL:vi] Vietnamese program translation update (Closes: #598476)
+  * Pre-handle keyring packages using GPG for use with apt >= 0.8
+    (Closes: #595017)
+
+ -- Neil Williams <codehelp@debian.org>  Sat, 02 Oct 2010 16:27:01 +0100
 
 multistrap (2.1.6) unstable; urgency=low
 
