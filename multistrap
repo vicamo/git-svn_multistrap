@@ -162,6 +162,8 @@ system ("mkdir -p ${dir}${libdir}") if (not -d "${dir}${libdir}");
 system ("mkdir -p ${dir}${dpkgdir}") if (not -d "${dir}${dpkgdir}");
 system ("mkdir -p ${dir}etc/apt/sources.list.d/")
 	if (not -d "${dir}etc/apt/sources.list.d/");
+system ("mkdir -p ${dir}etc/apt/trusted.gpg.d/")
+	if (not -d "${dir}etc/apt/trusted.gpg.d/");
 system ("mkdir -p ${dir}etc/apt/preferences.d/")
 	if (not -d "${dir}etc/apt/preferences.d/");
 system ("mkdir -p ${dir}usr/share/info/")
@@ -261,26 +263,37 @@ my $k;
 foreach my $pkg (values %keyrings) {
 	next if (not defined $pkg);
 	next if ("" eq "$pkg");
-	my $status = `LC_ALL=C dpkg -s $pkg`;
-	next if $status =~ /Status: install ok installed/;
 	$k .= "$pkg ";
 }
-if (defined $k) {
-	my $e=`LC_ALL=C printenv`;
-	if ($e !~ /\nFAKEROOTKEY=[0-9]+\n/) {
-		my $str = "";
-		if (($e =~ /\nUSER=root\n/)) {
-			$str = "sudo" if (-f "/usr/bin/sudo");
+if ((defined $k) and (not defined $noauth)) {
+	printf (_g("I: Installing %s\n"), $k);
+	system ("apt-get -d --reinstall install $k");
+	foreach my $keyring_pkg (values %keyrings) {
+		my @files=();
+		my $file = `find /var/cache/apt/archives/ -name "$keyring_pkg*"`;
+		chomp ($file);
+		my $xdir = `mktemp -d -t keyring.XXXXXX`;
+		chomp ($xdir);
+		system ("dpkg -X $file $xdir >/dev/null");
+		if (-d "${xdir}/usr/share/keyrings") {
+			opendir (DIR, "${xdir}/usr/share/keyrings");
+			@files=grep(!m:\.\.?$:,readdir DIR);
+			closedir (DIR);
 		}
-		printf (_g("I: Installing %s\n"), $k);
-		system ("$str apt-get install $k");
+		foreach my $gpg (@files) {
+			next if ($gpg =~ /removed/);
+			system ("gpg --no-default-keyring ".
+				"--homedir=${dir}/etc/apt/trusted.gpg.d/ ".
+				"--keyring=multistrap.gpg ".
+				" --import ${xdir}/usr/share/keyrings/${gpg} 2>/dev/null");
+		}
+		system ("rm -rf ${xdir}");
 	}
 }
-
 $config_str = '';
 $config_str .= " -o Apt::Architecture=$arch";
-$config_str .= " -o Dir::Etc::TrustedParts=/etc/apt/trusted.gpg.d";
-$config_str .= " -o Dir::Etc::Trusted=/etc/apt/trusted.gpg";
+$config_str .= " -o Dir::Etc::TrustedParts=${dir}${etcdir}trusted.gpg.d";
+$config_str .= " -o Dir::Etc::Trusted=${dir}${etcdir}trusted.gpg";
 $config_str .= " -o Apt::Get::AllowUnauthenticated=true"
 	if (defined $noauth);
 $config_str .= " -o Apt::Get::Download-Only=true";
@@ -289,7 +302,7 @@ $config_str .= " -o Dir=$dir";
 $config_str .= " -o Dir::Etc=${dir}${etcdir}";
 if (defined $deflist) {
 	$sourcesname = "sources.list.d/multistrap.sources.list";
-        $config_str .= " -o Dir::Etc::SourceList=${dir}${etcdir}$sourcesname";
+	$config_str .= " -o Dir::Etc::SourceList=${dir}${etcdir}$sourcesname";
 }
 $config_str .= " -o Dir::State=${dir}${libdir}";
 $config_str .= " -o Dir::State::Status=${dir}${dpkgdir}status";
