@@ -267,7 +267,7 @@ foreach my $pkg (values %keyrings) {
 }
 if ((defined $k) and (not defined $noauth)) {
 	printf (_g("I: Installing %s\n"), $k);
-	system ("apt-get -d --reinstall install $k");
+	system ("apt-get -y -d --reinstall install $k");
 	foreach my $keyring_pkg (values %keyrings) {
 		my @files=();
 		my $file = `find /var/cache/apt/archives/ -name "$keyring_pkg*"`;
