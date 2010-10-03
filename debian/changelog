@@ -11,8 +11,6 @@ multistrap (2.1.8) experimental; urgency=low
   [ Wookey ]
   * Add support for 'flat' apt-ftparchive-style URLs
   * Include chroot.sh preventing services being started during chroot creation
-  * Always use the host apt keyring when bootstrapping, since we don't
-    have one yet in the target root.
 
   [ Neil Williams ]
   * Improve check-deps to find missing packages
