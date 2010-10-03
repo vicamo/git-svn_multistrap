@@ -203,10 +203,13 @@ The codename (etch, lenny, squeeze, sid) does not change.
 
 =head1 Secure Apt
 
-To use authenticated apt repositories, multistrap either needs to be
-able to install an appropriate keyring package from the existing apt
-sources B<outside the multistrap environment> or have the relevant keys
-already configured using apt-key B<on the host system>.
+To use authenticated apt repositories, multistrap needs to be able to
+install an appropriate keyring package from the existing apt
+sources B<outside the multistrap environment> into the destination
+system. Unfortunately, keyring packages cannot be downloaded from
+the repositories specified in the multistrap configuration - this is
+because C<apt> needs the keyring to be updated before being able to
+use repositories not previously known.
 
 If relevant packages exist, specify them in the 'keyring' option for
 each repository. multistrap will then check that apt has already
@@ -218,14 +221,10 @@ authenticated or apt will fail. Similarly, secure apt can only be
 disabled for all repositories (by using the --no-auth command line
 option or setting the general noauth option in the configuration
 file), even if only one repository does not have a suitable keyring
-available. Not all packages need keyring packages, if you configure
-apt-key appropriately.
+available.
 
 The keyring package(s) will also be installed inside the multistrap
 environment to match the installed apt sources for the multistrap.
-
-All configuration of apt-key needs to be done for the machine
-running multistrap itself.
 
 =head1 State
 

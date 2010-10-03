@@ -16,8 +16,10 @@ multistrap (2.1.8) experimental; urgency=low
 
   [ Neil Williams ]
   * Improve check-deps to find missing packages
+  * Drop all use of forceyes - no longer necessary.
+  * Handle missing 'include' files cleanly and early. (Closes: #595006)
 
- -- Neil Williams <codehelp@debian.org>  Sun, 03 Oct 2010 16:17:16 +0100
+ -- Neil Williams <codehelp@debian.org>  Sun, 03 Oct 2010 19:08:43 +0100
 
 multistrap (2.1.7) unstable; urgency=low
 

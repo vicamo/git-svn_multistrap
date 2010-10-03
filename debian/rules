@@ -4,4 +4,3 @@ include /usr/share/cdbs/1/rules/debhelper.mk
 
 DEB_MAKE_INSTALL_TARGET=install
 DEB_COMPRESS_EXCLUDE_ALL := device_table.txt
-

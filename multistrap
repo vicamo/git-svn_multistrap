@@ -147,7 +147,10 @@ unless (keys %sources and @aptsources) {
 
 # Translators: fields are: programname, architecture, host architecture.
 printf (_g("%s building %s multistrap on '%s'\n"), $progname, $arch, $host);
-
+if ($dir =~ /^$/) {
+	my $msg = _g("No directory specified!");
+	die "$progname: $msg\n";
+}
 if (not -d "$dir") {
 	my $ret = system ("mkdir -p $dir");
 	$ret /= 256 if (defined $ret);
@@ -267,11 +270,16 @@ foreach my $pkg (values %keyrings) {
 }
 if ((defined $k) and (not defined $noauth)) {
 	printf (_g("I: Installing %s\n"), $k);
+	# the keyring package must be available to the external apt
 	system ("apt-get -y -d --reinstall install $k");
 	foreach my $keyring_pkg (values %keyrings) {
 		my @files=();
 		my $file = `find /var/cache/apt/archives/ -name "$keyring_pkg*"`;
 		chomp ($file);
+		if ($file eq "") {
+			my $msg = sprintf (_g("Unable to download keyring package: '%s'"),$dir);
+			die "$progname: $msg\n";
+		}
 		my $xdir = `mktemp -d -t keyring.XXXXXX`;
 		chomp ($xdir);
 		system ("dpkg -X $file $xdir >/dev/null");
@@ -348,9 +356,7 @@ foreach my $a (@s) {
 }
 $str = join (' ', sort keys %uniq);
 @dsclist = sort keys %uniq;
-my $forceyes="";
-$forceyes="--force-yes" if (defined $noauth);
-print "apt-get $forceyes -y $config_str install $str\n";
+print "apt-get -y $config_str install $str\n";
 $retval = system ("apt-get -y $config_str install $str");
 die (sprintf (_g("apt download failed. Exit value: %d\n"),($retval/256)))
 	if ($retval != 0);
@@ -684,7 +690,7 @@ sub native {
 	}
 	# reinstall set
 	foreach my $reinst (sort @reinstall) {
-		system ("$str $env chroot $dir apt-get --reinstall -y $forceyes install $reinst");
+		system ("$str $env chroot $dir apt-get --reinstall -y install $reinst");
 	}
 }
 
@@ -865,6 +871,18 @@ sub cascade {
 			my @a = split (' ', lc($keys{$section}{'aptsources'}));
 			push @aptsources, @a;
 			my @i = split (' ', lc($keys{$section}{'include'}));
+			foreach my $inc (@i) {
+				# look for the full filepath or try same directory as current conf.
+				if (not -f $inc) {
+					$chk = `realpath $cfgdir/$inc 2>/dev/null`;
+					chomp ($chk) if (defined $chk);
+					$inc = $chk if (-f $chk);
+				}
+				if (not -f $inc) {
+					my $dirmsg = sprintf (_g("ERR: Cannot find include file: '%s' for '%s'"), $inc, $file);
+					die ("$dirmsg\n");
+				}
+			}
 			push @includes, @i;
 		} else {
 			$sources{$section}=$keys{$section}{'source'} if (not exists $source{$section});
