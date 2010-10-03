@@ -1,5 +1,9 @@
 multistrap (2.1.8) experimental; urgency=low
 
+  [ Wookey ]
+  * Add support for 'flat' apt-ftparchive-style URLs
+  * Include chroot.sh preventing services being started during chroot creation
+
   [ Neil Williams ]
   * Improve the omitdebsrc handling for detection of 'true'.
   * Add examples for Grip.
@@ -7,12 +11,6 @@ multistrap (2.1.8) experimental; urgency=low
   * Aim 2.1.8 at experimental as squeeze is frozen and this version
     includes possibly disruptive changes.
   * Remove aptsources lists in bootstrap phase (Closes: #593561)
-
-  [ Wookey ]
-  * Add support for 'flat' apt-ftparchive-style URLs
-  * Include chroot.sh preventing services being started during chroot creation
-
-  [ Neil Williams ]
   * Improve check-deps to find missing packages
   * Drop all use of forceyes - no longer necessary.
   * Handle missing 'include' files cleanly and early. (Closes: #595006)
