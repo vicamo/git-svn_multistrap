@@ -63,6 +63,9 @@ for pkg in $DEPS; do
 	if [ "apt" = "$name" ]; then
 		continue
 	fi
+	if [ -z "$name" ]; then
+		continue
+	fi
 	orlist=$(echo $pkg|grep "|" || true)
 	while [ -n "$orlist" ]; do
 		ORPKG=`echo $pkg|cut -d'|' -f2|sed -e 's/^ //'`
@@ -82,22 +85,22 @@ for pkg in $DEPS; do
 			set +e
 			CHECK=`dpkg --compare-versions $POLICY "$VERCMP" $VERLIMIT ; echo $?`
 			set -e
-		fi
-		if [ -z "$CHECK" ]; then
-			VERLIMIT=
-			VERCMP=
-			name=$(echo $ALTERNATE|sed -e 's/^ //'|cut -d' ' -f1)
-			if [ -n `echo $ALTERNATE|grep '('` ]; then
-				VERLIMIT=`echo $ALTERNATE|cut -d'(' -f2|tr -d ')'|tr -d '\n'|grep -v $name || true`
-				VERCMP=`echo $VERLIMIT|sed -e 's/\(.*\) \(.*\)/\1/'`
-				VERLIMIT=`echo $VERLIMIT|sed -e 's/\(.*\) \(.*\)/\2/'`
-			fi
-			POLICY=`LC_ALL=C apt-cache policy $name 2>/dev/null|grep Candidate|cut -d':' -f2-3|tr -d ' '`
-			if [ -n "$POLICY" ]; then
-				if [ -n "$VERLIMIT" ]; then
-					set +e
-					CHECK=`dpkg --compare-versions $POLICY "$VERCMP" $VERLIMIT ; echo $?`
-					set -e
+			if [ -z "$CHECK" ]; then
+				VERLIMIT=
+				VERCMP=
+				name=$(echo $ALTERNATE|sed -e 's/^ //'|cut -d' ' -f1)
+				if [ -n `echo $ALTERNATE|grep '('` ]; then
+					VERLIMIT=`echo $ALTERNATE|cut -d'(' -f2|tr -d ')'|tr -d '\n'|grep -v $name || true`
+					VERCMP=`echo $VERLIMIT|sed -e 's/\(.*\) \(.*\)/\1/'`
+					VERLIMIT=`echo $VERLIMIT|sed -e 's/\(.*\) \(.*\)/\2/'`
+				fi
+				POLICY=`LC_ALL=C apt-cache policy $name 2>/dev/null|grep Candidate|cut -d':' -f2-3|tr -d ' '`
+				if [ -n "$POLICY" ]; then
+					if [ -n "$VERLIMIT" ]; then
+						set +e
+						CHECK=`dpkg --compare-versions $POLICY "$VERCMP" $VERLIMIT ; echo $?`
+						set -e
+					fi
 				fi
 			fi
 		fi
@@ -112,6 +115,10 @@ for pkg in $DEPS; do
 	fi
 	if [ -n "$YES" ]; then
 		CMD="$CMD -y $name"
+	fi
+	MISSING=`dpkg-query -W -f '\${Status}' $name 2>/dev/null | grep "install ok installed"|sed -e 's/ //g'`
+	if [ -z "$MISSING" ]; then
+		CMD="$CMD $name"
 	fi
 done
 if [ -n "$ERR" ]; then

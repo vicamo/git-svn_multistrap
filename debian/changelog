@@ -6,14 +6,18 @@ multistrap (2.1.8) experimental; urgency=low
   * Add more synopsis information to manual page. (Closes: #592621)
   * Aim 2.1.8 at experimental as squeeze is frozen and this version
     includes possibly disruptive changes.
+  * Remove aptsources lists in bootstrap phase (Closes: #593561)
 
-  [Wookey]
+  [ Wookey ]
   * Add support for 'flat' apt-ftparchive-style URLs
   * Include chroot.sh preventing services being started during chroot creation
   * Always use the host apt keyring when bootstrapping, since we don't
     have one yet in the target root.
 
- -- Neil Williams <codehelp@debian.org>  Sat, 02 Oct 2010 16:53:47 +0100
+  [ Neil Williams ]
+  * Improve check-deps to find missing packages
+
+ -- Neil Williams <codehelp@debian.org>  Sun, 03 Oct 2010 16:17:16 +0100
 
 multistrap (2.1.7) unstable; urgency=low
 
@@ -29,8 +33,9 @@ multistrap (2.1.7) unstable; urgency=low
   * [INTL:vi] Vietnamese program translation update (Closes: #598476)
   * Pre-handle keyring packages using GPG for use with apt >= 0.8
     (Closes: #595017)
+  * [INTL:fr] French program translation update (Closes: #598873)
 
- -- Neil Williams <codehelp@debian.org>  Sat, 02 Oct 2010 16:27:01 +0100
+ -- Neil Williams <codehelp@debian.org>  Sat, 02 Oct 2010 19:26:02 +0100
 
 multistrap (2.1.6) unstable; urgency=low
 
