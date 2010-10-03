@@ -93,18 +93,10 @@ $dpkgdir = "var/lib/dpkg/";   # state
 $cfgdir=dirname($file);
 cascade($file);
 
-foreach my $inc (@includes)
-{
-	# look for the full filepath or try same directory as current conf.
-	if (not -f $inc ) {
-		$chk = `realpath $cfgdir/$inc 2>/dev/null`;
-		next if ($chk =~ /^\n?$/);
-		chomp ($chk);
-	} else {
-		$chk = $inc;
-	}
-	printf (_g("%s %s using %s\n"), $progname, $ourversion, $chk);
-	cascade($chk);
+foreach my $inc (@includes) {
+	# Translators: fields are programname, version string, include file.
+	printf (_g("%s %s including %s\n"), $progname, $ourversion, $inc);
+	cascade($inc);
 }
 %uniq=();
 foreach my $line (@debootstrap) {
@@ -172,9 +164,6 @@ system ("mkdir -p ${dir}etc/apt/preferences.d/")
 system ("mkdir -p ${dir}usr/share/info/")
 	if (not -d "${dir}usr/share/info/");
 system ("touch ${dir}usr/share/info/dir");
-my $msg = sprintf(_g("Unable to create directory '%s'\n"), "${dir}etc/apt/preferences.d/");
-die ($msg)
-	if (not -d "${dir}etc/apt/preferences.d/");
 
 @dirs = qw/ alternatives info parts updates/;
 @touch = qw/ diversions statoverride status lock/;
