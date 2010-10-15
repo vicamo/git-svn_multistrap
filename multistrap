@@ -84,6 +84,7 @@ while( @ARGV ) {
 $msg = sprintf (_g("Need a configuration file - use %s -f\n"), $progname);
 die ($msg)
 	if (not defined $file);
+undef ($msg);
 
 $cachedir = "var/cache/apt/"; # archives
 $libdir = "var/lib/apt/";     # lists
