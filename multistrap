@@ -260,7 +260,13 @@ foreach my $pkg (values %keyrings) {
 if ((defined $k) and (not defined $noauth)) {
 	printf (_g("I: Installing %s\n"), $k);
 	# the keyring package must be available to the external apt
-	system ("apt-get -y -d --reinstall install $k");
+	my $str = "";
+	my $e=`LC_ALL=C printenv`;
+	if ($e !~ /\nFAKEROOTKEY=[0-9]+\n/) {
+		if (($e =~ /\nUSER=root\n/)) {
+			$str = "sudo" if (-f "/usr/bin/sudo");
+		}
+	system ("$str apt-get -y -d --reinstall install $k");
 	foreach my $keyring_pkg (values %keyrings) {
 		my @files=();
 		my $file = `find /var/cache/apt/archives/ -name "$keyring_pkg*"`;
@@ -859,7 +865,8 @@ sub cascade {
 			push @debootstrap, @b;
 			my @a = split (' ', lc($keys{$section}{'aptsources'}));
 			push @aptsources, @a;
-			my @i = split (' ', lc($keys{$section}{'include'}));
+			my @i = split (' ', $keys{$section}{'include'})
+				if (defined $keys{$section}{'include'});
 			foreach my $inc (@i) {
 				# look for the full filepath or try same directory as current conf.
 				if (not -f $inc) {
