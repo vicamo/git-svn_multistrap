@@ -940,7 +940,7 @@ sub dump_config {
 	if (not defined $dir or not defined $arch) {
 		my $msg = sprintf(_g("The supplied configuration file '%s'".
 		" cannot be parsed correctly."), $file);
-		warn ("\n$msg\n");
+		warn ("\n$msg\n\n");
 	}
 	@check=();
 	%uniq=();
