@@ -266,6 +266,7 @@ if ((defined $k) and (not defined $noauth)) {
 		if (($e =~ /\nUSER=root\n/)) {
 			$str = "sudo" if (-f "/usr/bin/sudo");
 		}
+	}
 	system ("$str apt-get -y -d --reinstall install $k");
 	foreach my $keyring_pkg (values %keyrings) {
 		my @files=();
