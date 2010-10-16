@@ -93,10 +93,10 @@ $dpkgdir = "var/lib/dpkg/";   # state
 
 $cfgdir=dirname($file);
 cascade($file);
+# Translators: fields are programname, version string, include file.
+printf (_g("%s %s using %s\n"), $progname, $ourversion, $file);
 
 foreach my $inc (@includes) {
-	# Translators: fields are programname, version string, include file.
-	printf (_g("%s %s including %s\n"), $progname, $ourversion, $inc);
 	cascade($inc);
 }
 %uniq=();
@@ -429,8 +429,8 @@ sub our_version {
 }
 
 sub add_extra_packages {
-	$str = join (' ', @extrapkgs);
-	if (@extrapkgs) {
+	if (scalar @extrapkgs > 0) {
+		$str = join (' ', @extrapkgs);
 		print "apt-get -y $config_str install $str\n";
 		$retval = system ("apt-get -y $config_str install $str");
 		&force_unpack (@extrapkgs) if ($unpack eq "true");
@@ -906,6 +906,11 @@ sub cascade {
 	}
 	@reinstall=();
 	@reinstall=sort keys %uniq;
+	%uniq=();
+	foreach my $x (@extrapkgs) {
+		$uniq{$x}++;
+	}
+	@extrapkgs = keys %uniq;
 	# check for old versions of apt, <= 0.7.20.2+lenny1
 	my $aptVer = `dpkg-query -W -f='\${Version}' apt`;
 	if (defined $aptVer and ($aptVer ne "")) {
@@ -942,6 +947,7 @@ sub dump_config {
 		" cannot be parsed correctly."), $file);
 		warn ("\n$msg\n\n");
 	}
+	my $plural;
 	@check=();
 	%uniq=();
 	push @check, @debootstrap;
@@ -955,15 +961,19 @@ sub dump_config {
 		}
 	}
 	if (scalar @includes > 0) {
-		printf ("include:\t"._g("Including configuration file from: ").join (", ", sort @includes)."\n");
+		$plural = ngettext("Including configuration file from:",
+		"Including configuration files from:", scalar @includes);
+		printf ("include:\t%s '%s'\n", $plural, join ("', '", sort @includes));
 	} else {
-		printf ("include:\t"._g("No included configuration files.\n"));
+		printf ("include:\t\t"._g("No included configuration files.\n"));
 	}
+	undef $plural;
+	print "\n";
 	# explain the bootstrap section details explicitly and just refer to
 	# those for the apt sources.
 	foreach my $sect_name (@check) {
-		printf ("Section:\t$sect_name\n");
-		print "\tsource:  \t$sources{$sect_name}\n";
+		printf ("Section name:\t$sect_name\n");
+		print "\tsource:\t\t$sources{$sect_name}\n";
 		my @sorted = split(/ /, $packages{$sect_name});
 		%uniq=();
 		foreach my $pkg (@sorted) {
@@ -971,65 +981,85 @@ sub dump_config {
 		}
 		@sorted = sort keys %uniq;
 		%uniq=();
-		print "\tsuite:  \t$suites{$sect_name}\n" if (not exists $flatfile{$sect_name});
+		print "\tsuite:\t\t$suites{$sect_name}\n" if (not exists $flatfile{$sect_name});
 		print "\tcomponents:\t$components{$sect_name}\n" if (not exists $flatfile{$sect_name});
-		# only packages can have a list
-		next if (not grep(/^$sect_name$/i, @debootstrap));
-		print "\tBootstrap:\tpackages: ".join(" ", @sorted)."\n";
+		# only list packages in a bootstrapping section
+		if (not grep(/^$sect_name$/i, @debootstrap)) {
+			printf ("\t%s\n",_g("Not listed as a 'Bootstrap' section."));
+			print "\n";
+			next;
+		}
+		print "\tpackages:\t".join(" ", @sorted)."\n";
+		print "\n";
 	}
-	printf ("Bootstrap:\t%s: %s\n", _g("Sections"), join(" ", sort @debootstrap));
-	printf ("AptSources:\t%s: %s\n", _g("Sections"), join(" ", sort @aptsources));
+	$plural = ngettext("Section to install", "Sections to install", scalar @debootstrap);
+	printf ("%s:\t%s\n", $plural, join(" ", sort @debootstrap));
+	$plural = ngettext("Section for updates", "Sections for updates", scalar @aptsources);
+	printf ("%s:\t%s\n", $plural, join(" ", sort @aptsources));
 	my @srcdump=();
 	foreach my $src (sort keys %sources) {
 		next if ((!grep(/^$src$/i, @aptsources)) or (!grep(/^$src$/i, @debootstrap)));
 		push @srcdump, $sources{$src};
 	}
-	my $srcmsg="omitdebsrc\t"._g("Omit deb-src from sources.list for sections:");
-	foreach my $omit (sort keys %omitdebsrc) {
-		$srcmsg .= $omitdebsrc{$omit} if (defined $omitdebsrc{$omit});
+	my $srcmsg="omitdebsrc\t\t"._g("Omit deb-src from sources.list for sections:");
+	if (scalar keys %omitdebsrc == 0) {
+		$srcmsg .= sprintf(" %s",_g("None."));
+	} else {
+		foreach my $omit (sort keys %omitdebsrc) {
+			$srcmsg .= $omitdebsrc{$omit} if (defined $omitdebsrc{$omit});
+		}
 	}
 	print "$srcmsg\n";
 	if (defined $explicit_suite) {
-		printf("explicitsuite:\t"._g("Explicit suite selection: Yes\n"));
+		printf("explicitsuite:\t\t"._g("Explicit suite selection: Yes\n"));
 	} else {
-		printf("explicitsuite:\t"._g("Explicit suite selection: No - let apt use latest.\n"));
+		printf("explicitsuite:\t\t"._g("Explicit suite selection: No - let apt use latest.\n"));
 	}
 	if (defined $allow_recommends) {
 		printf("allowrecommends:\t"._g("Recommended packages are added to the selection.\n"));
 	} else {
 		printf("allowrecommends:\t"._g("Recommended packages are ignored.\n"));
 	}
-	print "Extra Packages: ".join (", ", sort @extrapkgs)."\n"
+	$plural = ngettext ("Extra Package: ", "Extra Packages: ", scalar @extrapkgs);
+	print "additional:\t\t$plural".join (", ", sort @extrapkgs)."\n"
 		if (scalar @extrapkgs > 0);
-	print "reinstall: ".join (", ", sort (@reinstall))."\n"
+	print "reinstall:\t\t".join (", ", sort (@reinstall))."\n"
 		if (scalar @reinstall > 0);
-	if (defined $arch) {
-		printf ("arch:   \t"._g("Architecture: %s\n"), $arch);
+	if (defined $arch and $arch ne "") {
+		printf ("arch:\t\t\t"._g("Architecture to download: %s\n"), $arch);
 	} else {
 		$msg .= sprintf(_g("Cannot determine architecture from '%s'.\n"), $file);
 	}
-	if (defined $dir) {
-		printf ("dir:    \t"._g("Output directory: '%s'\n"), $dir);
+	if (defined $dir and $dir ne "") {
+		printf ("dir:\t\t\t"._g("Output directory: '%s'\n"), $dir);
 	} else {
 		$msg .= sprintf(_g("Cannot determine directory from '%s'.\n"), $file);
 	}
-	printf ("unpack:   \t"._g("extract all downloaded archives: %s\n"), $unpack) if (defined $unpack);
-	print "configscript:\t$configsh\n" if (defined $configsh);
-	print "setupscript:\t$setupsh\n" if (defined $setupsh);
-	print "omitrequired:\t$omitrequired\n" if (defined $omitrequired);
-	if (defined $tidy) {
-		printf ("cleanup: \t"._g("remove apt cache data: true\n"));
+	printf ("unpack:\t\t\t"._g("extract all downloaded archives: %s\n"), $unpack) if (defined $unpack);
+	print "configscript:\t\t$configsh\n" if (defined $configsh);
+	printf ("setupscript:\t\t%s: %s",_g("Script to be run after unpacking"),"$setupsh\n") if (defined $setupsh);
+	if (defined $omitrequired and $omitrequired ne "false") {
+		printf ("omitrequired:\t\t%s\n",_g("'Priority required' packages are not included."));
 	} else {
-		printf ("cleanup: \t"._g("remove apt cache data: false\n"));
+		printf ("omitrequired:\t\t%s\n",_g("'Priority: required' packages are included."));
+	}
+	if (defined $tidy) {
+		printf ("cleanup:\t\t"._g("remove apt cache data: true\n"));
+	} else {
+		printf ("cleanup:\t\t"._g("remove apt cache data: false\n"));
 	}
 	if (defined $noauth) {
-		printf ("noauth:   \t"._g("allow the use of unauthenticated repositories: true\n"));
+		printf ("noauth:\t\t\t"._g("allow the use of unauthenticated repositories: true\n"));
 	} else {
-		printf ("noauth:   \t"._g("allow the use of unauthenticated repositories: false\n"));
+		printf ("noauth:\t\t\t"._g("allow the use of unauthenticated repositories: false\n"));
 	}
 	if (defined $sourcedir) {
 		printf ("retainsources:\t"._g("Sources will be retained in: %s\n"), $sourcedir);
 	}
+	if (defined $tgzname) {
+		printf ("tarballname:\t\t"._g("Tarball name: '%s'\n"), $tgzname);
+	}
+	print "\n";
 	if (defined $msg) {
 		warn ("\n$msg\n");
 		exit 1;
