@@ -480,3 +480,56 @@ installation of the keyring package on the host system is also skipped
 if fakeroot is detected.
 
 =cut
+
+=head1 Handling problematic packages
+
+Sometimes, a particular package will fail to even unpack properly if
+other packages have not already been unpacked. This can happen if
+dpkg diversions are not setup correctly or if the package Pre-Depends
+on an executable in another package.
+
+Multistrap offers two ways to handle these problems. A package can be
+listed as C<reinstall> or as C<additional>. Each section in the
+C<multistrap> configuration file can have a single C<reinstall> or
+C<additional> listing or both.
+
+Reinstall means that the package will be downloaded and unpacked as
+normal - alongside all the other packages, but will then be reinstalled
+at the end by running the C<preinst> maintainer script with the
+C<upgrade> argument. C<dpkg> will then continue the rest of the
+configuration of that package.
+
+Additional adds a second round of C<apt-get install> to the multistrap
+process - after the initial unpacking. The additional package will
+then be downloaded and unpacked. If running natively, the additional
+package is downloaded, unpacked and configured after all the
+rest of the packages have been downloaded, unpacked and configured.
+
+Neither C<reinstall> nor C<additional> should be seen as more than
+just workarounds and wishlist bugs should be filed in Debian against
+packages which require the use of these mechanisms (or the packages
+which would prevent the particular package from operating normally).
+
+=cut
+
+=head1 Bugs
+
+As C<multistrap> gets more complex, bugs will creep into the package.
+When reporting bugs against multistrap, B<please> attach all
+configuration files. If your configuration needs to access local or
+private apt repositories, please check your configuration with the
+latest version of C<multistrap> in Debian using the C<--simulate>
+option and include that report in your bug report.
+
+The C<--simulate> option output is regularly expanded to help users
+debug problems in the configuration files.
+
+Please also check (and update) the Multistrap wiki at
+http://wiki.debian.org/Multistrap and the Multistrap webpage content
+at http://www.emdebian.org/multistrap/ before filing bugs. Various
+people on the debian-embedded@lists.debian.org mailing list and
+#emdebian IRC channel on irc.oftc.net can also help - if you can put
+the C<--simulate> output on a pastebin website and put the URL in
+your message.
+
+=cut

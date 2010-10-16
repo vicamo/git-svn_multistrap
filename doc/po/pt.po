@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: multistrap 2.1.7\n"
-"POT-Creation-Date: 2010-10-03 19:23+0200\n"
+"POT-Creation-Date: 2010-10-16 12:34+0200\n"
 "PO-Revision-Date: 2010-09-02 22:47+0100\n"
 "Last-Translator: Américo Monteiro <a_monteiro@netcabo.pt>\n"
 "Language-Team: Portuguese <traduz@debianpt.org>\n"
@@ -1296,6 +1296,91 @@ msgstr ""
 "O mesmo problema aplica-se ao C<apt-get install> e por isso a instalação do "
 "pacote chaveiro no sistema anfitrião é também saltado se for detectado o "
 "fakeroot."
+
+#. type: =head1
+#: pod/multistrap:484
+msgid "Handling problematic packages"
+msgstr ""
+
+#. type: textblock
+#: pod/multistrap:486
+msgid ""
+"Sometimes, a particular package will fail to even unpack properly if other "
+"packages have not already been unpacked. This can happen if dpkg diversions "
+"are not setup correctly or if the package Pre-Depends on an executable in "
+"another package."
+msgstr ""
+
+#. type: textblock
+#: pod/multistrap:491
+msgid ""
+"Multistrap offers two ways to handle these problems. A package can be listed "
+"as C<reinstall> or as C<additional>. Each section in the C<multistrap> "
+"configuration file can have a single C<reinstall> or C<additional> listing "
+"or both."
+msgstr ""
+
+#. type: textblock
+#: pod/multistrap:496
+msgid ""
+"Reinstall means that the package will be downloaded and unpacked as normal - "
+"alongside all the other packages, but will then be reinstalled at the end by "
+"running the C<preinst> maintainer script with the C<upgrade> argument. "
+"C<dpkg> will then continue the rest of the configuration of that package."
+msgstr ""
+
+#. type: textblock
+#: pod/multistrap:502
+msgid ""
+"Additional adds a second round of C<apt-get install> to the multistrap "
+"process - after the initial unpacking. The additional package will then be "
+"downloaded and unpacked. If running natively, the additional package is "
+"downloaded, unpacked and configured after all the rest of the packages have "
+"been downloaded, unpacked and configured."
+msgstr ""
+
+#. type: textblock
+#: pod/multistrap:508
+msgid ""
+"Neither C<reinstall> nor C<additional> should be seen as more than just "
+"workarounds and wishlist bugs should be filed in Debian against packages "
+"which require the use of these mechanisms (or the packages which would "
+"prevent the particular package from operating normally)."
+msgstr ""
+
+#. type: =head1
+#: pod/multistrap:515
+msgid "Bugs"
+msgstr ""
+
+#. type: textblock
+#: pod/multistrap:517
+msgid ""
+"As C<multistrap> gets more complex, bugs will creep into the package.  When "
+"reporting bugs against multistrap, B<please> attach all configuration files. "
+"If your configuration needs to access local or private apt repositories, "
+"please check your configuration with the latest version of C<multistrap> in "
+"Debian using the C<--simulate> option and include that report in your bug "
+"report."
+msgstr ""
+
+#. type: textblock
+#: pod/multistrap:524
+msgid ""
+"The C<--simulate> option output is regularly expanded to help users debug "
+"problems in the configuration files."
+msgstr ""
+
+#. type: textblock
+#: pod/multistrap:527
+msgid ""
+"Please also check (and update) the Multistrap wiki at http://wiki.debian.org/"
+"Multistrap and the Multistrap webpage content at http://www.emdebian.org/"
+"multistrap/ before filing bugs. Various people on the debian-embedded@lists."
+"debian.org mailing list and #emdebian IRC channel on irc.oftc.net can also "
+"help - if you can put the C<--simulate> output on a pastebin website and put "
+"the URL in your message."
+msgstr ""
 
 #. type: textblock
 #: device-table.pl:155
