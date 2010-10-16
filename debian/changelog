@@ -18,8 +18,9 @@ multistrap (2.1.8) experimental; urgency=low
   * Document the reinstall and additional fields. Add advice in manpage
     on what to check before filing bugs.
   * Add a note about redirecting output in manpage. (Closes: #593326)
+  * Bump to debhelper 7 compat for dh_prep usage.
 
- -- Neil Williams <codehelp@debian.org>  Sat, 16 Oct 2010 15:29:31 +0100
+ -- Neil Williams <codehelp@debian.org>  Sat, 16 Oct 2010 15:36:06 +0100
 
 multistrap (2.1.7) unstable; urgency=low
 

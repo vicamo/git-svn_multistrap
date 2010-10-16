@@ -3,7 +3,7 @@ Section: utils
 Priority: optional
 Maintainer: Neil Williams <codehelp@debian.org>
 Uploaders: Wookey <wookey@debian.org>
-Build-Depends: cdbs, debhelper (>= 5), po4a (>= 0.37.1)
+Build-Depends: cdbs, debhelper (>= 7), po4a (>= 0.37.1)
 Build-Depends-Indep: intltool
 Standards-Version: 3.9.1
 Homepage: http://www.emdebian.org/multistrap
