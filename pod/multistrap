@@ -510,7 +510,12 @@ just workarounds and wishlist bugs should be filed in Debian against
 packages which require the use of these mechanisms (or the packages
 which would prevent the particular package from operating normally).
 
-=cut
+=head1 Output
+
+C<multistrap> can produce a lot of output - informational messages
+appear on STDOUT, errors and warnings on STDERR. Calls to C<apt> and
+C<dpkg> respect the same pattern, so it is simple to trim the combined
+C<multistrap> output to just the errors, if desired.
 
 =head1 Bugs
 

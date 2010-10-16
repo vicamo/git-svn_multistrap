@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: multistrap 2.1.4\n"
-"POT-Creation-Date: 2010-10-16 12:34+0200\n"
+"POT-Creation-Date: 2010-10-16 15:30+0200\n"
 "PO-Revision-Date: 2010-09-11 13:13+0100\n"
 "Last-Translator: Julien Patriarca <patriarcaj@gmail.com>\n"
 "Language-Team: French <debian-l10n-french@lists.debian.org>\n"
@@ -1378,12 +1378,26 @@ msgid ""
 msgstr ""
 
 #. type: =head1
+#: pod/multistrap:513
+msgid "Output"
+msgstr ""
+
+#. type: textblock
 #: pod/multistrap:515
+msgid ""
+"C<multistrap> can produce a lot of output - informational messages appear on "
+"STDOUT, errors and warnings on STDERR. Calls to C<apt> and C<dpkg> respect "
+"the same pattern, so it is simple to trim the combined C<multistrap> output "
+"to just the errors, if desired."
+msgstr ""
+
+#. type: =head1
+#: pod/multistrap:520
 msgid "Bugs"
 msgstr ""
 
 #. type: textblock
-#: pod/multistrap:517
+#: pod/multistrap:522
 msgid ""
 "As C<multistrap> gets more complex, bugs will creep into the package.  When "
 "reporting bugs against multistrap, B<please> attach all configuration files. "
@@ -1394,14 +1408,14 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: pod/multistrap:524
+#: pod/multistrap:529
 msgid ""
 "The C<--simulate> option output is regularly expanded to help users debug "
 "problems in the configuration files."
 msgstr ""
 
 #. type: textblock
-#: pod/multistrap:527
+#: pod/multistrap:532
 msgid ""
 "Please also check (and update) the Multistrap wiki at http://wiki.debian.org/"
 "Multistrap and the Multistrap webpage content at http://www.emdebian.org/"

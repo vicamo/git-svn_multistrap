@@ -2,7 +2,8 @@ multistrap (2.1.8) experimental; urgency=low
 
   [ Wookey ]
   * Add support for 'flat' apt-ftparchive-style URLs
-  * Include chroot.sh preventing services being started during chroot creation
+  * Include chroot.sh preventing services being started during 
+    chroot creation (Closes: #599056)
 
   [ Neil Williams ]
   * Improve the omitdebsrc handling for detection of 'true'.
@@ -16,8 +17,9 @@ multistrap (2.1.8) experimental; urgency=low
   * Expand the --simulate option output further.
   * Document the reinstall and additional fields. Add advice in manpage
     on what to check before filing bugs.
+  * Add a note about redirecting output in manpage. (Closes: #593326)
 
- -- Neil Williams <codehelp@debian.org>  Sat, 16 Oct 2010 12:37:25 +0100
+ -- Neil Williams <codehelp@debian.org>  Sat, 16 Oct 2010 15:29:31 +0100
 
 multistrap (2.1.7) unstable; urgency=low
 
