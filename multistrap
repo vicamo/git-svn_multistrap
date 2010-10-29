@@ -972,6 +972,7 @@ sub dump_config {
 	# explain the bootstrap section details explicitly and just refer to
 	# those for the apt sources.
 	foreach my $sect_name (@check) {
+		next unless (defined $packages{$sect_name});
 		printf ("Section name:\t$sect_name\n");
 		print "\tsource:\t\t$sources{$sect_name}\n";
 		my @sorted = split(/ /, $packages{$sect_name});
@@ -1006,7 +1007,7 @@ sub dump_config {
 		$srcmsg .= sprintf(" %s",_g("None."));
 	} else {
 		foreach my $omit (sort keys %omitdebsrc) {
-			$srcmsg .= $omitdebsrc{$omit} if (defined $omitdebsrc{$omit});
+			$srcmsg .= " " . $omitdebsrc{$omit} if (defined $omitdebsrc{$omit});
 		}
 	}
 	print "$srcmsg\n";

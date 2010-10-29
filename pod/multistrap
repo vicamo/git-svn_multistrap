@@ -462,6 +462,9 @@ apt-cache size), use the omitdebsrc field in each Section.
  suite=testing
  omitdebsrc=true
 
+omitdebsrc is necessary when using packages from debian-ports where
+packages do not have sources, except "unreleased".
+
 =cut
 
 =head1 fakeroot

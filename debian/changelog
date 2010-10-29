@@ -1,3 +1,10 @@
+multistrap (2.1.9) experimental; urgency=low
+
+  * Allow missing packages lines and add note about using omitdebsrc
+    with debian-ports.
+
+ -- Neil Williams <codehelp@debian.org>  Fri, 29 Oct 2010 15:27:21 +0100
+
 multistrap (2.1.8) experimental; urgency=low
 
   [ Wookey ]
