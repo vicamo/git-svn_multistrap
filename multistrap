@@ -271,7 +271,7 @@ if ((defined $k) and (not defined $noauth)) {
 	system ("$str apt-get -y -d --reinstall install $k");
 	foreach my $keyring_pkg (values %keyrings) {
 		my @files=();
-		my $file = `find /var/cache/apt/archives/ -name "$keyring_pkg*"`;
+		my $file = `find /var/cache/apt/archives/ -name "$keyring_pkg*"|grep -m1 $keyring_pkg`;
 		chomp ($file);
 		if ($file eq "") {
 			my $msg = sprintf (_g("Unable to download keyring package: '%s'"),$dir);
@@ -291,6 +291,11 @@ if ((defined $k) and (not defined $noauth)) {
 				"--homedir=${dir}/etc/apt/trusted.gpg.d/ ".
 				"--keyring=multistrap.gpg ".
 				" --import ${xdir}/usr/share/keyrings/${gpg} 2>/dev/null");
+			if (-f "${dir}/etc/apt/trusted.gpg.d/multistrap.gpg") {
+				system ("cp ${dir}/etc/apt/trusted.gpg.d/multistrap.gpg ${dir}/etc/apt/trusted.gpg.d/trustdb.gpg");
+			} else {
+				die (_g("Secure Apt handling failed - try without authentication."));
+			}
 		}
 		system ("rm -rf ${xdir}");
 	}
