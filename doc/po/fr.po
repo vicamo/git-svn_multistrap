@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: multistrap 2.1.4\n"
-"POT-Creation-Date: 2010-12-25 12:30+0000\n"
+"POT-Creation-Date: 2010-12-25 17:21+0000\n"
 "PO-Revision-Date: 2010-09-11 13:13+0100\n"
 "Last-Translator: Julien Patriarca <patriarcaj@gmail.com>\n"
 "Language-Team: French <debian-l10n-french@lists.debian.org>\n"
@@ -1512,12 +1512,12 @@ msgstr ""
 #. type: textblock
 #: pod/multistrap:552
 msgid ""
-"As C<multistrap> gets more complex, bugs will creep into the package.  When "
-"reporting bugs against multistrap, B<please> attach all configuration files. "
-"If your configuration needs to access local or private apt repositories, "
-"please check your configuration with the latest version of C<multistrap> in "
-"Debian using the C<--simulate> option and include that report in your bug "
-"report."
+"As C<multistrap> gets more complex, bugs will creep into the package.  "
+"Please report all bugs to the Debian BTS using the C<reportbug> tool and "
+"B<please> attach all configuration files. If your configuration needs to "
+"access local or private apt repositories, please check your configuration "
+"with the latest version of C<multistrap> in Debian using the C<--simulate> "
+"option and include that report in your bug report."
 msgstr ""
 
 #. type: textblock
@@ -1534,15 +1534,8 @@ msgid ""
 "Multistrap and the Multistrap webpage content at http://www.emdebian.org/"
 "multistrap/ before filing bugs. Various people on the debian-embedded@lists."
 "debian.org mailing list and #emdebian IRC channel on irc.oftc.net can also "
-"help - if you can put the C<--simulate> output on a pastebin website and put "
-"the URL in your message."
-msgstr ""
-
-#. type: textblock
-#: pod/multistrap:570
-msgid ""
-"Please direct all queries to the Debian BTS, not to the general Debian or "
-"Emdebian mailing lists."
+"help if your config file does not parse correctly. You would need to put the "
+"C<--simulate> output on a pastebin website and put the URL in your message."
 msgstr ""
 
 #. type: textblock
