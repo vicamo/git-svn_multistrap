@@ -6,8 +6,10 @@ multistrap (2.1.9) experimental; urgency=low
     lists.
   * Update the trustdb.gpg with keyrings, to fix gpgv errors on
     missing file.
+  * Document changes in packages key support and advise on reporting
+    bugs via the BTS
 
- -- Neil Williams <codehelp@debian.org>  Sat, 25 Dec 2010 12:26:24 +0000
+ -- Neil Williams <codehelp@debian.org>  Sat, 25 Dec 2010 12:34:03 +0000
 
 multistrap (2.1.8) experimental; urgency=low
 

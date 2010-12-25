@@ -168,6 +168,10 @@ overloading the multistrap config files to support other tools
 (like pbuilder). Use the C<--simulate> option to see the combined
 configuration settings.
 
+However, if the config file itself cannot be parsed, multistrap will
+abort. Check that the config file has a key and a value for each line,
+other than comments. Values must all on the same line as the key.
+
 =head1 Section settings
 
  [Debian]
@@ -182,7 +186,36 @@ includes. Section names are case insensitive (all comparisons happen
 after conversion to lower case).
 
 'packages' is the list of packages to be added when this Section
-is listed in C<bootstrap>.
+is listed in C<bootstrap> - all package names must be listed on a
+single line or the file will fail to parse. One alternative is to define
+your list of packages as multiple groups with packages separated on a
+functional / dependency basis, e.g. base, Xorg, networking etc. and list
+each group under 'bootstrap'.
+
+ bootstrap=base networking
+
+ [base]
+ packages=udev mtd-utils
+ source=http://www.emdebian.org/grip
+ keyring=emdebian-archive-keyring
+ suite=lenny
+
+ [networking]
+ packages=netbase ifupdown iproute net-tools samba
+ source=http://www.emdebian.org/grip
+ keyring=emdebian-archive-keyring
+ suite=lenny
+
+As a special case, C<multistrap> also supports multiple packages keys
+per section, one line for each. Other keys cannot be repeated in this
+manner.
+
+ [Emdebian]
+ packages=udev mtd-utils netbase ifupdown iproute
+ packages=busybox net-tools samba
+ source=http://www.emdebian.org/grip
+ keyring=emdebian-archive-keyring
+ suite=lenny
 
 'source' is the apt source to use for this Section. (To use a local
 source on the same machine, ensure you use C<copy://> not C<file://>,
@@ -444,8 +477,6 @@ suite and is removed from the temporary suite (as with
 *-proposed-updates), multistrap will not be able to find the
 package.
 
-=cut
-
 =head1 Omitting deb-src listings
 
 Some multistrap environments do not need access to the Debian sources
@@ -465,8 +496,6 @@ apt-cache size), use the omitdebsrc field in each Section.
 omitdebsrc is necessary when using packages from debian-ports where
 packages do not have sources, except "unreleased".
 
-=cut
-
 =head1 fakeroot
 
 Foreign architecture bootstraps can operate under C<fakeroot> (C<multistrap>
@@ -481,8 +510,6 @@ mode configuration is skipped with a reminder warning.
 The same problem applies to C<apt-get install> and therefore the
 installation of the keyring package on the host system is also skipped
 if fakeroot is detected.
-
-=cut
 
 =head1 Handling problematic packages
 
@@ -523,11 +550,11 @@ C<multistrap> output to just the errors, if desired.
 =head1 Bugs
 
 As C<multistrap> gets more complex, bugs will creep into the package.
-When reporting bugs against multistrap, B<please> attach all
-configuration files. If your configuration needs to access local or
-private apt repositories, please check your configuration with the
-latest version of C<multistrap> in Debian using the C<--simulate>
-option and include that report in your bug report.
+Please report all bugs to the Debian BTS using the C<reportbug> tool
+and B<please> attach all configuration files. If your configuration
+needs to access local or private apt repositories, please check your
+configuration with the latest version of C<multistrap> in Debian using
+the C<--simulate> option and include that report in your bug report.
 
 The C<--simulate> option output is regularly expanded to help users
 debug problems in the configuration files.
@@ -536,8 +563,8 @@ Please also check (and update) the Multistrap wiki at
 http://wiki.debian.org/Multistrap and the Multistrap webpage content
 at http://www.emdebian.org/multistrap/ before filing bugs. Various
 people on the debian-embedded@lists.debian.org mailing list and
-#emdebian IRC channel on irc.oftc.net can also help - if you can put
-the C<--simulate> output on a pastebin website and put the URL in
-your message.
+#emdebian IRC channel on irc.oftc.net can also help if your config file
+does not parse correctly. You would need to put the C<--simulate> output
+on a pastebin website and put the URL in your message.
 
 =cut
