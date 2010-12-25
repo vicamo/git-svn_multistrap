@@ -2,8 +2,12 @@ multistrap (2.1.9) experimental; urgency=low
 
   * Allow missing packages lines and add note about using omitdebsrc
     with debian-ports.
+  * Allow multiple packages lines per section to support very long
+    lists.
+  * Update the trustdb.gpg with keyrings, to fix gpgv errors on
+    missing file.
 
- -- Neil Williams <codehelp@debian.org>  Fri, 29 Oct 2010 15:27:21 +0100
+ -- Neil Williams <codehelp@debian.org>  Sat, 25 Dec 2010 12:26:24 +0000
 
 multistrap (2.1.8) experimental; urgency=low
 

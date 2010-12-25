@@ -48,36 +48,27 @@ while( @ARGV ) {
 	if (!/^-/) {
 		unshift(@ARGV,$_);
 		last;
-	}
-	elsif (/^(-\?|-h|--help|--version)$/) {
+	} elsif (/^(-\?|-h|--help|--version)$/) {
 	&usageversion();
 		exit( 0 );
-	}
-	elsif (/^(-f|--file)$/) {
+	} elsif (/^(-f|--file)$/) {
 		$file = shift(@ARGV);
-	}
-	elsif (/^(-a|--arch)$/) {
+	} elsif (/^(-a|--arch)$/) {
 		$arch = shift(@ARGV);
-	}
-	elsif (/^(-d|--dir)$/) {
+	} elsif (/^(-d|--dir)$/) {
 		$dir = shift(@ARGV);
 		$dir .= ($dir =~ m:/$:) ? '' : "/";
-	}
-	elsif (/^(--tidy-up)$/) {
+	} elsif (/^(--tidy-up)$/) {
 		$tidy++;
-	}
-	elsif (/^(--source-dir)$/) {
+	} elsif (/^(--source-dir)$/) {
 		$sourcedir = shift (@ARGV);
 		$sourcedir .= ($sourcedir =~ m:/$:) ? '' : "/";
 		$sourcedir = (-d $sourcedir) ? $sourcedir : undef;
-	}
-	elsif (/^(--no-auth)$/) {
+	} elsif (/^(--no-auth)$/) {
 		$noauth++;
-	}
-	elsif (/^(--dry-run|--simulate)$/) {
+	} elsif (/^(--dry-run|--simulate)$/) {
 		$dryrun++;
-	}
-	else {
+	} else {
 		die "$progname: "._g("Unknown option")." $_.\n";
 	}
 }
@@ -893,9 +884,13 @@ sub cascade {
 		} else {
 			$sources{$section}=$keys{$section}{'source'} if (not exists $source{$section});
 			# don't set suite or component if URL is of apt-ftparchive trailing-slash form
-		        # regexp is: optional string in '[]', string without '[' or ']', string ending in '/'
+			# regexp is: optional string in '[]', string without '[' or ']', string ending in '/'
 			$flatfile{$section}++ if (($sources{$section} =~ /^(\[.*\] )*[^\[\]]+ .+\/$/));
-			$packages{$section}=$keys{$section}{'packages'} if (not exists $packages{$section});
+			if (ref ($keys{$section}{'packages'}) eq 'ARRAY') {
+				$packages{$section}=join(' ', @{$keys{$section}{'packages'}}) if (not exists $packages{$section});
+			} else {
+				$packages{$section}=join(' ', $keys{$section}{'packages'}) if (not exists $packages{$section});
+			}
 			$suites{$section}=$keys{$section}{'suite'}
 				if (not exists $suites{$section} and not exists $flatfile{$section});
 			$components{$section}=$keys{$section}{'components'}
