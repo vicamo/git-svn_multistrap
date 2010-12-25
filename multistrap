@@ -183,8 +183,7 @@ if (not -d "${dir}dev") {
 # writes outside the multistrap root dir. See: #553599
 if (-l "${dir}lib64" ) {
 	my $r = readlink "${dir}lib64";
-	if ($r =~ m:^/:)
-	{
+	if ($r =~ m:^/:) {
 		my $old = `pwd`;
 		chomp ($old);
 		unlink "${dir}lib64";
@@ -194,12 +193,12 @@ if (-l "${dir}lib64" ) {
 		chdir ("${old}");
 	}
 } else {
-		my $old = `pwd`;
-		chomp ($old);
-		chdir ("$dir");
-		print _g("INF: Setting ./lib64 -> ./lib symbolic link.\n");
-		symlink "./lib", "lib64";
-		chdir ("${old}");
+	my $old = `pwd`;
+	chomp ($old);
+	chdir ("$dir");
+	print _g("INF: Setting ./lib64 -> ./lib symbolic link.\n");
+	symlink "./lib", "lib64";
+	chdir ("${old}");
 }
 
 system ("rm -rf ${dir}etc/apt/sources.list.d/*");
@@ -362,8 +361,7 @@ system ("cp $configsh $dir/") if ((defined $configsh) and (-f $configsh));
 (not defined $tidy) ? system ("apt-get $config_str update") : &tidy_apt;
 if (-l "${dir}lib64" ) {
 	my $r = readlink "${dir}lib64";
-	if ($r =~ m:^/:)
-	{
+	if ($r =~ m:^/:) {
 		print _g("ERR: ./lib64 -> /lib symbolic link reset to ./lib after unpacking.\n");
 		printf (_g("ERR: Some files may have been unpacked outside %s!\n"), $dir);
 	}
