@@ -829,7 +829,10 @@ will be created - it is not packed into a .tgz once complete.
 
 sub cascade {
 	$file = shift;
-	$config = Config::Auto::parse($file);
+	$config = Config::Auto::parse($file, format => 'ini');
+	if (not defined $config or (scalar keys %$config) == 0) {
+		die ("$progname: ". _g("Failed to parse '$file'!\n"));
+	}
 	foreach $key (%$config) {
 		$type = lc($key) if (ref $key ne "HASH");
 		$value = $key if (ref $key eq "HASH");
