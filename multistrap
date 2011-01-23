@@ -33,7 +33,7 @@ use vars qw/ $progname $ourversion $dstrap $extra @aptsources $mirror
  @extrapkgs @includes %source $setupsh $configsh $omitrequired $dryrun
  $omitpreinst @reinstall $tgzname %uniq %required $check @check %uniq
  $explicit_suite $allow_recommends %omitdebsrc @dsclist @sectoutput
- %flatfile /;
+ %flatfile %important $addimportant/;
 
 setlocale(LC_MESSAGES, "");
 textdomain("multistrap");
@@ -89,6 +89,20 @@ printf (_g("%s %s using %s\n"), $progname, $ourversion, $file);
 
 foreach my $inc (@includes) {
 	cascade($inc);
+}
+if (defined $omitrequired and defined $addimportant) {
+	warn("\n"._g("Error: Cannot set 'add Priority: important' when packages ".
+	"of 'Priority: required' are being omitted.\n"));
+	if (scalar @includes > 0) {
+		my $plural = ngettext("Please also check the included configuration file:",
+		"Please also check the included configuration files:", scalar @includes);
+		warn (sprintf("%s '%s'\n", $plural, join ("', '", sort @includes)));
+	}
+	if (defined $dryrun) {
+		warn("\n");
+		&dump_config;
+	}
+	exit (7);
 }
 %uniq=();
 foreach my $line (@debootstrap) {
@@ -313,10 +327,15 @@ die (sprintf (_g("apt update failed. Exit value: %d\n"), ($retval/256)))
 	if ($retval != 0);
 my @s = ();
 $str = "";
-if ((not defined $omitrequired) or ($omitrequired eq "false")) {
+if (not defined $omitrequired) {
 	print _g("I: Calculating required packages.\n");
 	&get_required_debs;
 	$str .= join (' ', keys %required);
+	if (defined $addimportant) {
+		my $imps = join (' ', sort keys %important);
+		printf(_g("I: Adding 'Priority: important': %s\n"), $imps);
+		$str .= " ".$imps;
+	}
 	chomp($str);
 }
 $str .= " ";
@@ -712,8 +731,11 @@ sub get_required_debs {
 				next;
 			}
 			next if (not defined $package{'Priority'});
-			next unless $package{'Priority'} eq "required";
-			$required{$package{'Package'}}++;
+			if ($package{'Priority'} eq "required") {
+				$required{$package{'Package'}}++;
+			} elsif ($package{'Priority'} eq "important") {
+				$important{$package{'Package'}}++;
+			}
 		}
 	}
 }
@@ -846,8 +868,8 @@ sub cascade {
 			$setupsh = lc($keys{$section}{'setupscript'})
 				if (defined $keys{$section}{'setupscript'} and (not defined $setupsh));
 			undef $setupsh if ((defined $setupsh) and (not -x $setupsh));
-			$omitrequired = lc($keys{$section}{'omitrequired'})
-				if (defined $keys{$section}{'omitrequired'} and (not defined $omitrequired));
+			$omitrequired++ if (defined $keys{$section}{'omitrequired'} and (lc($keys{$section}{'omitrequired'}) eq "true"));
+			$addimportant++ if (defined $keys{$section}{'addimportant'} and (lc($keys{$section}{'addimportant'}) eq "true"));
 			$omitpreinst = lc($keys{$section}{'omitpreinst'})
 				if (defined $keys{$section}{'omitpreinst'} and (not defined $omitpreinst));
 			$tidy++ if ((defined $keys{$section}{'cleanup'}) and ($keys{$section}{'cleanup'} eq "true"));
@@ -1040,10 +1062,15 @@ sub dump_config {
 	printf ("unpack:\t\t\t"._g("extract all downloaded archives: %s\n"), $unpack) if (defined $unpack);
 	print "configscript:\t\t$configsh\n" if (defined $configsh);
 	printf ("setupscript:\t\t%s: %s",_g("Script to be run after unpacking"),"$setupsh\n") if (defined $setupsh);
-	if (defined $omitrequired and $omitrequired ne "false") {
+	if (defined $omitrequired) {
 		printf ("omitrequired:\t\t%s\n",_g("'Priority required' packages are not included."));
 	} else {
 		printf ("omitrequired:\t\t%s\n",_g("'Priority: required' packages are included."));
+	}
+	if (defined $addimportant) {
+		printf("addimportant:\t\t"._g("'Priority: important' packages are included.\n"));
+	} else {
+		printf("addimportant:\t\t"._g("'Priority: important' packages are ignored.\n"));
 	}
 	if (defined $tidy) {
 		printf ("cleanup:\t\t"._g("remove apt cache data: true\n"));

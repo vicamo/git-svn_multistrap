@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: multistrap 2.1.6\n"
 "Report-Msgid-Bugs-To: codehelp@debian.org\n"
-"POT-Creation-Date: 2010-12-25 17:21+0000\n"
+"POT-Creation-Date: 2011-01-23 00:13+0000\n"
 "PO-Revision-Date: 2010-09-07 21:30+0100\n"
 "Last-Translator: Chris Leick <c.leick@vollbio.de>\n"
 "Language-Team: German <debian-l10n-german@lists.debian.org>\n"
@@ -1148,9 +1148,13 @@ msgstr "Paketauswahl einschränken"
 
 #. type: textblock
 #: pod/multistrap:410
+#, fuzzy
+#| msgid ""
+#| "C<multistrap> includes Required packages by default, the current list of "
+#| "packages can be seen using:"
 msgid ""
 "C<multistrap> includes Required packages by default, the current list of "
-"packages can be seen using:"
+"packages on your own machine can be seen using:"
 msgstr ""
 "C<Multistrap> schließt standardmäßig benötigte Pakete ein, die aktuelle "
 "Liste der Pakete kann angesehen werden unter Benutzung von:"
@@ -1168,6 +1172,13 @@ msgstr ""
 #. type: textblock
 #: pod/multistrap:415
 msgid ""
+"(The actual list is calculated from the downloaded Packages files and may "
+"differ from the output of C<grep-available>.)"
+msgstr ""
+
+#. type: textblock
+#: pod/multistrap:418
+msgid ""
 "If the OmitRequired option is set to true, these packages will not be added "
 "- whilst useful, this option can easily lead to a useless rootfs. Only the "
 "packages specified manually in the configuration files will be used in the "
@@ -1179,25 +1190,53 @@ msgstr ""
 "Konfigurationsdateien angegebenen Pakete werden in den Berechnungen benutzt "
 "– Abhängigkeiten dieser Pakete werden hinzugefügt, aber keine anderen."
 
-#. type: textblock
-#: pod/multistrap:421
-msgid ""
-"Packages with Priority: important or standard are never included by "
-"C<multistrap> unless specifically included in a C<packages=> option in a "
-"section specified in the C<bootstrap> general option."
+#. type: =head1
+#: pod/multistrap:424
+msgid "Adding Priority: important packages"
 msgstr ""
-"Pakete mit der Priorität »important« oder »standard« werden niemals von "
-"C<Multistrap> eingeschlossen, außer wenn sie speziell in einer C<packages=>-"
-"Option in einem Abschnitt in den allgemeinen C<Bootstrap>-Optionen enthalten "
-"sind."
+
+#. type: textblock
+#: pod/multistrap:426
+msgid ""
+"C<multistrap> can imitate C<debootstrap> by automatically adding all "
+"packages from all sections where the downloaded Packages file lists the "
+"package as Priority: important. The default is not to add such packages "
+"unless individually included in a C<packages=> option in a section specified "
+"in the C<bootstrap> general option. To add all such packages, set the "
+"addimportant option to true in the general section."
+msgstr ""
+
+#. type: verbatim
+#: pod/multistrap:434
+#, no-wrap
+msgid ""
+" addimportant=true\n"
+"\n"
+msgstr ""
+
+#. type: textblock
+#: pod/multistrap:436
+msgid ""
+"Priority: important can only operate for all sections listed in the "
+"C<boostrap> option. This may cause some confusion when mixing suites."
+msgstr ""
+
+#. type: textblock
+#: pod/multistrap:439
+msgid ""
+"It is not possible to enable addimportant and omitrequired in the same "
+"configuration. C<multistrap> will exit with error code 7 if any "
+"configuration results in addimportant and omitrequired both being set to "
+"true. (This includes the effects of including other configuration files.)"
+msgstr ""
 
 #. type: =head1
-#: pod/multistrap:425
+#: pod/multistrap:445
 msgid "Recommends behaviour"
 msgstr "Empfohlenes Verhalten"
 
 #. type: textblock
-#: pod/multistrap:427
+#: pod/multistrap:447
 msgid ""
 "The Debian default behaviour after the Lenny release was to consider "
 "recommended packages as extra packages to be installed when any one package "
@@ -1213,12 +1252,12 @@ msgstr ""
 "erlaubte Empfehlungen empfohlener Pakete usw."
 
 #. type: textblock
-#: pod/multistrap:434
+#: pod/multistrap:454
 msgid "The multistrap default is to turn recommends OFF."
 msgstr "Standardmäßig sind Empfehlungen in Multistrap AUSgeschaltet."
 
 #. type: textblock
-#: pod/multistrap:436
+#: pod/multistrap:456
 msgid ""
 "Set the allowrecommends option to true in the General section to use typical "
 "Debian behaviour."
@@ -1227,12 +1266,12 @@ msgstr ""
 "um typisches Debian-Verhalten zu bekommen."
 
 #. type: =head1
-#: pod/multistrap:439
+#: pod/multistrap:459
 msgid "Explicit suite specification"
 msgstr "Explizite Angabe der Suite"
 
 #. type: textblock
-#: pod/multistrap:441
+#: pod/multistrap:461
 msgid ""
 "Sometimes, apt needs to be told to get a particular package from a "
 "particular suite, ignoring a more recent version in another suite in the "
@@ -1244,7 +1283,7 @@ msgstr ""
 "wird."
 
 #. type: textblock
-#: pod/multistrap:445
+#: pod/multistrap:465
 msgid ""
 "C<multistrap> can operate with and without the explicit suite option, the "
 "default is to let apt use the most recent version from the collection of "
@@ -1255,7 +1294,7 @@ msgstr ""
 "F<Bootstrap>-Quellen benutzen."
 
 #. type: textblock
-#: pod/multistrap:449
+#: pod/multistrap:469
 msgid ""
 "Explicit suite specification has no effect on the final installed system - "
 "if your aptsources includes a repository which in turn includes a newer "
@@ -1269,7 +1308,7 @@ msgstr ""
 "führen."
 
 #. type: textblock
-#: pod/multistrap:454
+#: pod/multistrap:474
 msgid ""
 "Also, when specifying packages to get from a specific suite, apt will also "
 "try and ensure that the dependencies for that package are also from the same "
@@ -1289,7 +1328,7 @@ msgstr ""
 "treffen müssen."
 
 #. type: textblock
-#: pod/multistrap:461
+#: pod/multistrap:481
 msgid ""
 "When using this support in Lenny, ensure that each section uses the suite "
 "(oldstable, stable, testing, sid) and B<not> the codename (etch, lenny, "
@@ -1303,12 +1342,12 @@ msgstr ""
 "in Lenny und früher den Codenamen nicht benutzen kann."
 
 #. type: textblock
-#: pod/multistrap:466
+#: pod/multistrap:486
 msgid "To test, on Lenny, try:"
 msgstr "Für einen Test unter Lenny probieren Sie:"
 
 #. type: verbatim
-#: pod/multistrap:468
+#: pod/multistrap:488
 #, no-wrap
 msgid ""
 " $ sudo apt-get install apt/stable\n"
@@ -1318,12 +1357,12 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: pod/multistrap:470
+#: pod/multistrap:490
 msgid "Compare with"
 msgstr "Vergleichen Sie mit"
 
 #. type: verbatim
-#: pod/multistrap:472
+#: pod/multistrap:492
 #, no-wrap
 msgid ""
 " $ sudo apt-get install apt/lenny\n"
@@ -1333,7 +1372,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: pod/multistrap:474
+#: pod/multistrap:494
 msgid ""
 "When using explicitsuite, take care in using stable-proposed-updates or "
 "other temporary locations - if the package migrates into another suite and "
@@ -1342,12 +1381,12 @@ msgid ""
 msgstr ""
 
 #. type: =head1
-#: pod/multistrap:480
+#: pod/multistrap:500
 msgid "Omitting deb-src listings"
 msgstr "»deb-src«-Auflistungen werden ausgelassen"
 
 #. type: textblock
-#: pod/multistrap:482
+#: pod/multistrap:502
 msgid ""
 "Some multistrap environments do not need access to the Debian sources of "
 "packages being installed, typically this is required when preparing a build "
@@ -1359,7 +1398,7 @@ msgstr ""
 "Multistrap vorbereitet wird."
 
 #. type: textblock
-#: pod/multistrap:486
+#: pod/multistrap:506
 msgid ""
 "To turn off this additional source (and save both download time and apt-"
 "cache size), use the omitdebsrc field in each Section."
@@ -1369,7 +1408,7 @@ msgstr ""
 "jedem Abschnitt."
 
 #. type: verbatim
-#: pod/multistrap:489
+#: pod/multistrap:509
 #, no-wrap
 msgid ""
 " [Baked]\n"
@@ -1389,19 +1428,19 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: pod/multistrap:496
+#: pod/multistrap:516
 msgid ""
 "omitdebsrc is necessary when using packages from debian-ports where packages "
 "do not have sources, except \"unreleased\"."
 msgstr ""
 
 #. type: =head1
-#: pod/multistrap:499
+#: pod/multistrap:519
 msgid "fakeroot"
 msgstr "fakeroot"
 
 #. type: textblock
-#: pod/multistrap:501
+#: pod/multistrap:521
 msgid ""
 "Foreign architecture bootstraps can operate under C<fakeroot> (C<multistrap> "
 "is designed to do as much as it can within a single call to make this "
@@ -1416,7 +1455,7 @@ msgstr ""
 "C<Chroot>, und C<Chroot> seinerseits funktioniert nicht unter C<Fakeroot>."
 
 #. type: textblock
-#: pod/multistrap:507
+#: pod/multistrap:527
 msgid ""
 "Therefore, if C<multistrap> detects that C<fakeroot> is in use, native mode "
 "configuration is skipped with a reminder warning."
@@ -1426,7 +1465,7 @@ msgstr ""
 "benutzt wird."
 
 #. type: textblock
-#: pod/multistrap:510
+#: pod/multistrap:530
 msgid ""
 "The same problem applies to C<apt-get install> and therefore the "
 "installation of the keyring package on the host system is also skipped if "
@@ -1437,12 +1476,12 @@ msgstr ""
 "übersprungen, falls Fakeroot erkannt wird."
 
 #. type: =head1
-#: pod/multistrap:514
+#: pod/multistrap:534
 msgid "Handling problematic packages"
 msgstr ""
 
 #. type: textblock
-#: pod/multistrap:516
+#: pod/multistrap:536
 msgid ""
 "Sometimes, a particular package will fail to even unpack properly if other "
 "packages have not already been unpacked. This can happen if dpkg diversions "
@@ -1451,7 +1490,7 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: pod/multistrap:521
+#: pod/multistrap:541
 msgid ""
 "Multistrap offers two ways to handle these problems. A package can be listed "
 "as C<reinstall> or as C<additional>. Each section in the C<multistrap> "
@@ -1460,7 +1499,7 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: pod/multistrap:526
+#: pod/multistrap:546
 msgid ""
 "Reinstall means that the package will be downloaded and unpacked as normal - "
 "alongside all the other packages, but will then be reinstalled at the end by "
@@ -1469,7 +1508,7 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: pod/multistrap:532
+#: pod/multistrap:552
 msgid ""
 "Additional adds a second round of C<apt-get install> to the multistrap "
 "process - after the initial unpacking. The additional package will then be "
@@ -1479,7 +1518,7 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: pod/multistrap:538
+#: pod/multistrap:558
 msgid ""
 "Neither C<reinstall> nor C<additional> should be seen as more than just "
 "workarounds and wishlist bugs should be filed in Debian against packages "
@@ -1488,12 +1527,12 @@ msgid ""
 msgstr ""
 
 #. type: =head1
-#: pod/multistrap:543
+#: pod/multistrap:563
 msgid "Output"
 msgstr ""
 
 #. type: textblock
-#: pod/multistrap:545
+#: pod/multistrap:565
 msgid ""
 "C<multistrap> can produce a lot of output - informational messages appear on "
 "STDOUT, errors and warnings on STDERR. Calls to C<apt> and C<dpkg> respect "
@@ -1502,12 +1541,12 @@ msgid ""
 msgstr ""
 
 #. type: =head1
-#: pod/multistrap:550
+#: pod/multistrap:570
 msgid "Bugs"
 msgstr ""
 
 #. type: textblock
-#: pod/multistrap:552
+#: pod/multistrap:572
 msgid ""
 "As C<multistrap> gets more complex, bugs will creep into the package.  "
 "Please report all bugs to the Debian BTS using the C<reportbug> tool and "
@@ -1518,14 +1557,14 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: pod/multistrap:559
+#: pod/multistrap:579
 msgid ""
 "The C<--simulate> option output is regularly expanded to help users debug "
 "problems in the configuration files."
 msgstr ""
 
 #. type: textblock
-#: pod/multistrap:562
+#: pod/multistrap:582
 msgid ""
 "Please also check (and update) the Multistrap wiki at http://wiki.debian.org/"
 "Multistrap and the Multistrap webpage content at http://www.emdebian.org/"
@@ -1695,6 +1734,16 @@ msgstr ""
 #: device-table.pl:209
 msgid "See http://wiki.debian.org/DeviceTableScripting"
 msgstr "Siehe http://wiki.debian.org/DeviceTableScripting"
+
+#~ msgid ""
+#~ "Packages with Priority: important or standard are never included by "
+#~ "C<multistrap> unless specifically included in a C<packages=> option in a "
+#~ "section specified in the C<bootstrap> general option."
+#~ msgstr ""
+#~ "Pakete mit der Priorität »important« oder »standard« werden niemals von "
+#~ "C<Multistrap> eingeschlossen, außer wenn sie speziell in einer "
+#~ "C<packages=>-Option in einem Abschnitt in den allgemeinen C<Bootstrap>-"
+#~ "Optionen enthalten sind."
 
 #~ msgid ""
 #~ "'packages' is the list of packages to be added when this Section is "

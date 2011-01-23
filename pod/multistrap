@@ -408,9 +408,12 @@ be called in the variant configuration file (General section):
 =head1 Restricting package selection
 
 C<multistrap> includes Required packages by default, the current list
-of packages can be seen using:
+of packages on your own machine can be seen using:
 
  grep-available  -FPriority 'required' -sPackage
+
+(The actual list is calculated from the downloaded Packages files
+and may differ from the output of C<grep-available>.)
 
 If the OmitRequired option is set to true, these packages will not be
 added - whilst useful, this option can easily lead to a useless
@@ -418,9 +421,26 @@ rootfs. Only the packages specified manually in the configuration
 files will be used in the calculations - dependencies of those packages
 will be added but no others.
 
-Packages with Priority: important or standard are never included by
-C<multistrap> unless specifically included in a C<packages=> option in
-a section specified in the C<bootstrap> general option.
+=head1 Adding Priority: important packages
+
+C<multistrap> can imitate C<debootstrap> by automatically adding all
+packages from all sections where the downloaded Packages file lists
+the package as Priority: important. The default is not to add such
+packages unless individually included in a C<packages=> option in
+a section specified in the C<bootstrap> general option. To add
+all such packages, set the addimportant option to true in the general
+section.
+
+ addimportant=true
+
+Priority: important can only operate for all sections listed in the
+C<boostrap> option. This may cause some confusion when mixing suites.
+
+It is not possible to enable addimportant and omitrequired in the
+same configuration. C<multistrap> will exit with error code 7 if
+any configuration results in addimportant and omitrequired both being
+set to true. (This includes the effects of including other configuration
+files.)
 
 =head1 Recommends behaviour
 
