@@ -39,7 +39,7 @@ setlocale(LC_MESSAGES, "");
 textdomain("multistrap");
 $progname = basename($0);
 $ourversion = &our_version();
-$unpack = "true";
+$unpack = "false";
 %omitdebsrc=();
 
 while( @ARGV ) {
@@ -857,9 +857,9 @@ sub cascade {
 				if (defined $keys{$section}{'directory'} and (not defined $dir));
 			# support the original value but replace by new value.
 			$unpack = lc($keys{$section}{'unpack'})
-				if (defined $keys{$section}{'forceunpack'} and (not defined $unpack));
+				if (defined $keys{$section}{'forceunpack'} and (lc($keys{$section}{'forceunpack'}) eq "true"));
 			$unpack = lc($keys{$section}{'unpack'})
-				if (defined $keys{$section}{'unpack'} and (not defined $unpack));
+				if (defined $keys{$section}{'unpack'} and (lc($keys{$section}{'unpack'} eq "true")));
 			$configsh = lc($keys{$section}{'configscript'})
 				if (defined $keys{$section}{'configscript'} and (not defined $configsh));
 			$tgzname = lc($keys{$section}{'tarballname'})

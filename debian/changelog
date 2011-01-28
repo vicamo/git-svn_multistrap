@@ -10,8 +10,9 @@ multistrap (2.1.9) experimental; urgency=low
     bugs via the BTS
   * Add support for addimportant in the general section only.
     (Closes: #610634)
+  * Fix unpack option to look only for 'true' values.
 
- -- Neil Williams <codehelp@debian.org>  Sat, 22 Jan 2011 23:43:27 +0000
+ -- Neil Williams <neilw@toby-churchill.com>  Fri, 28 Jan 2011 10:49:01 +0000
 
 multistrap (2.1.8) experimental; urgency=low
 
