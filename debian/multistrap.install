@@ -8,6 +8,7 @@ examples/lenny.conf ./usr/share/multistrap/
 examples/setup.sh ./usr/share/doc/multistrap/examples/
 examples/config.sh ./usr/share/doc/multistrap/examples/
 examples/chroot.sh ./usr/share/multistrap/
+examples/chroot-policy.sh ./usr/share/multistrap/
 check-deps.sh ./usr/share/multistrap/
 device-table.pl ./usr/share/multistrap/
 update-rc.d ./usr/share/multistrap/

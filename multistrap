@@ -33,7 +33,7 @@ use vars qw/ $progname $ourversion $dstrap $extra @aptsources $mirror
  @extrapkgs @includes %source $setupsh $configsh $omitrequired $dryrun
  $omitpreinst @reinstall $tgzname %uniq %required $check @check %uniq
  $explicit_suite $allow_recommends %omitdebsrc @dsclist @sectoutput
- %flatfile %important $addimportant/;
+ %flatfile %important $addimportant @debconf /;
 
 setlocale(LC_MESSAGES, "");
 textdomain("multistrap");
@@ -586,6 +586,18 @@ sub force_unpack {
 	}
 	chdir ("$old");
 	print _g("I: Unpacking complete.\n");
+	foreach my $seed (@debconf) {
+		next if (not -f $seed);
+		open (SEED, "$seed") or next;
+		my @s=<SEED>;
+		close (SEED);
+		my $sfile = basename($seed);
+		printf (_g("I: Copying debconf preseed data to %s.\n"), $sfile);
+		mkdir ("${dir}/tmp/preseeds");
+		open (SEED, ">${dir}tmp/preseeds/$sfile");
+		print SEED @s;
+		close (SEED);
+	}
 }
 
 sub check_bin_sh {
@@ -612,7 +624,7 @@ sub check_bin_sh {
 		}
 	}
 	if (-l "$dir/bin/sh") {
-		print ("${dir}bin/sh found OK:\n");
+		printf (_g("I: Shell found OK in %s:\n"), "${dir}bin/sh");
 		system ("(cd $dir ; ls -lh bin/sh)");
 	} else {
 		die ("No shell in $dir.");
@@ -685,6 +697,16 @@ sub native {
 	}
 	# check that we have a workable shell inside the chroot
 	&check_bin_sh("$dir");
+	# pre-populate debconf
+	if (-d "${dir}/tmp/preseeds/") {
+		opendir (SEEDS, "${dir}/tmp/preseeds/") or return;
+		my @seeds=grep(!m:\.\.?$:, readdir SEEDS);
+		closedir (SEEDS);
+		foreach my $s (@seeds) {
+			printf (_g("I: Running debconf for seed file: %s\n"), $s);
+			system ("$str $env chroot $dir debconf-set-selections /tmp/preseeds/$s");
+		}
+	}
 	system ("$str $env chroot $dir dpkg --configure -a");
 	opendir (PRI, "${dir}/var/lib/dpkg/info") or return;
 	my @preinsts=grep(/\.preinst$/, readdir PRI);
@@ -878,6 +900,14 @@ sub cascade {
 				($keys{$section}{'explicitsuite'} eq "true"));
 			$allow_recommends++ if ((defined $keys{$section}{'allowrecommends'}) and
 				($keys{$section}{'allowrecommends'} eq "true"));
+			my @p = split(' ', lc($keys{$section}{'debconfseed'}))
+				if (defined $keys{$section}{'debconfseed'});
+			foreach my $f (@p) {
+				my $fl = `realpath $f`;
+				next if (not -f $fl);
+				chomp ($fl);
+				push @debconf, $fl;
+			}
 			my @d = split(' ', lc($keys{$section}{'debootstrap'}));
 			push @debootstrap, @d;
 			my @b = split(' ', lc($keys{$section}{'bootstrap'}));
@@ -1042,11 +1072,11 @@ sub dump_config {
 	} else {
 		printf("allowrecommends:\t"._g("Recommended packages are ignored.\n"));
 	}
+	$plural = ngettext("Debconf preseed file", "Debconf preseed files", scalar @debconf);
+	printf("%s:\t%s\n", $plural, join(" ", sort @debconf)) if (scalar @debconf > 0);
 	$plural = ngettext ("Extra Package: ", "Extra Packages: ", scalar @extrapkgs);
-	print "additional:\t\t$plural".join (", ", sort @extrapkgs)."\n"
-		if (scalar @extrapkgs > 0);
-	print "reinstall:\t\t".join (", ", sort (@reinstall))."\n"
-		if (scalar @reinstall > 0);
+	print "additional:\t\t$plural".join (", ", sort @extrapkgs)."\n" if (scalar @extrapkgs > 0);
+	print "reinstall:\t\t".join (", ", sort (@reinstall))."\n" if (scalar @reinstall > 0);
 	if (defined $arch and $arch ne "") {
 		printf ("arch:\t\t\t"._g("Architecture to download: %s\n"), $arch);
 	} else {
