@@ -350,6 +350,21 @@ A native multistrap can be used directly with chroot, so
 C<multistrap> runs C<dpkg --configure -a> at the end of the
 multistrap process. 
 
+=head1 Daemons in chroots
+
+Depending on which system you using to provide the packages for
+C<multistrap>, native chroots should generally not allow daemons to
+start inside the chroot. Use the F</usr/share/multistrap/chroot.sh>
+as your C<setupscript> or include that script in your own setup script.
+
+ setupscript=/usr/share/multistrap/chroot.sh
+
+F<chroot.sh> copes with systems using F<sysvinit> and F<upstart>.
+
+See also
+
+ http://people.debian.org/~hmh/invokerc.d-policyrc.d-specification.txt
+
 =head1 Cascading configuration
 
 To support multiple variants of a basic (common) configuration,

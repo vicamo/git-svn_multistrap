@@ -12,8 +12,10 @@ multistrap (2.1.9) experimental; urgency=low
     (Closes: #610634)
   * Fix unpack option to look only for 'true' values.
   * Experimental support for debconf preseed files (Closes: #610614)
+  * Add sysvinit method to existing upstart support in script for native
+    chroots to disable starting daemons. (Closes: #611188)
 
- -- Neil Williams <codehelp@debian.org>  Fri, 28 Jan 2011 12:57:19 +0000
+ -- Neil Williams <codehelp@debian.org>  Sat, 29 Jan 2011 15:43:39 +0000
 
 multistrap (2.1.8) experimental; urgency=low
 
