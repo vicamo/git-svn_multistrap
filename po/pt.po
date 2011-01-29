@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: multistrap\n"
 "Report-Msgid-Bugs-To: multistrap@packages.debian.org\n"
-"POT-Creation-Date: 2011-01-28 15:23+0000\n"
+"POT-Creation-Date: 2011-01-29 15:51+0000\n"
 "PO-Revision-Date: 2010-09-12 23:50+0100\n"
 "Last-Translator: Pedro Ribeiro <p.m42.ribeiro@gmail.com>\n"
 "Language-Team: Portuguese <traduz@debianpt.org>\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: pt\n"
 
 #: ../multistrap:72
 msgid "Unknown option"
@@ -162,8 +162,8 @@ msgid ""
 "Compressing multistrap system in '%s' to a tarball called: '%s'.\n"
 msgstr ""
 "\n"
-"A comprimir o sistema multistrap em '%s' para um ficheiro tar chamado: '%"
-"s'.\n"
+"A comprimir o sistema multistrap em '%s' para um ficheiro tar chamado: "
+"'%s'.\n"
 
 #: ../multistrap:429
 #, perl-format
@@ -556,80 +556,80 @@ msgid_plural "Debconf preseed files"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../multistrap:1078
+#: ../multistrap:1077
 msgid "Extra Package: "
 msgid_plural "Extra Packages: "
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../multistrap:1084
+#: ../multistrap:1081
 #, fuzzy, perl-format
 msgid "Architecture to download: %s\n"
 msgstr "Arquitectura: %s\n"
 
-#: ../multistrap:1086
+#: ../multistrap:1083
 #, perl-format
 msgid "Cannot determine architecture from '%s'.\n"
 msgstr "Impossível determinar a arquitectura a partir de '%s'.\n"
 
-#: ../multistrap:1089
+#: ../multistrap:1086
 #, perl-format
 msgid "Output directory: '%s'\n"
 msgstr "Directório de saída: '%s'\n"
 
-#: ../multistrap:1091
+#: ../multistrap:1088
 #, perl-format
 msgid "Cannot determine directory from '%s'.\n"
 msgstr "Impossível determinar o directório a partir de '%s'.\n"
 
-#: ../multistrap:1094 ../multistrap:1096
+#: ../multistrap:1091 ../multistrap:1093
 #, perl-format
 msgid "extract all downloaded archives: %s\n"
 msgstr "extrair todos os arquivos descarregados: %s\n"
 
-#: ../multistrap:1099
+#: ../multistrap:1096
 msgid "Script to be run after unpacking"
 msgstr ""
 
-#: ../multistrap:1101
+#: ../multistrap:1098
 msgid "'Priority required' packages are not included."
 msgstr ""
 
-#: ../multistrap:1103
+#: ../multistrap:1100
 msgid "'Priority: required' packages are included."
 msgstr ""
 
-#: ../multistrap:1106
+#: ../multistrap:1103
 msgid "'Priority: important' packages are included.\n"
 msgstr ""
 
-#: ../multistrap:1108
+#: ../multistrap:1105
 #, fuzzy
 msgid "'Priority: important' packages are ignored.\n"
 msgstr "Pacotes recomendados são ignorados.\n"
 
-#: ../multistrap:1111
+#: ../multistrap:1108
 msgid "remove apt cache data: true\n"
 msgstr "remover cache de dados do apt: verdadeiro\n"
 
-#: ../multistrap:1113
+#: ../multistrap:1110
 msgid "remove apt cache data: false\n"
 msgstr "remover cache de dados do apt: falso\n"
 
-#: ../multistrap:1116
+#: ../multistrap:1113
 msgid "allow the use of unauthenticated repositories: true\n"
 msgstr "permitir o uso de repositórios não autenticados: verdadeiro\n"
 
-#: ../multistrap:1118
+#: ../multistrap:1115
 msgid "allow the use of unauthenticated repositories: false\n"
 msgstr "permitir o uso de repositórios não autenticados: falso\n"
 
-#: ../multistrap:1121
+#: ../multistrap:1118
 #, perl-format
 msgid "Sources will be retained in: %s\n"
 msgstr "Fontes serão guardadas em: %s\n"
 
-#: ../multistrap:1124
+#: ../multistrap:1121
 #, perl-format
 msgid "Tarball name: '%s'\n"
 msgstr ""

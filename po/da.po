@@ -9,14 +9,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: multistrap\n"
 "Report-Msgid-Bugs-To: multistrap@packages.debian.org\n"
-"POT-Creation-Date: 2011-01-28 15:23+0000\n"
+"POT-Creation-Date: 2011-01-29 15:51+0000\n"
 "PO-Revision-Date: 2010-09-03 17:30+01:00\n"
 "Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"
 "Language-Team: Danish <debian-l10n-danish@lists.debian.org> \n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: \n"
 
 #: ../multistrap:72
 msgid "Unknown option"
@@ -550,80 +550,80 @@ msgid_plural "Debconf preseed files"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../multistrap:1078
+#: ../multistrap:1077
 msgid "Extra Package: "
 msgid_plural "Extra Packages: "
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../multistrap:1084
+#: ../multistrap:1081
 #, fuzzy, perl-format
 msgid "Architecture to download: %s\n"
 msgstr "Arkitektur: %s\n"
 
-#: ../multistrap:1086
+#: ../multistrap:1083
 #, perl-format
 msgid "Cannot determine architecture from '%s'.\n"
 msgstr "Kan ikke bestemme arkitektur fra '%s'.\n"
 
-#: ../multistrap:1089
+#: ../multistrap:1086
 #, perl-format
 msgid "Output directory: '%s'\n"
 msgstr "Uddatamappe: '%s'\n"
 
-#: ../multistrap:1091
+#: ../multistrap:1088
 #, perl-format
 msgid "Cannot determine directory from '%s'.\n"
 msgstr "Kan ikke bestemme mappe fra '%s'.\n"
 
-#: ../multistrap:1094 ../multistrap:1096
+#: ../multistrap:1091 ../multistrap:1093
 #, perl-format
 msgid "extract all downloaded archives: %s\n"
 msgstr "udtræk alle hentede arkiver: %s\n"
 
-#: ../multistrap:1099
+#: ../multistrap:1096
 msgid "Script to be run after unpacking"
 msgstr ""
 
-#: ../multistrap:1101
+#: ../multistrap:1098
 msgid "'Priority required' packages are not included."
 msgstr ""
 
-#: ../multistrap:1103
+#: ../multistrap:1100
 msgid "'Priority: required' packages are included."
 msgstr ""
 
-#: ../multistrap:1106
+#: ../multistrap:1103
 msgid "'Priority: important' packages are included.\n"
 msgstr ""
 
-#: ../multistrap:1108
+#: ../multistrap:1105
 #, fuzzy
 msgid "'Priority: important' packages are ignored.\n"
 msgstr "Anbefalede pakker ignoreres.\n"
 
-#: ../multistrap:1111
+#: ../multistrap:1108
 msgid "remove apt cache data: true\n"
 msgstr "fjern apt-mellemlagerdata: true\n"
 
-#: ../multistrap:1113
+#: ../multistrap:1110
 msgid "remove apt cache data: false\n"
 msgstr "fjern apt-mellemlagerdata: false\n"
 
-#: ../multistrap:1116
+#: ../multistrap:1113
 msgid "allow the use of unauthenticated repositories: true\n"
 msgstr "tillad brugen af arkiver der ikke er godkendte: true\n"
 
-#: ../multistrap:1118
+#: ../multistrap:1115
 msgid "allow the use of unauthenticated repositories: false\n"
 msgstr "tillad brugen af arkiver der ikke ikke er godkendte: false\n"
 
-#: ../multistrap:1121
+#: ../multistrap:1118
 #, perl-format
 msgid "Sources will be retained in: %s\n"
 msgstr "Kilder vil blive bevaret i: %s\n"
 
-#: ../multistrap:1124
+#: ../multistrap:1121
 #, perl-format
 msgid "Tarball name: '%s'\n"
 msgstr ""
