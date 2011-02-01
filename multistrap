@@ -707,19 +707,19 @@ sub native {
 			system ("$str $env chroot $dir debconf-set-selections /tmp/preseeds/$s");
 		}
 	}
-	system ("$str $env chroot $dir dpkg --configure -a");
 	opendir (PRI, "${dir}/var/lib/dpkg/info") or return;
 	my @preinsts=grep(/\.preinst$/, readdir PRI);
 	closedir (PRI);
-	printf (_g("I: Running preinst scripts with 'upgrade' argument.\n"));
+	printf (_g("I: Running preinst scripts with 'install' argument.\n"));
 	my $f = join (" ", @reinstall);
 	foreach my $script (sort @preinsts) {
 		my $t = $script;
 		$t =~ s/\.preinst//;
 		next if ($t =~ /$f/);
 		next if ($script =~ /bash/);
-		system ("$str $env chroot $dir /var/lib/dpkg/info/$script upgrade");
+		system ("$str $env chroot $dir /var/lib/dpkg/info/$script install");
 	}
+	system ("$str $env chroot $dir dpkg --configure -a");
 	# reinstall set
 	foreach my $reinst (sort @reinstall) {
 		system ("$str $env chroot $dir apt-get --reinstall -y install $reinst");

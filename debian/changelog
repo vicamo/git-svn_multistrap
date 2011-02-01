@@ -1,8 +1,12 @@
 multistrap (2.1.10) experimental; urgency=low
 
   * Fix typo in sysvinit chroot.sh script.
+  * run preinst scripts install command instead of upgrade
+    (Closes: #611744)
+  * Run the preinst scripts ahead of calling configure -a in native
+    mode. Thanks to Daniel Baumann for spotting it.
 
- -- Neil Williams <codehelp@debian.org>  Tue, 01 Feb 2011 22:09:40 +0000
+ -- Neil Williams <codehelp@debian.org>  Tue, 01 Feb 2011 22:25:59 +0000
 
 multistrap (2.1.9) experimental; urgency=low
 
