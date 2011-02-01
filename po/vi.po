@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: multistrap 2.1.7\n"
 "Report-Msgid-Bugs-To: multistrap@packages.debian.org\n"
-"POT-Creation-Date: 2011-01-29 15:51+0000\n"
+"POT-Creation-Date: 2011-02-01 22:27+0000\n"
 "PO-Revision-Date: 2010-09-29 19:59+0930\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
@@ -300,8 +300,9 @@ msgstr "TIN: Chế độ sở hữu — cấu hình các gói chưa mở . . .\n
 msgid "I: Running debconf for seed file: %s\n"
 msgstr ""
 
-#: ../multistrap:714
-msgid "I: Running preinst scripts with 'upgrade' argument.\n"
+#: ../multistrap:713
+#, fuzzy
+msgid "I: Running preinst scripts with 'install' argument.\n"
 msgstr ""
 "TIN: Đang chạy các văn lệnh cài đặt sẵn với đối số « upgrade » (nâng cấp).\n"
 

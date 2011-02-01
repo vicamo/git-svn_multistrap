@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: multistrap\n"
 "Report-Msgid-Bugs-To: multistrap@packages.debian.org\n"
-"POT-Creation-Date: 2011-01-29 15:51+0000\n"
+"POT-Creation-Date: 2011-02-01 22:27+0000\n"
 "PO-Revision-Date: 2010-09-12 23:50+0100\n"
 "Last-Translator: Pedro Ribeiro <p.m42.ribeiro@gmail.com>\n"
 "Language-Team: Portuguese <traduz@debianpt.org>\n"
@@ -295,8 +295,9 @@ msgstr "I: Modo nativo - a configurar pacotes desempacotados . . .\n"
 msgid "I: Running debconf for seed file: %s\n"
 msgstr ""
 
-#: ../multistrap:714
-msgid "I: Running preinst scripts with 'upgrade' argument.\n"
+#: ../multistrap:713
+#, fuzzy
+msgid "I: Running preinst scripts with 'install' argument.\n"
 msgstr "I: A correr scripts 'preinst' com o argumento 'upgrade'.\n"
 
 #: ../multistrap:737
