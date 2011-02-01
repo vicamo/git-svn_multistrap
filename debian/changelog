@@ -1,3 +1,9 @@
+multistrap (2.1.10) experimental; urgency=low
+
+  * Fix typo in sysvinit chroot.sh script.
+
+ -- Neil Williams <codehelp@debian.org>  Tue, 01 Feb 2011 22:09:40 +0000
+
 multistrap (2.1.9) experimental; urgency=low
 
   * Allow missing packages lines and add note about using omitdebsrc

@@ -29,7 +29,7 @@ echo \"Warning: Fake initctl called, doing nothing\"" > "$TARGET/sbin/initctl"
 fi
 
 # sysvinit support - exit value of 101 is essential.
-if [ -x "$TARGET/sbin/init" && ! -f "$TARGET/usr/sbin/policy-rc.d" ]; then
+if [ -x "$TARGET/sbin/init" -a ! -f "$TARGET/usr/sbin/policy-rc.d" ]; then
 	echo "sysvinit: Using policy-rc.d to prevent daemons from starting in $TARGET"
 	mkdir -p $TARGET/usr/sbin/
 	cat > $TARGET/usr/sbin/policy-rc.d << EOF
