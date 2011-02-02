@@ -47,24 +47,18 @@ while( @ARGV ) {
 	if (!/^-/) {
 		unshift(@ARGV,$_);
 		last;
-	}
-	elsif (/^(-\?|-h|--help|--version)$/) {
+	} elsif (/^(-\?|-h|--help|--version)$/) {
 	&usageversion();
 		exit( 0 );
-	}
-	elsif (/^(-f|--file)$/) {
+	} elsif (/^(-f|--file)$/) {
 		$file = shift(@ARGV);
-	}
-	elsif (/^(-d|--dir)$/) {
+	} elsif (/^(-d|--dir)$/) {
 		$dir = shift(@ARGV);
-	}
-	elsif (/^(-n|--dry-run)$/) {
+	} elsif (/^(-n|--dry-run)$/) {
 		$dry++;
-	}
-	elsif (/^(--no-fakeroot)$/) {
+	} elsif (/^(--no-fakeroot)$/) {
 		$fakeroot="";
-	}
-	else {
+	} else {
 		die "$progname: "._g("Unknown option")." $_.\n";
 	}
 }
@@ -73,7 +67,7 @@ $msg = sprintf (_g("Need a configuration file - use %s -f\n"), $progname);
 die ($msg)
 	if (not -f $file);
 printf (_g("%s %s using %s\n"), $progname, $ourversion, $file);
-open (TABLE, "<", $file) or die ("$file: $!\n");
+open (TABLE, "<", $file) or die ("$progname: $file: $!\n");
 @list=<TABLE>;
 close (TABLE);
 
@@ -108,8 +102,7 @@ foreach $line (@list) {
 		push @seq, "mkdir -m $cmd[2] -p .$cmd[0]";
 		next;
 	}
-	if ($cmd[9] =~ /-/)
-	{
+	if ($cmd[9] =~ /-/) {
 		push @seq, "mknod .$cmd[0] $cmd[1] $cmd[5] $cmd[6]";
 		push @seq, "chmod $cmd[2] .$cmd[0]";
 		push @seq, "chown $cmd[3]:$cmd[4] .$cmd[0]";
@@ -132,7 +125,7 @@ if (defined $dry) {
 
 sub our_version {
 	my $query = `dpkg-query -W -f='\${Version}' multistrap 2>/dev/null`;
-	(defined $query) ? return $query : return "0.0.9";
+	(defined $query) ? return $query : return "2.1.10";
 }
 
 sub usageversion {

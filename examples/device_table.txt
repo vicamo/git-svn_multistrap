@@ -103,16 +103,16 @@
 #/dev/sdg	b	640	0	0	8	97	1	1	15
 #/dev/sdh	b	640	0	0	8	112	0	0	-
 #/dev/sdh	b	640	0	0	8	113	1	1	15
-#/dev/sg		c	640	0	0	21	0	0	1	15
+#/dev/sg	c	640	0	0	21	0	0	1	15
 #/dev/scd	b	640	0	0	11	0	0	1	15
-#/dev/st		c	640	0	0	9	0	0	1	8
+#/dev/st	c	640	0	0	9	0	0	1	8
 #/dev/nst	c	640	0	0	9	128	0	1	8
 #/dev/st	c	640	0	0	9	32	1	1	4
 #/dev/st	c	640	0	0	9	64	1	1	4
 #/dev/st	c	640	0	0	9	96	1	1	4
 
 # Floppy disk devices
-#/dev/fd		b	640	0	0	2	0	0	1	2
+#/dev/fd	b	640	0	0	2	0	0	1	2
 #/dev/fd0d360	b	640	0	0	2	4	0	0	-
 #/dev/fd1d360	b	640	0	0	2	5	0	0	-
 #/dev/fd0h1200	b	640	0	0	2	8	0	0	-
@@ -136,4 +136,3 @@
 #/dev/sbpcd	b	640	0	0	25	0	0	1	4
 #/dev/mcd	b	640	0	0	23	0	0	0	-
 #/dev/optcd	b	640	0	0	17	0	0	0	-
-
