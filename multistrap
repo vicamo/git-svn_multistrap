@@ -385,7 +385,7 @@ if (-l "${dir}lib64" ) {
 		printf (_g("ERR: Some files may have been unpacked outside %s!\n"), $dir);
 	}
 }
-# cleanly separate the debootstrap sources from the final apt sources.
+# cleanly separate the bootstrap sources from the final apt sources.
 unlink ("${dir}etc/apt/sources.list.d/multistrap.sources.list")
 	if (-f "${dir}etc/apt/sources.list.d/multistrap.sources.list");
 opendir (LISTS, "${dir}etc/apt/sources.list.d/")
@@ -830,7 +830,7 @@ unpack=true
 # aptsources is a list of sections to be used for downloading packages
 # and lists and placed in the /etc/apt/sources.list.d/multistrap.sources.list
 # of the target. Order is not important
-aptsources=Grip Updates
+aptsources=Debian
 # the order of sections is not important.
 # the bootstrap option determines which repository
 # is used to calculate the list of Priority: required packages.
@@ -842,12 +842,12 @@ source=http://cdn.debian.net/debian
 keyring=debian-archive-keyring
 suite=lenny
 
-This will result in a completely normal debootstrap of Debian lenny from
+This will result in a completely normal bootstrap of Debian lenny from
 the specified mirror, for armel in /opt/multistrap/.
 
 'Architecture' and 'directory' can be overridden on the command line.
 
-Specify a package to extend the debootstap to include that package and
+Specify a package to extend the bootstap to include that package and
 all dependencies. Dependencies will be calculated by apt so as to use
 only the most recent suitable version from all configured repositories.
 

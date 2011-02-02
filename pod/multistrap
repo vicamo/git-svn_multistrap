@@ -83,7 +83,7 @@ Example configuration:
  keyring=debian-archive-keyring
  suite=lenny
 
-This will result in a completely normal debootstrap of Debian lenny from
+This will result in a completely normal bootstrap of Debian lenny from
 the specified mirror, for armel in '/opt/multistrap/'. (This configuration
 is retained in the package as F</usr/share/multistrap/lenny.conf>)
 
