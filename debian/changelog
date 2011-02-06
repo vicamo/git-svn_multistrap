@@ -1,9 +1,9 @@
-multistrap (2.1.11) experimental; urgency=low
+multistrap (2.1.11) unstable; urgency=low
 
   * Fix examples in comments within device_table.txt to
     use consistent tabs. (Closes: #611808)
 
- -- Neil Williams <codehelp@debian.org>  Wed, 02 Feb 2011 17:23:03 +0000
+ -- Neil Williams <neil@debian.cable.virginmedia.net>  Sun, 06 Feb 2011 08:59:42 +0000
 
 multistrap (2.1.10) experimental; urgency=low
 
