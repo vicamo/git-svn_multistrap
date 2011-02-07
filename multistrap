@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright (C) 2009, 2010  Neil Williams <codehelp@debian.org>
+# Copyright (C) 2009-2011  Neil Williams <codehelp@debian.org>
 #
 # This package is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -155,7 +155,7 @@ if (not -d "$dir") {
 	my $msg = sprintf (_g("Unable to create directory '%s'"),$dir);
 	die "$progname: $msg\n" if ($ret != 0);
 }
-$dir = `realpath $dir`;
+$dir = `realpath $dir 2>/dev/null`;
 chomp ($dir);
 $dir .= ($dir =~ m:/$:) ? '' : "/";
 system ("mkdir -p ${dir}${cachedir}") if (not -d "${dir}${cachedir}");
@@ -437,8 +437,8 @@ print "\n";
 exit 0;
 
 sub our_version {
-	my $query = `dpkg-query -W -f='\${Version}' multistrap`;
-	(defined $query) ? return $query : return "2.1.5";
+	my $query = `dpkg-query -W -f='\${Version}' multistrap 2>/dev/null`;
+	($query ne "") ? return $query : return "2.1.5";
 }
 
 sub add_extra_packages {
@@ -610,7 +610,7 @@ sub check_bin_sh {
 	unlink ("$dir/var/lib/dpkg/info/dash.postinst");
 	# now ensure that a usable shell is available as /bin/sh
 	if (not -l "$dir/bin/sh") {
-		print (_g("ERR: ./bin/sh symbolic link does not exist.\n"));
+		print (_g("INF: ./bin/sh symbolic link does not exist.\n"));
 		if (-f "$dir/bin/dash") {
 			print (_g("INF: Setting ./bin/sh -> ./bin/dash\n"));
 			chdir ("$dir/bin");
@@ -840,9 +840,9 @@ bootstrap=Debian
 packages=
 source=http://cdn.debian.net/debian
 keyring=debian-archive-keyring
-suite=lenny
+suite=stable
 
-This will result in a completely normal bootstrap of Debian lenny from
+This will result in a completely normal bootstrap of Debian stable from
 the specified mirror, for armel in /opt/multistrap/.
 
 'Architecture' and 'directory' can be overridden on the command line.
@@ -903,7 +903,9 @@ sub cascade {
 			my @p = split(' ', lc($keys{$section}{'debconfseed'}))
 				if (defined $keys{$section}{'debconfseed'});
 			foreach my $f (@p) {
-				my $fl = `realpath $f`;
+				my $fl = `realpath $f 2>/dev/null`;
+				chomp($fl);
+				next if ($fl eq "");
 				next if (not -f $fl);
 				chomp ($fl);
 				push @debconf, $fl;
@@ -962,30 +964,6 @@ sub cascade {
 		$uniq{$x}++;
 	}
 	@extrapkgs = keys %uniq;
-	# check for old versions of apt, <= 0.7.20.2+lenny1
-	my $aptVer = `dpkg-query -W -f='\${Version}' apt`;
-	if (defined $aptVer and ($aptVer ne "")) {
-		chomp ($aptVer);
-		my $retval = system ("dpkg --compare-versions $aptVer '>>' 0.7.20.2+lenny1");
-		$retval /= 256;
-		if ($retval == 1) {
-			foreach my $key (sort keys %suites) {
-				if (($suites{$key} =~ /lenny/)
-				or ($suites{$key} =~ /squeeze/)
-				or ($suites{$key} =~ /sid/)
-				or ($suites{$key} =~ /etch/)) {
-					my $msg = sprintf (_g("ERROR: Your version of apt is too old to support ".
-					"using a codename like '%s'. You MUST use the suite and multistrap is ".
-					"unable to guess which one you meant because suites change over time. " .
-					"Use one of: 'oldstable', 'stable', 'stable-proposed-updates', 'testing',".
-					" 'unstable' or 'experimental'. Alternatively, upgrade to version of apt ".
-					"newer than 0.7.20.2+lenny1.\n"), $suites{$key});
-					system ("echo \"$msg\" | fold -s");
-					exit 5;
-				}
-			}
-		}
-	}
 }
 
 sub _g {
