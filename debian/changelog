@@ -6,8 +6,10 @@ multistrap (2.1.11) unstable; urgency=low
   * Remove workaround for apt from lenny.
   * Improve the fix for #553599 and generalise it. Handle making a real
     directory for amd64 to cope with libc6-amd64 [i386].
+  * Add hook directory support, per configuration file, similar to
+    pbuilder support.
 
- -- Neil Williams <codehelp@debian.org>  Mon, 07 Feb 2011 12:14:17 +0000
+ -- Neil Williams <codehelp@debian.org>  Mon, 07 Feb 2011 12:21:33 +0000
 
 multistrap (2.1.10) experimental; urgency=low
 

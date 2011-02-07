@@ -33,7 +33,7 @@ use vars qw/ $progname $ourversion $dstrap $extra @aptsources $mirror
  @extrapkgs @includes %source $setupsh $configsh $omitrequired $dryrun
  $omitpreinst @reinstall $tgzname %uniq %required $check @check %uniq
  $explicit_suite $allow_recommends %omitdebsrc @dsclist @sectoutput
- %flatfile %important $addimportant @debconf /;
+ %flatfile %important $addimportant @debconf $hookdir %hooks /;
 
 setlocale(LC_MESSAGES, "");
 textdomain("multistrap");
@@ -897,6 +897,20 @@ sub cascade {
 				chomp ($fl);
 				push @debconf, $fl;
 			}
+			my @h = split(' ', lc($keys{$section}{'hookdir'}))
+				if (defined $keys{$section}{'hookdir'});
+			foreach my $f (@h) {
+				opendir (HOOKS, "$f") or next;
+				my @hookfiles=grep(!m:\.\.?$:, readdir HOOKS);
+				closedir(HOOKS);
+				foreach my $hf (@hookfiles) { 
+					my $fl = `realpath $f/$hf 2>/dev/null`;
+					chomp ($fl);
+					next if (($fl eq "") or (not -f $fl) or (not -x $fl));
+					push (@{$hooks{'A'}}, $fl) if ($hf =~ /^A/);
+					push (@{$hooks{'D'}}, $fl) if ($hf =~ /^D/);
+				}
+			}
 			my @d = split(' ', lc($keys{$section}{'debootstrap'}));
 			push @debootstrap, @d;
 			my @b = split(' ', lc($keys{$section}{'bootstrap'}));
@@ -1039,6 +1053,11 @@ sub dump_config {
 	}
 	$plural = ngettext("Debconf preseed file", "Debconf preseed files", scalar @debconf);
 	printf("%s:\t%s\n", $plural, join(" ", sort @debconf)) if (scalar @debconf > 0);
+	$plural = ngettext ("Hook: ", "", scalar @extrapkgs);
+	print "hooks (A):\t\t$plural".join (", ", sort @{$hooks{'A'}})."\n"
+		if (defined ($hooks{'A'} and scalar @{$hooks{'A'}} > 0));
+	print "hooks (D):\t\t$plural".join (", ", sort @{$hooks{'D'}})."\n"
+		if (defined ($hooks{'D'} and scalar @{$hooks{'D'}} > 0));
 	$plural = ngettext ("Extra Package: ", "Extra Packages: ", scalar @extrapkgs);
 	print "additional:\t\t$plural".join (", ", sort @extrapkgs)."\n" if (scalar @extrapkgs > 0);
 	print "reinstall:\t\t".join (", ", sort (@reinstall))."\n" if (scalar @reinstall > 0);
