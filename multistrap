@@ -354,6 +354,8 @@ die (sprintf (_g("apt download failed. Exit value: %d\n"),($retval/256)))
 &force_unpack if ($unpack eq "true");
 system ("touch ${dir}${libdir}lists/lock");
 system ("$setupsh $dir $arch") if ((defined $setupsh) and (-x $setupsh));
+# run first set of hooks
+&run_download_hooks(sort @{$hooks{'D'}});
 &native if (not defined ($foreign) and $unpack eq "true");
 &add_extra_packages;
 system ("cp $configsh $dir/") if ((defined $configsh) and (-f $configsh));
@@ -393,6 +395,8 @@ foreach my $aptsrc (@aptsources) {
 }
 # altered the sources, so get apt to update.
 (not defined $tidy) ? system ("apt-get $config_str update") : &tidy_apt;
+# run second set of hooks
+&run_completion_hooks(sort @{$hooks{'A'}});
 printf (_g("\nMultistrap system installed successfully in %s.\n"), $dir);
 if (defined $tgzname) {
 	printf (_g("\nCompressing multistrap system in '%s' to a tarball called: '%s'.\n"), $dir, $tgzname);
@@ -563,6 +567,50 @@ sub force_unpack {
 	}
 }
 
+sub run_download_hooks {
+	my (@hooks) = @_;
+	return if (scalar @hooks == 0);
+	printf(ngettext("I: Running %d post-download hook\n",
+		"I: Running %d post-download hooks\n", scalar @hooks), scalar @hooks);
+	foreach my $hookscript (@hooks) {
+		printf (_g("I: Running post-download hook: '%s'\n"), basename($hookscript));
+		system ("$hookscript $dir");
+	}
+}
+
+sub run_native_hooks_start {
+	my (@hooks) = @_;
+	return if (scalar @hooks == 0);
+	printf(ngettext("I: Starting %d native hook\n",
+		"I: Starting %d native hooks\n", scalar @hooks), scalar @hooks);
+	foreach my $hookscript (@hooks) {
+		printf (_g("I: Starting native hook: '%s'\n"), basename($hookscript));
+		system ("$hookscript $dir start");
+	}
+}
+
+sub run_native_hooks_end {
+	my (@hooks) = @_;
+	return if (scalar @hooks == 0);
+	printf(ngettext("I: Stopping %d native hook\n",
+		"I: Stopping %d native hooks\n", scalar @hooks), scalar @hooks);
+	foreach my $hookscript (@hooks) {
+		printf (_g("I: Stopping native hook: '%s'\n"), basename($hookscript));
+		system ("$hookscript $dir end");
+	}
+}
+
+sub run_completion_hooks {
+	my (@hooks) = @_;
+	return if (scalar @hooks == 0);
+	printf(ngettext("I: Running %d post-configuration hook\n",
+		"I: Running %d post-configuration hooks\n", scalar @hooks), scalar @hooks);
+	foreach my $hookscript (@hooks) {
+		printf (_g("I: Running post-configuration hook: '%s'\n"), basename($hookscript));
+		system ("$hookscript $dir");
+	}
+}
+
 # prevent the absolute symlink in libc6 from allowing
 # writes outside the multistrap root dir. See: #553599
 sub guard_lib64 {
@@ -577,10 +625,10 @@ sub guard_lib64 {
 	} elsif (not -d "${dir}lib64") {
 		chdir ("$dir");
 		if ($host eq 'i386' and $arch eq 'amd64') {
-			print _g("INF: Replaced ./lib64 -> /lib symbolic link with new ./lib64 directory.\n");
+			print _g("I: Replaced ./lib64 -> /lib symbolic link with new ./lib64 directory.\n");
 			mkdir ("./lib64");
 		} else {
-			print _g("INF: Setting ./lib64 -> ./lib symbolic link.\n");
+			print _g("I: Setting ./lib64 -> ./lib symbolic link.\n");
 			symlink "./lib", "lib64";
 		}
 	}
@@ -597,14 +645,14 @@ sub check_bin_sh {
 	unlink ("$dir/var/lib/dpkg/info/dash.postinst");
 	# now ensure that a usable shell is available as /bin/sh
 	if (not -l "$dir/bin/sh") {
-		print (_g("INF: ./bin/sh symbolic link does not exist.\n"));
+		print (_g("I: ./bin/sh symbolic link does not exist.\n"));
 		if (-f "$dir/bin/dash") {
-			print (_g("INF: Setting ./bin/sh -> ./bin/dash\n"));
+			print (_g("I: Setting ./bin/sh -> ./bin/dash\n"));
 			chdir ("$dir/bin");
 			symlink ("dash", "sh");
 			chdir ("$old");
 		} elsif (-f "$dir/bin/bash") {
-			print (_g("INF: ./bin/dash not found. Setting ./bin/sh -> ./bin/bash\n"));
+			print (_g("I: ./bin/dash not found. Setting ./bin/sh -> ./bin/bash\n"));
 			chdir ("$dir/bin");
 			symlink ("bash", "sh");
 			chdir ("$old");
@@ -694,6 +742,7 @@ sub native {
 			system ("$str $env chroot $dir debconf-set-selections /tmp/preseeds/$s");
 		}
 	}
+	&run_native_hooks_start(sort @{$hooks{'N'}});
 	opendir (PRI, "${dir}/var/lib/dpkg/info") or return;
 	my @preinsts=grep(/\.preinst$/, readdir PRI);
 	closedir (PRI);
@@ -711,6 +760,7 @@ sub native {
 	foreach my $reinst (sort @reinstall) {
 		system ("$str $env chroot $dir apt-get --reinstall -y install $reinst");
 	}
+	&run_native_hooks_end(sort @{$hooks{'N'}});
 }
 
 sub get_required_debs {
@@ -907,8 +957,9 @@ sub cascade {
 					my $fl = `realpath $f/$hf 2>/dev/null`;
 					chomp ($fl);
 					next if (($fl eq "") or (not -f $fl) or (not -x $fl));
-					push (@{$hooks{'A'}}, $fl) if ($hf =~ /^A/);
-					push (@{$hooks{'D'}}, $fl) if ($hf =~ /^D/);
+					push (@{$hooks{'A'}}, $fl) if ($hf =~ /^completion/);
+					push (@{$hooks{'D'}}, $fl) if ($hf =~ /^download/);
+					push (@{$hooks{'N'}}, $fl) if ($hf =~ /^native/);
 				}
 			}
 			my @d = split(' ', lc($keys{$section}{'debootstrap'}));
@@ -1053,11 +1104,18 @@ sub dump_config {
 	}
 	$plural = ngettext("Debconf preseed file", "Debconf preseed files", scalar @debconf);
 	printf("%s:\t%s\n", $plural, join(" ", sort @debconf)) if (scalar @debconf > 0);
-	$plural = ngettext ("Hook: ", "", scalar @extrapkgs);
-	print "hooks (A):\t\t$plural".join (", ", sort @{$hooks{'A'}})."\n"
-		if (defined ($hooks{'A'} and scalar @{$hooks{'A'}} > 0));
-	print "hooks (D):\t\t$plural".join (", ", sort @{$hooks{'D'}})."\n"
-		if (defined ($hooks{'D'} and scalar @{$hooks{'D'}} > 0));
+	if (defined ($hooks{'D'} and scalar @{$hooks{'D'}} > 0)) {
+		$plural = ngettext ("Download hook: ", "", scalar @{$hooks{'D'}});
+		print "download hooks:\t\t$plural".join (", ", sort @{$hooks{'D'}})."\n";
+	}
+	if (defined ($hooks{'N'} and scalar @{$hooks{'N'}} > 0)) {
+		$plural = ngettext ("Native hook: ", "", scalar @{$hooks{'N'}});
+		print "native hooks:\t\t$plural".join (", ", sort @{$hooks{'N'}})."\n";
+	}
+	if (defined ($hooks{'A'} and scalar @{$hooks{'A'}} > 0)) {
+		$plural = ngettext ("Completion hook: ", "", scalar @{$hooks{'A'}});
+		print "completion hooks:\t$plural".join (", ", sort @{$hooks{'A'}})."\n";
+	}
 	$plural = ngettext ("Extra Package: ", "Extra Packages: ", scalar @extrapkgs);
 	print "additional:\t\t$plural".join (", ", sort @extrapkgs)."\n" if (scalar @extrapkgs > 0);
 	print "reinstall:\t\t".join (", ", sort (@reinstall))."\n" if (scalar @reinstall > 0);

@@ -400,6 +400,9 @@ into C<multistrap> configuration variables. The machine:variant
 support in C<multistrap> concentrates on the scripts, 
 F<config.sh> and F<setup.sh>
 
+Note: B<machine:variant support is likely to be replaced by the
+hook functionality described below.>
+
 Once C<multistrap> has unpacked the downloaded packages, the 
 C<setup.sh> can be called, passing the location and architecture of
 the root filesystem, so that other fine tuning can take place. At
@@ -598,19 +601,44 @@ If a hook directory is specified in the General section of the
 C<multistrap> configuration file, the hook scripts which are executable
 will be run from outside the multistrap directory at the following stages:
 
- A hooks
+=over 1
 
-Executed before unpacking is started
+=item download hooks
 
- D hooks
+Executed before unpacking is started, immediately after the packages
+have been downloaded. Download hooks are executable scripts in the
+specified hook directory with a filename beginning with B<download>.
+
+=item native hooks
+
+Native hook scripts are executed only in native mode, immediately before
+starting the configuration of the downloaded packages and again upon
+completion of the package configuration. Native hooks will be called
+the absolute path and the current progress state, start or end.
+
+Native scripts are executable scripts in the specified hook directory
+with a filename beginning with B<native>.
+
+=item completion hooks
 
 Executed immediately before the tarball is created or C<multistrap> exits
 if not configured to create a tarball.
+
+Completion scripts are executable scripts in the specified hook directory
+with a filename beginning with C<completion>.
+
+=back
 
 Hooks are passed the absolute path to the directory which will be the
 top level directory of the chroot or multistrap system. Hooks which
 cannot be resolved using realpath or which are not executable will be
 ignored.
+
+All hooks of one type are sorted into alphabetical order before being
+run. 
+
+Note that C<multistrap> does not rollback the effects of hooks in the
+case of errors.
 
 =head1 Output
 
