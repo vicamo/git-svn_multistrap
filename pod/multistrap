@@ -227,7 +227,7 @@ never actually happen.
 listed in this Section. If no keyring is specified, the C<noauth>
 option must be set to B<true>. See Secure Apt.
 
-'suite' is the suite to use from this source. Note that this B<must>
+'suite' is the suite to use from this source. Note that this should
 be the suite, not the codename.
 
 Suites change from time to time: (oldstable, stable, testing, sid)
@@ -591,6 +591,26 @@ the [General] section, separated by spaces:
 Files which do not exist or which cannot be opened will be silently
 ignored. Check the results of the parsing using the C<--simulate>
 option to C<multistrap>.
+
+=head1 Hooks
+
+If a hook directory is specified in the General section of the
+C<multistrap> configuration file, the hook scripts which are executable
+will be run from outside the multistrap directory at the following stages:
+
+ A hooks
+
+Executed before unpacking is started
+
+ D hooks
+
+Executed immediately before the tarball is created or C<multistrap> exits
+if not configured to create a tarball.
+
+Hooks are passed the absolute path to the directory which will be the
+top level directory of the chroot or multistrap system. Hooks which
+cannot be resolved using realpath or which are not executable will be
+ignored.
 
 =head1 Output
 

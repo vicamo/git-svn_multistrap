@@ -193,27 +193,7 @@ if (not -d "${dir}dev") {
 	mkdir "${dir}dev";
 }
 
-# prevent the absolute symlink in libc6 from allowing
-# writes outside the multistrap root dir. See: #553599
-if (-l "${dir}lib64" ) {
-	my $r = readlink "${dir}lib64";
-	if ($r =~ m:^/:) {
-		my $old = `pwd`;
-		chomp ($old);
-		unlink "${dir}lib64";
-		chdir ("$dir");
-		print _g("INF: ./lib64 -> /lib symbolic link reset to ./lib.\n");
-		symlink "./lib", "lib64";
-		chdir ("${old}");
-	}
-} else {
-	my $old = `pwd`;
-	chomp ($old);
-	chdir ("$dir");
-	print _g("INF: Setting ./lib64 -> ./lib symbolic link.\n");
-	symlink "./lib", "lib64";
-	chdir ("${old}");
-}
+&guard_lib64($dir);
 
 system ("rm -rf ${dir}etc/apt/sources.list.d/*");
 unlink ("${dir}etc/apt/sources.list")
@@ -378,13 +358,8 @@ system ("$setupsh $dir $arch") if ((defined $setupsh) and (-x $setupsh));
 &add_extra_packages;
 system ("cp $configsh $dir/") if ((defined $configsh) and (-f $configsh));
 (not defined $tidy) ? system ("apt-get $config_str update") : &tidy_apt;
-if (-l "${dir}lib64" ) {
-	my $r = readlink "${dir}lib64";
-	if ($r =~ m:^/:) {
-		print _g("ERR: ./lib64 -> /lib symbolic link reset to ./lib after unpacking.\n");
-		printf (_g("ERR: Some files may have been unpacked outside %s!\n"), $dir);
-	}
-}
+&guard_lib64($dir);
+
 # cleanly separate the bootstrap sources from the final apt sources.
 unlink ("${dir}etc/apt/sources.list.d/multistrap.sources.list")
 	if (-f "${dir}etc/apt/sources.list.d/multistrap.sources.list");
@@ -570,19 +545,7 @@ sub force_unpack {
 		print STATUS "\n";
 		close (STATUS);
 		system ("rm -rf ./${tmpdir}");
-		if (-l "${dir}lib64" ) {
-			my $r = readlink "${dir}lib64";
-			if ($r =~ m:^/:) {
-				my $old = `pwd`;
-				chomp ($old);
-				printf (_g("ERR: lib64 -> ./lib symbolic link clobbered by %s\n"), $pkg);
-				unlink "${dir}lib64";
-				chdir ("$dir");
-				print _g("INF: lib64 -> /lib symbolic link reset to ./lib.\n");
-				symlink "./lib", "lib64";
-				chdir ("${old}");
-			}
-		}
+		&guard_lib64 ($dir);
 	}
 	chdir ("$old");
 	print _g("I: Unpacking complete.\n");
@@ -598,6 +561,30 @@ sub force_unpack {
 		print SEED @s;
 		close (SEED);
 	}
+}
+
+# prevent the absolute symlink in libc6 from allowing
+# writes outside the multistrap root dir. See: #553599
+sub guard_lib64 {
+	my $dir = shift;
+	my $old = `pwd`;
+	chomp ($old);
+	unlink "${dir}lib64" if (-f "${dir}lib64");
+	if (-l "${dir}lib64" ) {
+		my $r = readlink "${dir}lib64";
+		chomp ($r);
+		unlink "${dir}lib64" if ($r =~ m:^/lib$:);
+	} elsif (not -d "${dir}lib64") {
+		chdir ("$dir");
+		if ($host eq 'i386' and $arch eq 'amd64') {
+			print _g("INF: Replaced ./lib64 -> /lib symbolic link with new ./lib64 directory.\n");
+			mkdir ("./lib64");
+		} else {
+			print _g("INF: Setting ./lib64 -> ./lib symbolic link.\n");
+			symlink "./lib", "lib64";
+		}
+	}
+	chdir ("${old}");
 }
 
 sub check_bin_sh {
