@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: multistrap\n"
 "Report-Msgid-Bugs-To: multistrap@packages.debian.org\n"
-"POT-Creation-Date: 2011-02-02 21:37+0000\n"
+"POT-Creation-Date: 2011-02-07 18:01+0000\n"
 "PO-Revision-Date: 2010-09-12 23:50+0100\n"
 "Last-Translator: Pedro Ribeiro <p.m42.ribeiro@gmail.com>\n"
 "Language-Team: Portuguese <traduz@debianpt.org>\n"
@@ -81,72 +81,53 @@ msgstr ""
 msgid "Unable to create directory '%s'"
 msgstr "Não foi possível criar o directório '%s'"
 
-#: ../multistrap:205
-msgid "INF: ./lib64 -> /lib symbolic link reset to ./lib.\n"
-msgstr "INF: link simbólico ./lib64 -> /lib reposto para ./lib.\n"
-
-#: ../multistrap:213
-msgid "INF: Setting ./lib64 -> ./lib symbolic link.\n"
-msgstr "INF: A definir link simbólico ./lib64 -> ./lib.\n"
-
-#: ../multistrap:242 ../multistrap:247 ../multistrap:402 ../multistrap:407
+#: ../multistrap:222 ../multistrap:227 ../multistrap:379 ../multistrap:384
 msgid "Cannot open sources list"
 msgstr "Impossível abrir lista de fontes"
 
-#: ../multistrap:266
+#: ../multistrap:246
 #, perl-format
 msgid "I: Installing %s\n"
 msgstr "I: A instalar %s\n"
 
-#: ../multistrap:281
+#: ../multistrap:261
 #, perl-format
 msgid "Unable to download keyring package: '%s'"
 msgstr ""
 
-#: ../multistrap:301
+#: ../multistrap:281
 msgid "Secure Apt handling failed - try without authentication."
 msgstr ""
 
-#: ../multistrap:324
+#: ../multistrap:304
 #, perl-format
 msgid "Getting package lists: apt-get %s update\n"
 msgstr "A obter listas de pacotes: apt-get %s update\n"
 
-#: ../multistrap:326
+#: ../multistrap:306
 #, perl-format
 msgid "apt update failed. Exit value: %d\n"
 msgstr "apt update falhou. Valor de saída: %d\n"
 
-#: ../multistrap:331
+#: ../multistrap:311
 msgid "I: Calculating required packages.\n"
 msgstr "I: A calcular pacotes necessários\n"
 
-#: ../multistrap:336
+#: ../multistrap:316
 #, perl-format
 msgid "I: Adding 'Priority: important': %s\n"
 msgstr ""
 
-#: ../multistrap:372
+#: ../multistrap:352
 #, perl-format
 msgid "apt download failed. Exit value: %d\n"
 msgstr "apt download falhou. Valor de saída: %d\n"
 
-#: ../multistrap:384
-msgid "ERR: ./lib64 -> /lib symbolic link reset to ./lib after unpacking.\n"
-msgstr ""
-"ERRO: link simbólico ./lib64 -> /lib reposto para ./lib após "
-"desempacotamento.\n"
-
-#: ../multistrap:385
-#, perl-format
-msgid "ERR: Some files may have been unpacked outside %s!\n"
-msgstr "ERRO: Alguns ficheiros podem ter sido desempacotados fora de %s!\n"
-
-#: ../multistrap:392
+#: ../multistrap:369
 msgid "Cannot read apt sources list directory.\n"
 msgstr "Impossível ler directório de listas de fontes apt.\n"
 
-#: ../multistrap:421
+#: ../multistrap:400
 #, perl-format
 msgid ""
 "\n"
@@ -155,7 +136,7 @@ msgstr ""
 "\n"
 "Sistema multistrap instalado com sucesso em %s.\n"
 
-#: ../multistrap:423
+#: ../multistrap:402
 #, perl-format
 msgid ""
 "\n"
@@ -165,7 +146,7 @@ msgstr ""
 "A comprimir o sistema multistrap em '%s' para um ficheiro tar chamado: "
 "'%s'.\n"
 
-#: ../multistrap:429
+#: ../multistrap:408
 #, perl-format
 msgid ""
 "\n"
@@ -174,7 +155,7 @@ msgstr ""
 "\n"
 "A remover directório de criação: '%s'\n"
 
-#: ../multistrap:434
+#: ../multistrap:413
 #, perl-format
 msgid ""
 "\n"
@@ -183,30 +164,30 @@ msgstr ""
 "\n"
 "Sistema multistrap empacotado com sucesso como '%s'.\n"
 
-#: ../multistrap:460 ../multistrap:501 ../multistrap:666
+#: ../multistrap:439 ../multistrap:480 ../multistrap:701
 msgid "Cannot read apt archives directory.\n"
 msgstr "Impossível ler o directório de arquivos apt.\n"
 
-#: ../multistrap:473
+#: ../multistrap:452
 msgid "I: Calculating obsolete packages\n"
 msgstr "I: A calcular pacotes obsoletos\n"
 
-#: ../multistrap:487 ../multistrap:491
+#: ../multistrap:466 ../multistrap:470
 #, perl-format
 msgid "I: Removing %s\n"
 msgstr "I: A remover %s\n"
 
-#: ../multistrap:508
+#: ../multistrap:487
 #, perl-format
 msgid "Using directory %s for unpacking operations\n"
 msgstr "A usar o directório %s para operações de desempacotamento\n"
 
-#: ../multistrap:510
+#: ../multistrap:489
 #, perl-format
 msgid "I: Extracting %s...\n"
 msgstr "I: A extrair %s...\n"
 
-#: ../multistrap:523
+#: ../multistrap:502
 #, perl-format
 msgid ""
 "dpkg -X failed with error code %s\n"
@@ -215,59 +196,111 @@ msgstr ""
 "dpkg -X falhou com o código de erro %s\n"
 "A saltar....\n"
 
-#: ../multistrap:559
+#: ../multistrap:538
 #, perl-format
 msgid " -> Processing conffiles for %s\n"
 msgstr " -> A processar ficheiros de configuração para %s\n"
 
-#: ../multistrap:578
-#, perl-format
-msgid "ERR: lib64 -> ./lib symbolic link clobbered by %s\n"
-msgstr "ERRO: link simbólico lib64 -> ./lib ocultado por %s\n"
-
-#: ../multistrap:581
-msgid "INF: lib64 -> /lib symbolic link reset to ./lib.\n"
-msgstr "INF: link simbólico lib64 -> /lib reposto para ./lib.\n"
-
-#: ../multistrap:588
+#: ../multistrap:555
 msgid "I: Unpacking complete.\n"
 msgstr "I: Desempacotamento completo.\n"
 
-#: ../multistrap:595
+#: ../multistrap:562
 #, perl-format
 msgid "I: Copying debconf preseed data to %s.\n"
 msgstr ""
 
-#: ../multistrap:613
-msgid "ERR: ./bin/sh symbolic link does not exist.\n"
+#: ../multistrap:573
+#, perl-format
+msgid "I: Running %d post-download hook\n"
+msgid_plural "I: Running %d post-download hooks\n"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../multistrap:576
+#, perl-format
+msgid "I: Running post-download hook: '%s'\n"
+msgstr ""
+
+#: ../multistrap:584
+#, perl-format
+msgid "I: Starting %d native hook\n"
+msgid_plural "I: Starting %d native hooks\n"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../multistrap:587
+#, perl-format
+msgid "I: Starting native hook: '%s'\n"
+msgstr ""
+
+#: ../multistrap:595
+#, perl-format
+msgid "I: Stopping %d native hook\n"
+msgid_plural "I: Stopping %d native hooks\n"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../multistrap:598
+#, perl-format
+msgid "I: Stopping native hook: '%s'\n"
+msgstr ""
+
+#: ../multistrap:606
+#, perl-format
+msgid "I: Running %d post-configuration hook\n"
+msgid_plural "I: Running %d post-configuration hooks\n"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../multistrap:609
+#, perl-format
+msgid "I: Running post-configuration hook: '%s'\n"
+msgstr ""
+
+#: ../multistrap:628
+#, fuzzy
+msgid "I: Replaced ./lib64 -> /lib symbolic link with new ./lib64 directory.\n"
+msgstr "INF: link simbólico ./lib64 -> /lib reposto para ./lib.\n"
+
+#: ../multistrap:631
+#, fuzzy
+msgid "I: Setting ./lib64 -> ./lib symbolic link.\n"
+msgstr "INF: A definir link simbólico ./lib64 -> ./lib.\n"
+
+#: ../multistrap:648
+#, fuzzy
+msgid "I: ./bin/sh symbolic link does not exist.\n"
 msgstr "ERRO: link simbólico ./bin/sh não existe.\n"
 
-#: ../multistrap:615
-msgid "INF: Setting ./bin/sh -> ./bin/dash\n"
+#: ../multistrap:650
+#, fuzzy
+msgid "I: Setting ./bin/sh -> ./bin/dash\n"
 msgstr "INF: A definir link simbólico ./bin/sh -> ./bin/dash\n"
 
-#: ../multistrap:620
-msgid "INF: ./bin/dash not found. Setting ./bin/sh -> ./bin/bash\n"
+#: ../multistrap:655
+#, fuzzy
+msgid "I: ./bin/dash not found. Setting ./bin/sh -> ./bin/bash\n"
 msgstr "INF: ./bin/dash não foi encontrado. A definir ./bin/sh -> ./bin/bash\n"
 
-#: ../multistrap:627
+#: ../multistrap:662
 #, perl-format
 msgid "I: Shell found OK in %s:\n"
 msgstr ""
 
-#: ../multistrap:635
+#: ../multistrap:670
 msgid "I: Tidying up apt cache and list data.\n"
 msgstr "I: A arrumar dados de lista e de apt cache.\n"
 
-#: ../multistrap:648
+#: ../multistrap:683
 msgid "Cannot read apt lists directory.\n"
 msgstr "Impossível ler directório de listas apt.\n"
 
-#: ../multistrap:656
+#: ../multistrap:691
 msgid "Cannot read apt cache directory.\n"
 msgstr "Impossível ler directório de cache apt.\n"
 
-#: ../multistrap:688
+#: ../multistrap:723
 #, perl-format
 msgid ""
 "I: dpkg configuration settings:\n"
@@ -276,7 +309,7 @@ msgstr ""
 "I: opções de configuração do dpkg:\n"
 "\t%s\n"
 
-#: ../multistrap:690
+#: ../multistrap:725
 msgid ""
 "W: Cannot use 'chroot' when fakeroot is in use. Skipping package "
 "configuration.\n"
@@ -286,41 +319,41 @@ msgstr ""
 
 # msgid "Cannot read apt archives directory.\n"
 # msgstr "Impossível ler directório/ de arquivos apt.\n"
-#: ../multistrap:693
+#: ../multistrap:728
 msgid "I: Native mode - configuring unpacked packages . . .\n"
 msgstr "I: Modo nativo - a configurar pacotes desempacotados . . .\n"
 
-#: ../multistrap:706
+#: ../multistrap:741
 #, perl-format
 msgid "I: Running debconf for seed file: %s\n"
 msgstr ""
 
-#: ../multistrap:713
+#: ../multistrap:749
 #, fuzzy
 msgid "I: Running preinst scripts with 'install' argument.\n"
 msgstr "I: A correr scripts 'preinst' com o argumento 'upgrade'.\n"
 
-#: ../multistrap:737
+#: ../multistrap:774
 #, perl-format
 msgid "Cannot open %s directory. %s\n"
 msgstr "Impossível abrir o directório %s. %s\n"
 
-#: ../multistrap:771
+#: ../multistrap:808
 #, perl-format
 msgid "cannot open apt sources list. %s"
 msgstr "impossível abrir lista de fontes apt. %s"
 
-#: ../multistrap:777
+#: ../multistrap:814
 #, perl-format
 msgid "cannot open apt sources.list directory %s\n"
 msgstr "impossível abrir directório de apt sources.list %s\n"
 
-#: ../multistrap:782
+#: ../multistrap:819
 #, perl-format
 msgid "cannot open /etc/apt/sources.list.d/%s %s"
 msgstr "impossível abrir /etc/apt/sources.list.d/%s %s"
 
-#: ../multistrap:794
+#: ../multistrap:831
 #, fuzzy, perl-format
 msgid ""
 "\n"
@@ -373,9 +406,9 @@ msgid ""
 "packages=\n"
 "source=http://cdn.debian.net/debian\n"
 "keyring=debian-archive-keyring\n"
-"suite=lenny\n"
+"suite=stable\n"
 "\n"
-"This will result in a completely normal bootstrap of Debian lenny from\n"
+"This will result in a completely normal bootstrap of Debian stable from\n"
 "the specified mirror, for armel in /opt/multistrap/.\n"
 "\n"
 "'Architecture' and 'directory' can be overridden on the command line.\n"
@@ -460,180 +493,211 @@ msgstr ""
 "será criado - não será empacotado num .tgz após ficar completo.\n"
 "\n"
 
-#: ../multistrap:860
+#: ../multistrap:897
 msgid "failed to write usage:"
 msgstr "falhou a escrita do modo de utilização:"
 
-#: ../multistrap:867
+#: ../multistrap:904
 #, perl-format
 msgid "Failed to parse '%s'!\n"
 msgstr ""
 
-#: ../multistrap:927
+#: ../multistrap:981
 #, perl-format
 msgid "ERR: Cannot find include file: '%s' for '%s'"
 msgstr ""
 
-#: ../multistrap:977
-#, perl-format
-msgid ""
-"ERROR: Your version of apt is too old to support using a codename like '%s'. "
-"You MUST use the suite and multistrap is unable to guess which one you meant "
-"because suites change over time. Use one of: 'oldstable', 'stable', 'stable-"
-"proposed-updates', 'testing', 'unstable' or 'experimental'. Alternatively, "
-"upgrade to version of apt newer than 0.7.20.2+lenny1.\n"
-msgstr ""
-"ERRO: a sua versão de apt é demasiado velha para suportar um nome de código "
-"'%s'. TEM de usar a suite e o multistrap não é capaz de adivinhar qual quer "
-"referir porque as suites mudam ao longo do tempo. Use um de 'oldstable', "
-"'stable', 'stable-proposed-upgrades', 'testing', 'unstable' ou "
-"'experimental'.Em alternativa, actualize o apt para uma versão mais recente "
-"que 0.7.20.2+lenny1.\n"
-
-#: ../multistrap:997
+#: ../multistrap:1027
 #, perl-format
 msgid "The supplied configuration file '%s' cannot be parsed correctly."
 msgstr "O ficheiro de configuração '%s' não pode ser analisado correctamente."
 
-#: ../multistrap:1011
+#: ../multistrap:1041
 #, perl-format
 msgid "ERR: The '%s' section is not defined.\n"
 msgstr "ERR: A secção '%s' não está definida.\n"
 
-#: ../multistrap:1015
+#: ../multistrap:1045
 #, fuzzy
 msgid "Including configuration file from:"
 msgid_plural "Including configuration files from:"
 msgstr[0] "A incluir ficheiro de configuração de: "
 msgstr[1] "A incluir ficheiro de configuração de: "
 
-#: ../multistrap:1019
+#: ../multistrap:1049
 msgid "No included configuration files.\n"
 msgstr "Não foram incluídos ficheiros de configuração.\n"
 
-#: ../multistrap:1040
+#: ../multistrap:1070
 msgid "Not listed as a 'Bootstrap' section."
 msgstr ""
 
-#: ../multistrap:1047
+#: ../multistrap:1077
 msgid "Section to install"
 msgid_plural "Sections to install"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../multistrap:1049
+#: ../multistrap:1079
 msgid "Section for updates"
 msgid_plural "Sections for updates"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../multistrap:1056
+#: ../multistrap:1086
 msgid "Omit deb-src from sources.list for sections:"
 msgstr "Omitir deb-src do sources.list para as secções:"
 
-#: ../multistrap:1058
+#: ../multistrap:1088
 msgid "None."
 msgstr ""
 
-#: ../multistrap:1066
+#: ../multistrap:1096
 msgid "Explicit suite selection: Yes\n"
 msgstr "Selecção explícita de 'suite': Sim\n"
 
-#: ../multistrap:1068
+#: ../multistrap:1098
 msgid "Explicit suite selection: No - let apt use latest.\n"
 msgstr "Selecção explícita de 'suite': Não - deixar o apr usar a última.\n"
 
-#: ../multistrap:1071
+#: ../multistrap:1101
 msgid "Recommended packages are added to the selection.\n"
 msgstr "Pacotes recomendados são acrescentados à selecção.\n"
 
-#: ../multistrap:1073
+#: ../multistrap:1103
 msgid "Recommended packages are ignored.\n"
 msgstr "Pacotes recomendados são ignorados.\n"
 
-#: ../multistrap:1075
+#: ../multistrap:1105
 msgid "Debconf preseed file"
 msgid_plural "Debconf preseed files"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../multistrap:1077
+#: ../multistrap:1108
+msgid "Download hook: "
+msgid_plural ""
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../multistrap:1112
+msgid "Native hook: "
+msgid_plural ""
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../multistrap:1116
+msgid "Completion hook: "
+msgid_plural ""
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../multistrap:1119
 msgid "Extra Package: "
 msgid_plural "Extra Packages: "
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../multistrap:1081
+#: ../multistrap:1123
 #, fuzzy, perl-format
 msgid "Architecture to download: %s\n"
 msgstr "Arquitectura: %s\n"
 
-#: ../multistrap:1083
+#: ../multistrap:1125
 #, perl-format
 msgid "Cannot determine architecture from '%s'.\n"
 msgstr "Impossível determinar a arquitectura a partir de '%s'.\n"
 
-#: ../multistrap:1086
+#: ../multistrap:1128
 #, perl-format
 msgid "Output directory: '%s'\n"
 msgstr "Directório de saída: '%s'\n"
 
-#: ../multistrap:1088
+#: ../multistrap:1130
 #, perl-format
 msgid "Cannot determine directory from '%s'.\n"
 msgstr "Impossível determinar o directório a partir de '%s'.\n"
 
-#: ../multistrap:1091 ../multistrap:1093
+#: ../multistrap:1133 ../multistrap:1135
 #, perl-format
 msgid "extract all downloaded archives: %s\n"
 msgstr "extrair todos os arquivos descarregados: %s\n"
 
-#: ../multistrap:1096
+#: ../multistrap:1138
 msgid "Script to be run after unpacking"
 msgstr ""
 
-#: ../multistrap:1098
+#: ../multistrap:1140
 msgid "'Priority required' packages are not included."
 msgstr ""
 
-#: ../multistrap:1100
+#: ../multistrap:1142
 msgid "'Priority: required' packages are included."
 msgstr ""
 
-#: ../multistrap:1103
+#: ../multistrap:1145
 msgid "'Priority: important' packages are included.\n"
 msgstr ""
 
-#: ../multistrap:1105
+#: ../multistrap:1147
 #, fuzzy
 msgid "'Priority: important' packages are ignored.\n"
 msgstr "Pacotes recomendados são ignorados.\n"
 
-#: ../multistrap:1108
+#: ../multistrap:1150
 msgid "remove apt cache data: true\n"
 msgstr "remover cache de dados do apt: verdadeiro\n"
 
-#: ../multistrap:1110
+#: ../multistrap:1152
 msgid "remove apt cache data: false\n"
 msgstr "remover cache de dados do apt: falso\n"
 
-#: ../multistrap:1113
+#: ../multistrap:1155
 msgid "allow the use of unauthenticated repositories: true\n"
 msgstr "permitir o uso de repositórios não autenticados: verdadeiro\n"
 
-#: ../multistrap:1115
+#: ../multistrap:1157
 msgid "allow the use of unauthenticated repositories: false\n"
 msgstr "permitir o uso de repositórios não autenticados: falso\n"
 
-#: ../multistrap:1118
+#: ../multistrap:1160
 #, perl-format
 msgid "Sources will be retained in: %s\n"
 msgstr "Fontes serão guardadas em: %s\n"
 
-#: ../multistrap:1121
+#: ../multistrap:1163
 #, perl-format
 msgid "Tarball name: '%s'\n"
 msgstr ""
+
+#~ msgid "ERR: ./lib64 -> /lib symbolic link reset to ./lib after unpacking.\n"
+#~ msgstr ""
+#~ "ERRO: link simbólico ./lib64 -> /lib reposto para ./lib após "
+#~ "desempacotamento.\n"
+
+#~ msgid "ERR: Some files may have been unpacked outside %s!\n"
+#~ msgstr "ERRO: Alguns ficheiros podem ter sido desempacotados fora de %s!\n"
+
+#~ msgid "ERR: lib64 -> ./lib symbolic link clobbered by %s\n"
+#~ msgstr "ERRO: link simbólico lib64 -> ./lib ocultado por %s\n"
+
+#~ msgid "INF: lib64 -> /lib symbolic link reset to ./lib.\n"
+#~ msgstr "INF: link simbólico lib64 -> /lib reposto para ./lib.\n"
+
+#~ msgid ""
+#~ "ERROR: Your version of apt is too old to support using a codename like "
+#~ "'%s'. You MUST use the suite and multistrap is unable to guess which one "
+#~ "you meant because suites change over time. Use one of: 'oldstable', "
+#~ "'stable', 'stable-proposed-updates', 'testing', 'unstable' or "
+#~ "'experimental'. Alternatively, upgrade to version of apt newer than "
+#~ "0.7.20.2+lenny1.\n"
+#~ msgstr ""
+#~ "ERRO: a sua versão de apt é demasiado velha para suportar um nome de "
+#~ "código '%s'. TEM de usar a suite e o multistrap não é capaz de adivinhar "
+#~ "qual quer referir porque as suites mudam ao longo do tempo. Use um de "
+#~ "'oldstable', 'stable', 'stable-proposed-upgrades', 'testing', 'unstable' "
+#~ "ou 'experimental'.Em alternativa, actualize o apt para uma versão mais "
+#~ "recente que 0.7.20.2+lenny1.\n"
 
 #, fuzzy
 #~ msgid "%s %s including %s\n"
