@@ -2,8 +2,9 @@ multistrap (2.1.11) unstable; urgency=low
 
   * Fix examples in comments within device_table.txt to
     use consistent tabs. (Closes: #611808)
+  * Add example for wheezy and use permanent codenames.
 
- -- Neil Williams <codehelp@debian.org>  Sun, 06 Feb 2011 09:30:36 +0000
+ -- Neil Williams <codehelp@debian.org>  Sun, 06 Feb 2011 20:36:49 +0000
 
 multistrap (2.1.10) experimental; urgency=low
 
