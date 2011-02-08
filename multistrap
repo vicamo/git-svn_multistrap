@@ -33,7 +33,8 @@ use vars qw/ $progname $ourversion $dstrap $extra @aptsources $mirror
  @extrapkgs @includes %source $setupsh $configsh $omitrequired $dryrun
  $omitpreinst @reinstall $tgzname %uniq %required $check @check %uniq
  $explicit_suite $allow_recommends %omitdebsrc @dsclist @sectoutput
- %flatfile %important $addimportant @debconf $hookdir %hooks /;
+ %flatfile %important $addimportant @debconf $hookdir %hooks
+ $warn_count /;
 
 setlocale(LC_MESSAGES, "");
 textdomain("multistrap");
@@ -140,6 +141,7 @@ unless (keys %sources and @aptsources) {
 	Using your existing apt sources. To use different sources,
 	list them with aptsources= in '%s'."), $file);
 	warn ("$progname: $msg\n");
+	$warn_count++;
 	$deflist = prepare_sources_list();
 }
 
@@ -348,15 +350,27 @@ foreach my $a (@s) {
 $str = join (' ', sort keys %uniq);
 @dsclist = sort keys %uniq;
 print "apt-get -y $config_str install $str\n";
+$retval = 0;
 $retval = system ("apt-get -y $config_str install $str");
 die (sprintf (_g("apt download failed. Exit value: %d\n"),($retval/256)))
 	if ($retval != 0);
 &force_unpack if ($unpack eq "true");
 system ("touch ${dir}${libdir}lists/lock");
-system ("$setupsh $dir $arch") if ((defined $setupsh) and (-x $setupsh));
+if ((defined $setupsh) and (-x $setupsh)) {
+	$retval = 0;
+	$retval = system ("$setupsh $dir $arch");
+	if ($retval != 0) {
+		warn (_g("setupscript '%s' returned %d.\n"), $setupsh, $retval/256);
+		$warn_count++;
+	}
+}
 # run first set of hooks
 &run_download_hooks(sort @{$hooks{'D'}}) if (defined $hooks{'D'});
-&native if (not defined ($foreign) and $unpack eq "true");
+my $err = &native if (not defined ($foreign) and $unpack eq "true");
+if ($err != 0) {
+	warn (_g("Native mode configuration reported an error!\n"));
+	$warn_count++;
+}
 &add_extra_packages;
 system ("cp $configsh $dir/") if ((defined $configsh) and (-f $configsh));
 (not defined $tidy) ? system ("apt-get $config_str update") : &tidy_apt;
@@ -397,7 +411,14 @@ foreach my $aptsrc (@aptsources) {
 (not defined $tidy) ? system ("apt-get $config_str update") : &tidy_apt;
 # run second set of hooks
 &run_completion_hooks(sort @{$hooks{'A'}}) if (defined ($hooks{'A'}));
-printf (_g("\nMultistrap system installed successfully in %s.\n"), $dir);
+if (not defined $warn_count) {
+	printf (_g("\nMultistrap system installed successfully in %s.\n"), $dir);
+} else {
+	my $plural = sprintf(ngettext ("\nMultistrap system reported %d error in %s.\n",
+	"\nMultistrap system reported %d errors in %s.\n", $warn_count), $warn_count, $dir);
+	warn ($plural);
+	$warn_count++;
+}
 if (defined $tgzname) {
 	printf (_g("\nCompressing multistrap system in '%s' to a tarball called: '%s'.\n"), $dir, $tgzname);
 	chdir ("$dir");
@@ -410,10 +431,18 @@ if (defined $tgzname) {
 	}
 	my $final_path=`realpath $dir/../$tgzname`;
 	chomp ($final_path);
-	printf (_g("\nMultistrap system packaged successfully as '%s'.\n"), $final_path);
+	if (not defined $warn_count) {
+		printf (_g("\nMultistrap system packaged successfully as '%s'.\n"), $final_path);
+	} else {
+		warn (_g("\nMultistrap system packaged as '%s' with warnings.\n"), $final_path);
+	}
 }
 print "\n";
-exit 0;
+if (not defined $warn_count) {
+	exit 0;
+} else {
+	exit $warn_count;
+}
 
 sub our_version {
 	my $query = `dpkg-query -W -f='\${Version}' multistrap 2>/dev/null`;
@@ -574,7 +603,11 @@ sub run_download_hooks {
 		"I: Running %d post-download hooks\n", scalar @hooks), scalar @hooks);
 	foreach my $hookscript (@hooks) {
 		printf (_g("I: Running post-download hook: '%s'\n"), basename($hookscript));
-		system ("$hookscript $dir");
+		my $hookret = system ("$hookscript $dir");
+		if ($hookret != 0) {
+			printf (_g("I: post-download hook '%s' reported an error: %d\n"), basename($hookscript), $hookret/256);
+			$warn_count += ($hookret < 0) ? $hookret/-256 : $hookret/256;
+		}
 	}
 }
 
@@ -585,7 +618,10 @@ sub run_native_hooks_start {
 		"I: Starting %d native hooks\n", scalar @hooks), scalar @hooks);
 	foreach my $hookscript (@hooks) {
 		printf (_g("I: Starting native hook: '%s'\n"), basename($hookscript));
-		system ("$hookscript $dir start");
+		my $hookret = system ("$hookscript $dir start");
+		if ($hookret != 0) {
+			$warn_count += ($hookret < 0) ? $hookret/-256 : $hookret/256;
+		}
 	}
 }
 
@@ -596,7 +632,10 @@ sub run_native_hooks_end {
 		"I: Stopping %d native hooks\n", scalar @hooks), scalar @hooks);
 	foreach my $hookscript (@hooks) {
 		printf (_g("I: Stopping native hook: '%s'\n"), basename($hookscript));
-		system ("$hookscript $dir end");
+		my $hookret = system ("$hookscript $dir end");
+		if ($hookret != 0) {
+			$warn_count += ($hookret < 0) ? $hookret/-256 : $hookret/256;
+		}
 	}
 }
 
@@ -607,7 +646,10 @@ sub run_completion_hooks {
 		"I: Running %d post-configuration hooks\n", scalar @hooks), scalar @hooks);
 	foreach my $hookscript (@hooks) {
 		printf (_g("I: Running post-configuration hook: '%s'\n"), basename($hookscript));
-		system ("$hookscript $dir");
+		my $hookret = system ("$hookscript $dir");
+		if ($hookret != 0) {
+			$warn_count += ($hookret < 0) ? $hookret/-256 : $hookret/256;
+		}
 	}
 }
 
@@ -758,12 +800,18 @@ sub native {
 		next if ($script =~ /bash/);
 		system ("$str $env chroot $dir /var/lib/dpkg/info/$script install");
 	}
-	system ("$str $env chroot $dir dpkg --configure -a");
+	my $retval = 0;
+	$retval = system ("$str $env chroot $dir dpkg --configure -a");
+	$retval /= 256;
+	if ($retval != 0) {
+		warn (_g("ERR: dpkg configure reported an error.\n"));
+	}
 	# reinstall set
 	foreach my $reinst (sort @reinstall) {
 		system ("$str $env chroot $dir apt-get --reinstall -y install $reinst");
 	}
 	&run_native_hooks_end(sort @{$hooks{'N'}}) if (defined $hooks{'N'});
+	return $retval;
 }
 
 sub get_required_debs {

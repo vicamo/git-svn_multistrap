@@ -1,8 +1,10 @@
 multistrap (2.1.12) unstable; urgency=low
 
   * Fix hook implementation if no hooks in use
+  * Accumulate warnings from system calls and hooks and report to user
+    at the end of the operation.
 
- -- Neil Williams <codehelp@debian.org>  Tue, 08 Feb 2011 15:19:15 +0000
+ -- Neil Williams <codehelp@debian.org>  Tue, 08 Feb 2011 20:38:33 +0000
 
 multistrap (2.1.11) unstable; urgency=low
 

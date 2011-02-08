@@ -638,7 +638,10 @@ All hooks of one type are sorted into alphabetical order before being
 run. 
 
 Note that C<multistrap> does not rollback the effects of hooks in the
-case of errors.
+case of errors. However, C<multistrap> will report the accumulated
+errors as warnings. If a hook exits non-zero, the exit value is converted
+to a positive number and added to the total warning count, reported at
+the end of the operation.
 
 =head1 Output
 
@@ -646,6 +649,11 @@ C<multistrap> can produce a lot of output - informational messages
 appear on STDOUT, errors and warnings on STDERR. Calls to C<apt> and
 C<dpkg> respect the same pattern, so it is simple to trim the combined
 C<multistrap> output to just the errors, if desired.
+
+C<multistrap> accumulates error states from non-fatal processes within
+the operation and reports these as warnings on STDERR as well as exiting
+with the accumulated error count. This includes hooks which report
+non-zero exit values.
 
 =head1 Bugs
 
