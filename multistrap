@@ -355,7 +355,7 @@ die (sprintf (_g("apt download failed. Exit value: %d\n"),($retval/256)))
 system ("touch ${dir}${libdir}lists/lock");
 system ("$setupsh $dir $arch") if ((defined $setupsh) and (-x $setupsh));
 # run first set of hooks
-&run_download_hooks(sort @{$hooks{'D'}});
+&run_download_hooks(sort @{$hooks{'D'}}) if (defined $hooks{'D'});
 &native if (not defined ($foreign) and $unpack eq "true");
 &add_extra_packages;
 system ("cp $configsh $dir/") if ((defined $configsh) and (-f $configsh));
@@ -396,7 +396,7 @@ foreach my $aptsrc (@aptsources) {
 # altered the sources, so get apt to update.
 (not defined $tidy) ? system ("apt-get $config_str update") : &tidy_apt;
 # run second set of hooks
-&run_completion_hooks(sort @{$hooks{'A'}});
+&run_completion_hooks(sort @{$hooks{'A'}}) if (defined ($hooks{'A'}));
 printf (_g("\nMultistrap system installed successfully in %s.\n"), $dir);
 if (defined $tgzname) {
 	printf (_g("\nCompressing multistrap system in '%s' to a tarball called: '%s'.\n"), $dir, $tgzname);
@@ -621,12 +621,17 @@ sub guard_lib64 {
 	if (-l "${dir}lib64" ) {
 		my $r = readlink "${dir}lib64";
 		chomp ($r);
-		unlink "${dir}lib64" if ($r =~ m:^/lib$:);
+		if ($r =~ m:^/lib$:) {
+			print _g("I: Unlinking unsafe ${dir}lib64 -> /lib symbolic link.\n");
+			unlink "${dir}lib64";
+		} else {
+			print _g("I: Keeping the ${dir}lib64 -> ${dir}lib symbolic link.\n");
+		}
 	} elsif (not -d "${dir}lib64") {
 		chdir ("$dir");
 		if ($host eq 'i386' and $arch eq 'amd64') {
-			print _g("I: Replaced ./lib64 -> /lib symbolic link with new ./lib64 directory.\n");
-			mkdir ("./lib64");
+			print _g("I: Replaced ./lib64 -> /lib symbolic link with new ${dir}lib64 directory.\n");
+			mkdir ("${dir}lib64");
 		} else {
 			print _g("I: Setting ./lib64 -> ./lib symbolic link.\n");
 			symlink "./lib", "lib64";
@@ -742,7 +747,7 @@ sub native {
 			system ("$str $env chroot $dir debconf-set-selections /tmp/preseeds/$s");
 		}
 	}
-	&run_native_hooks_start(sort @{$hooks{'N'}});
+	&run_native_hooks_start(sort @{$hooks{'N'}}) if (defined ($hooks{'N'}));
 	opendir (PRI, "${dir}/var/lib/dpkg/info") or return;
 	my @preinsts=grep(/\.preinst$/, readdir PRI);
 	closedir (PRI);
@@ -760,7 +765,7 @@ sub native {
 	foreach my $reinst (sort @reinstall) {
 		system ("$str $env chroot $dir apt-get --reinstall -y install $reinst");
 	}
-	&run_native_hooks_end(sort @{$hooks{'N'}});
+	&run_native_hooks_end(sort @{$hooks{'N'}}) if (defined $hooks{'N'});
 }
 
 sub get_required_debs {
