@@ -664,16 +664,16 @@ sub guard_lib64 {
 		my $r = readlink "${dir}lib64";
 		chomp ($r);
 		if ($r =~ m:^/lib$:) {
-			print _g("I: Unlinking unsafe ${dir}lib64 -> /lib symbolic link.\n");
+			printf (_g("I: Unlinking unsafe %slib64 -> /lib symbolic link.\n"), $dir);
 			unlink "${dir}lib64";
 		}
 	} elsif (not -d "${dir}lib64") {
 		chdir ("$dir");
 		if ($host eq 'i386' and $arch eq 'amd64') {
-			print _g("I: Replaced ./lib64 -> /lib symbolic link with new ${dir}lib64 directory.\n");
+			printf (_g("I: Replaced ./lib64 -> /lib symbolic link with new %slib64 directory.\n"), $dir);
 			mkdir ("${dir}lib64");
 		} else {
-			print _g("I: Setting ${dir}lib64 -> ${dir}lib symbolic link.\n");
+			printf (_g("I: Setting %slib64 -> %slib symbolic link.\n"), $dir, $dir);
 			symlink "./lib", "lib64";
 		}
 	}

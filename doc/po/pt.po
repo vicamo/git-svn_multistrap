@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: multistrap 2.1.7\n"
-"POT-Creation-Date: 2011-02-07 18:01+0000\n"
+"POT-Creation-Date: 2011-02-08 20:41+0000\n"
 "PO-Revision-Date: 2010-09-02 22:47+0100\n"
 "Last-Translator: Américo Monteiro <a_monteiro@netcabo.pt>\n"
 "Language-Team: Portuguese <traduz@debianpt.org>\n"
@@ -1692,16 +1692,19 @@ msgstr ""
 #: pod/multistrap:640
 msgid ""
 "Note that C<multistrap> does not rollback the effects of hooks in the case "
-"of errors."
+"of errors. However, C<multistrap> will report the accumulated errors as "
+"warnings. If a hook exits non-zero, the exit value is converted to a "
+"positive number and added to the total warning count, reported at the end of "
+"the operation."
 msgstr ""
 
 #. type: =head1
-#: pod/multistrap:643
+#: pod/multistrap:646
 msgid "Output"
 msgstr ""
 
 #. type: textblock
-#: pod/multistrap:645
+#: pod/multistrap:648
 msgid ""
 "C<multistrap> can produce a lot of output - informational messages appear on "
 "STDOUT, errors and warnings on STDERR. Calls to C<apt> and C<dpkg> respect "
@@ -1709,13 +1712,22 @@ msgid ""
 "to just the errors, if desired."
 msgstr ""
 
+#. type: textblock
+#: pod/multistrap:653
+msgid ""
+"C<multistrap> accumulates error states from non-fatal processes within the "
+"operation and reports these as warnings on STDERR as well as exiting with "
+"the accumulated error count. This includes hooks which report non-zero exit "
+"values."
+msgstr ""
+
 #. type: =head1
-#: pod/multistrap:650
+#: pod/multistrap:658
 msgid "Bugs"
 msgstr ""
 
 #. type: textblock
-#: pod/multistrap:652
+#: pod/multistrap:660
 msgid ""
 "As C<multistrap> gets more complex, bugs will creep into the package.  "
 "Please report all bugs to the Debian BTS using the C<reportbug> tool and "
@@ -1726,14 +1738,14 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: pod/multistrap:659
+#: pod/multistrap:667
 msgid ""
 "The C<--simulate> option output is regularly expanded to help users debug "
 "problems in the configuration files."
 msgstr ""
 
 #. type: textblock
-#: pod/multistrap:662
+#: pod/multistrap:670
 msgid ""
 "Please also check (and update) the Multistrap wiki at http://wiki.debian.org/"
 "Multistrap and the Multistrap webpage content at http://www.emdebian.org/"
