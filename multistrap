@@ -624,8 +624,6 @@ sub guard_lib64 {
 		if ($r =~ m:^/lib$:) {
 			print _g("I: Unlinking unsafe ${dir}lib64 -> /lib symbolic link.\n");
 			unlink "${dir}lib64";
-		} else {
-			print _g("I: Keeping the ${dir}lib64 -> ${dir}lib symbolic link.\n");
 		}
 	} elsif (not -d "${dir}lib64") {
 		chdir ("$dir");
@@ -633,7 +631,7 @@ sub guard_lib64 {
 			print _g("I: Replaced ./lib64 -> /lib symbolic link with new ${dir}lib64 directory.\n");
 			mkdir ("${dir}lib64");
 		} else {
-			print _g("I: Setting ./lib64 -> ./lib symbolic link.\n");
+			print _g("I: Setting ${dir}lib64 -> ${dir}lib symbolic link.\n");
 			symlink "./lib", "lib64";
 		}
 	}
