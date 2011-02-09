@@ -78,6 +78,10 @@ die ($msg)
 	if (not defined $file);
 undef ($msg);
 
+my $realpath = `which realpath`;
+chomp ($realpath);
+die (_g("ERR: Unable to find realpath - missing dependency.\n")) if (not -x ($realpath));
+
 $cachedir = "var/cache/apt/"; # archives
 $libdir = "var/lib/apt/";     # lists
 $etcdir = "etc/apt/";         # sources
@@ -256,6 +260,7 @@ if ((defined $k) and (not defined $noauth)) {
 	}
 	system ("$str apt-get -y -d --reinstall install $k");
 	foreach my $keyring_pkg (values %keyrings) {
+		next if (not defined $keyring_pkg);
 		my @files=();
 		my $file = `find /var/cache/apt/archives/ -name "$keyring_pkg*"|grep -m1 $keyring_pkg`;
 		chomp ($file);
