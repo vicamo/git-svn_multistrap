@@ -372,7 +372,7 @@ if ((defined $setupsh) and (-x $setupsh)) {
 # run first set of hooks
 &run_download_hooks(sort @{$hooks{'D'}}) if (defined $hooks{'D'});
 my $err = &native if (not defined ($foreign) and $unpack eq "true");
-if ($err != 0) {
+if (defined $err and $err != 0) {
 	warn (_g("Native mode configuration reported an error!\n"));
 	$warn_count++;
 }
