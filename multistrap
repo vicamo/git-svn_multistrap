@@ -78,10 +78,13 @@ die ($msg)
 	if (not defined $file);
 undef ($msg);
 
-my $realpath = `which realpath`;
-chomp ($realpath);
-die (_g("ERR: Unable to find realpath - missing dependency.\n")) if (not -x ($realpath));
-
+# cope with people getting things wrong from local SVN (not a translated string).
+if (dirname($0) ne "/usr/sbin/") {
+	print "checking realpath\n";
+	my $realpath = `which realpath`;
+	chomp ($realpath);
+	die ("ERR: Please install realpath.\n") if (not -x ($realpath));
+}
 $cachedir = "var/cache/apt/"; # archives
 $libdir = "var/lib/apt/";     # lists
 $etcdir = "etc/apt/";         # sources
@@ -604,9 +607,11 @@ sub force_unpack {
 sub run_download_hooks {
 	my (@hooks) = @_;
 	return if (scalar @hooks == 0);
+	# Translators: the plural is followed by a single repeat for each
 	printf(ngettext("I: Running %d post-download hook\n",
 		"I: Running %d post-download hooks\n", scalar @hooks), scalar @hooks);
 	foreach my $hookscript (@hooks) {
+		# Translators: this is a single instance, naming the hook
 		printf (_g("I: Running post-download hook: '%s'\n"), basename($hookscript));
 		my $hookret = system ("$hookscript $dir");
 		if ($hookret != 0) {
@@ -619,9 +624,11 @@ sub run_download_hooks {
 sub run_native_hooks_start {
 	my (@hooks) = @_;
 	return if (scalar @hooks == 0);
+	# Translators: the plural is followed by a single repeat for each
 	printf(ngettext("I: Starting %d native hook\n",
 		"I: Starting %d native hooks\n", scalar @hooks), scalar @hooks);
 	foreach my $hookscript (@hooks) {
+		# Translators: this is a single instance, naming the hook
 		printf (_g("I: Starting native hook: '%s'\n"), basename($hookscript));
 		my $hookret = system ("$hookscript $dir start");
 		if ($hookret != 0) {
@@ -633,9 +640,11 @@ sub run_native_hooks_start {
 sub run_native_hooks_end {
 	my (@hooks) = @_;
 	return if (scalar @hooks == 0);
+	# Translators: the plural is followed by a single repeat for each
 	printf(ngettext("I: Stopping %d native hook\n",
 		"I: Stopping %d native hooks\n", scalar @hooks), scalar @hooks);
 	foreach my $hookscript (@hooks) {
+		# Translators: this is a single instance, naming the hook
 		printf (_g("I: Stopping native hook: '%s'\n"), basename($hookscript));
 		my $hookret = system ("$hookscript $dir end");
 		if ($hookret != 0) {
@@ -647,9 +656,11 @@ sub run_native_hooks_end {
 sub run_completion_hooks {
 	my (@hooks) = @_;
 	return if (scalar @hooks == 0);
+	# Translators: the plural is followed by a single repeat for each
 	printf(ngettext("I: Running %d post-configuration hook\n",
 		"I: Running %d post-configuration hooks\n", scalar @hooks), scalar @hooks);
 	foreach my $hookscript (@hooks) {
+		# Translators: this is a single instance, naming the hook
 		printf (_g("I: Running post-configuration hook: '%s'\n"), basename($hookscript));
 		my $hookret = system ("$hookscript $dir");
 		if ($hookret != 0) {
