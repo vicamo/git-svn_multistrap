@@ -3,8 +3,10 @@ multistrap (2.1.13) unstable; urgency=low
   * [INTL:da] Danish translation of multistrap (Closes: #614306)
   * [INTL:pt] Updated European Portuguese translation for
     manpage/documentation"  (Closes: #614381)
+  * Fix device-table.pl to use correct minor device number in
+    iterative mode (Closes: #615819)
 
- -- Neil Williams <codehelp@debian.org>  Mon, 21 Feb 2011 15:33:52 +0000
+ -- Neil Williams <codehelp@debian.org>  Mon, 28 Feb 2011 08:31:39 +0000
 
 multistrap (2.1.12) unstable; urgency=low
 
