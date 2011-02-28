@@ -41,6 +41,13 @@ if ($e !~ /\nFAKEROOTKEY=[0-9]+\n/) {
 } else {
 	$fakeroot="";
 }
+# cope with people getting things wrong from local SVN (not a translated string).
+if (dirname($0) ne "/usr/sbin/") {
+	print "checking realpath\n";
+	my $realpath = `which realpath`;
+	chomp ($realpath);
+	die ("ERR: Please install realpath.\n") if (not -x ($realpath));
+}
 while( @ARGV ) {
 	$_= shift( @ARGV );
 	last if m/^--$/;
@@ -54,6 +61,8 @@ while( @ARGV ) {
 		$file = shift(@ARGV);
 	} elsif (/^(-d|--dir)$/) {
 		$dir = shift(@ARGV);
+		$dir = `realpath $dir`;
+		chomp($dir);
 	} elsif (/^(-n|--dry-run)$/) {
 		$dry++;
 	} elsif (/^(--no-fakeroot)$/) {
