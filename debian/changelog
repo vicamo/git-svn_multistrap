@@ -5,8 +5,9 @@ multistrap (2.1.13) unstable; urgency=low
     manpage/documentation"  (Closes: #614381)
   * Fix device-table.pl to use correct minor device number in
     iterative mode (Closes: #615819)
+  * Disable SecureApt if fakeroot is detected.
 
- -- Neil Williams <codehelp@debian.org>  Mon, 28 Feb 2011 08:31:39 +0000
+ -- Neil Williams <codehelp@debian.org>  Mon, 28 Feb 2011 09:17:33 +0000
 
 multistrap (2.1.12) unstable; urgency=low
 

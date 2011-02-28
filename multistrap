@@ -252,15 +252,21 @@ foreach my $pkg (values %keyrings) {
 	$k .= "$pkg ";
 }
 if ((defined $k) and (not defined $noauth)) {
-	printf (_g("I: Installing %s\n"), $k);
 	# the keyring package must be available to the external apt
+	# and apt refuses to allow fakeroot to do this.
 	my $str = "";
 	my $e=`LC_ALL=C printenv`;
 	if ($e !~ /\nFAKEROOTKEY=[0-9]+\n/) {
 		if (($e =~ /\nUSER=root\n/)) {
 			$str = "sudo" if (-f "/usr/bin/sudo");
 		}
+	} else {
+		print "Turning off SecureApt due to use of fakeroot\n";
+		$noauth++;
 	}
+}
+if ((defined $k) and (not defined $noauth)) {
+	printf (_g("I: Installing %s\n"), $k);
 	system ("$str apt-get -y -d --reinstall install $k");
 	foreach my $keyring_pkg (values %keyrings) {
 		next if (not defined $keyring_pkg);
