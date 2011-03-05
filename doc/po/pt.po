@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: multistrap 2.1.12\n"
-"POT-Creation-Date: 2011-02-21 15:34+0000\n"
+"POT-Creation-Date: 2011-02-28 14:04+0000\n"
 "PO-Revision-Date: 2011-02-21 15:07+0000\n"
 "Last-Translator: Américo Monteiro <a_monteiro@netcabo.pt>\n"
 "Language-Team: Portuguese <traduz@debianpt.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. type: =head1
-#: pod/multistrap:3 device-table.pl:146
+#: pod/multistrap:3 device-table.pl:155
 msgid "Name"
 msgstr "Nome"
 
@@ -28,7 +28,7 @@ msgid "multistrap - multiple repository bootstraps"
 msgstr "multistrap - bootstraps de múltiplos repositórios"
 
 #. type: =head1
-#: pod/multistrap:7 device-table.pl:150
+#: pod/multistrap:7 device-table.pl:159
 msgid "Synopsis"
 msgstr "Sinopse"
 
@@ -47,7 +47,7 @@ msgstr ""
 "\n"
 
 #. type: =head1
-#: pod/multistrap:13 device-table.pl:155
+#: pod/multistrap:13 device-table.pl:164
 msgid "Options"
 msgstr "Opções"
 
@@ -1822,14 +1822,14 @@ msgstr ""
 "simulate> num site web de colagem binária e colocar o URL na sua mensagem."
 
 #. type: textblock
-#: device-table.pl:148
+#: device-table.pl:157
 msgid "device-table.pl - parses simple device tables and passes to mknod"
 msgstr ""
 "device-table.pl - analisa tabelas de dispositivos simples e passa-o para o "
 "mknod"
 
 #. type: verbatim
-#: device-table.pl:152
+#: device-table.pl:161
 #, no-wrap
 msgid ""
 " device-table.pl [-n|--dry-run] [-d DIR] [-f FILE]\n"
@@ -1841,7 +1841,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: device-table.pl:157
+#: device-table.pl:166
 msgid ""
 "By default, F<device-table.pl> writes out the device nodes in the current "
 "working directory. Use the directory option to write out elsewhere."
@@ -1851,7 +1851,7 @@ msgstr ""
 "localização."
 
 #. type: textblock
-#: device-table.pl:160
+#: device-table.pl:169
 msgid ""
 "multistrap contains a default device-table file, use the file option to "
 "override the default F</usr/share/multistrap/device-table.txt>"
@@ -1860,12 +1860,12 @@ msgstr ""
 "para sobrepor a predefinição F</usr/share/multistrap/device-table.txt>"
 
 #. type: textblock
-#: device-table.pl:163
+#: device-table.pl:172
 msgid "Use the dry-run option to see the commands that would be run."
 msgstr "Use  a opção dry-run para ver os comandos que seriam executados."
 
 #. type: textblock
-#: device-table.pl:165
+#: device-table.pl:174
 msgid ""
 "Device nodes need fakeroot or another way to use root access. If F<device-"
 "table.pl> is already being run under fakeroot or equivalent, the existing "
@@ -1878,7 +1878,7 @@ msgstr ""
 "opção no-fakeroot para abandonar a utilização interna do fakeroot."
 
 #. type: textblock
-#: device-table.pl:170
+#: device-table.pl:179
 msgid ""
 "Note that fakeroot does not support changing the actual ownerships, for "
 "that, run the final packing into a tarball under fakeroot as well, or use "
@@ -1889,12 +1889,12 @@ msgstr ""
 "C<sudo> quando executar F<device-table.pl>"
 
 #. type: =head1
-#: device-table.pl:174
+#: device-table.pl:183
 msgid "Device table format"
 msgstr "Formato da tabela de dispositivos"
 
 #. type: textblock
-#: device-table.pl:176
+#: device-table.pl:185
 msgid ""
 "Device table files are tab separated value files (TSV). All lines in the "
 "device table must have exactly 10 entries, each separated by a single tab, "
@@ -1906,12 +1906,12 @@ msgstr ""
 "comentários - que devem começar com #"
 
 #. type: textblock
-#: device-table.pl:180
+#: device-table.pl:189
 msgid "Device table entries take the form of:"
 msgstr "As entradas na tabela de dispositivos toma a foram de :"
 
 #. type: verbatim
-#: device-table.pl:182
+#: device-table.pl:191
 #, no-wrap
 msgid ""
 " <name> <type> <mode> <uid> <gid> <major> <minor> <start> <inc> <count>\n"
@@ -1921,12 +1921,12 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: device-table.pl:184
+#: device-table.pl:193
 msgid "where name is the file name, type can be one of:"
 msgstr "onde name é o nome do ficheiro, type pode ser um de:"
 
 #. type: verbatim
-#: device-table.pl:186
+#: device-table.pl:195
 #, no-wrap
 msgid ""
 " f A regular file\n"
@@ -1948,7 +1948,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: device-table.pl:194
+#: device-table.pl:203
 msgid ""
 "symlinks and hardlinks are extensions to the device table, just for F<device-"
 "table.pl>, other device table parsers might not handle these types. The "
@@ -1962,7 +1962,7 @@ msgstr ""
 "caminho completo do próprio link simbólico. ex."
 
 #. type: verbatim
-#: device-table.pl:200
+#: device-table.pl:209
 #, no-wrap
 msgid ""
 " /proc/self/fd/0 s /dev/stdin - - - - - - -\n"
@@ -1972,7 +1972,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: device-table.pl:202
+#: device-table.pl:211
 msgid "See http://wiki.debian.org/DeviceTableScripting"
 msgstr "Veja http://wiki.debian.org/DeviceTableScripting"
 
