@@ -13,7 +13,7 @@ Vcs-Svn: http://buildd.emdebian.org/repos/current/host/trunk/multistrap/trunk/
 Package: multistrap
 Section: admin
 Architecture: all
-Depends: ${perl:Depends}, ${misc:Depends}, apt, realpath,
+Depends: ${perl:Depends}, ${misc:Depends}, apt,
  libconfig-auto-perl, libparse-debian-packages-perl
 Recommends: emdebian-archive-keyring
 Suggests: fakeroot

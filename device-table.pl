@@ -17,6 +17,7 @@
 
 use strict;
 use warnings;
+use Cwd qw (realpath);
 use File::Basename;
 use POSIX qw(locale_h);
 use Locale::gettext;
@@ -41,13 +42,7 @@ if ($e !~ /\nFAKEROOTKEY=[0-9]+\n/) {
 } else {
 	$fakeroot="";
 }
-# cope with people getting things wrong from local SVN (not a translated string).
-if (dirname($0) ne "/usr/sbin/") {
-	print "checking realpath\n";
-	my $realpath = `which realpath`;
-	chomp ($realpath);
-	die ("ERR: Please install realpath.\n") if (not -x ($realpath));
-}
+
 while( @ARGV ) {
 	$_= shift( @ARGV );
 	last if m/^--$/;
@@ -61,8 +56,7 @@ while( @ARGV ) {
 		$file = shift(@ARGV);
 	} elsif (/^(-d|--dir)$/) {
 		$dir = shift(@ARGV);
-		$dir = `realpath $dir`;
-		chomp($dir);
+		$dir = realpath ($dir);
 	} elsif (/^(-n|--dry-run)$/) {
 		$dry++;
 	} elsif (/^(--no-fakeroot)$/) {
@@ -83,7 +77,7 @@ close (TABLE);
 my $ret = 0;
 if (not defined $dry) {
 	$ret = mkdir ("$dir") if (not -d "$dir");
-	$dir = `realpath $dir`;
+	$dir = realpath ($dir);
 	chomp ($dir);
 	$dir .= ($dir =~ m:/$:) ? '' : "/";
 	chdir ($dir);

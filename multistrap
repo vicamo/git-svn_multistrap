@@ -19,6 +19,7 @@ use strict;
 use warnings;
 use IO::File;
 use Config::Auto;
+use Cwd qw (realpath);
 use File::Basename;
 use Parse::Debian::Packages;
 use POSIX qw(locale_h);
@@ -78,13 +79,6 @@ die ($msg)
 	if (not defined $file);
 undef ($msg);
 
-# cope with people getting things wrong from local SVN (not a translated string).
-if (dirname($0) ne "/usr/sbin/") {
-	print "checking realpath\n";
-	my $realpath = `which realpath`;
-	chomp ($realpath);
-	die ("ERR: Please install realpath.\n") if (not -x ($realpath));
-}
 $cachedir = "var/cache/apt/"; # archives
 $libdir = "var/lib/apt/";     # lists
 $etcdir = "etc/apt/";         # sources
@@ -164,8 +158,7 @@ if (not -d "$dir") {
 	my $msg = sprintf (_g("Unable to create directory '%s'"),$dir);
 	die "$progname: $msg\n" if ($ret != 0);
 }
-$dir = `realpath $dir 2>/dev/null`;
-chomp ($dir);
+$dir = realpath ($dir);
 $dir .= ($dir =~ m:/$:) ? '' : "/";
 system ("mkdir -p ${dir}${cachedir}") if (not -d "${dir}${cachedir}");
 system ("mkdir -p ${dir}${libdir}") if (not -d "${dir}${libdir}");
@@ -443,8 +436,7 @@ if (defined $tgzname) {
 		printf (_g("\nRemoving build directory: '%s'\n"), $dir);
 		system ("rm -rf $dir/*");
 	}
-	my $final_path=`realpath $dir/../$tgzname`;
-	chomp ($final_path);
+	my $final_path=realpath ("$dir/../$tgzname");
 	if (not defined $warn_count) {
 		printf (_g("\nMultistrap system packaged successfully as '%s'.\n"), $final_path);
 	} else {
@@ -1013,8 +1005,7 @@ sub cascade {
 			my @p = split(' ', lc($keys{$section}{'debconfseed'}))
 				if (defined $keys{$section}{'debconfseed'});
 			foreach my $f (@p) {
-				my $fl = `realpath $f 2>/dev/null`;
-				chomp($fl);
+				my $fl = realpath ($f);
 				next if ($fl eq "");
 				next if (not -f $fl);
 				chomp ($fl);
@@ -1027,8 +1018,7 @@ sub cascade {
 				my @hookfiles=grep(!m:\.\.?$:, readdir HOOKS);
 				closedir(HOOKS);
 				foreach my $hf (@hookfiles) { 
-					my $fl = `realpath $f/$hf 2>/dev/null`;
-					chomp ($fl);
+					my $fl = realpath ("$f/$hf");
 					next if (($fl eq "") or (not -f $fl) or (not -x $fl));
 					push (@{$hooks{'A'}}, $fl) if ($hf =~ /^completion/);
 					push (@{$hooks{'D'}}, $fl) if ($hf =~ /^download/);
@@ -1046,7 +1036,7 @@ sub cascade {
 			foreach my $inc (@i) {
 				# look for the full filepath or try same directory as current conf.
 				if (not -f $inc) {
-					$chk = `realpath $cfgdir/$inc 2>/dev/null`;
+					$chk = realpath ("$cfgdir/$inc");
 					chomp ($chk) if (defined $chk);
 					$inc = $chk if (-f $chk);
 				}
