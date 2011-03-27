@@ -367,7 +367,7 @@ if ((defined $setupsh) and (-x $setupsh)) {
 	$retval = 0;
 	$retval = system ("$setupsh $dir $arch");
 	if ($retval != 0) {
-		warn (_g("setupscript '%s' returned %d.\n"), $setupsh, $retval/256);
+		warn sprintf(_g("setupscript '%s' returned %d.\n"), $setupsh, $retval/256);
 		$warn_count++;
 	}
 }
@@ -440,7 +440,7 @@ if (defined $tgzname) {
 	if (not defined $warn_count) {
 		printf (_g("\nMultistrap system packaged successfully as '%s'.\n"), $final_path);
 	} else {
-		warn (_g("\nMultistrap system packaged as '%s' with warnings.\n"), $final_path);
+		warn sprintf(_g("\nMultistrap system packaged as '%s' with warnings.\n"), $final_path);
 	}
 }
 print "\n";
