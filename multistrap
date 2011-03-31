@@ -19,7 +19,7 @@ use strict;
 use warnings;
 use IO::File;
 use Config::Auto;
-use Cwd qw (realpath);
+use Cwd qw (realpath getcwd);
 use File::Basename;
 use Parse::Debian::Packages;
 use POSIX qw(locale_h);
@@ -355,7 +355,6 @@ foreach my $a (@s) {
 	$uniq{$a}++;
 }
 $str = join (' ', sort keys %uniq);
-@dsclist = sort keys %uniq;
 print "apt-get -y $config_str install $str\n";
 $retval = 0;
 $retval = system ("apt-get -y $config_str install $str");
@@ -524,9 +523,12 @@ sub force_unpack {
 		printf (_g("I: Extracting %s...\n"), $deb);
 		my $ver=`LC_ALL=C dpkg -f ./${cachedir}archives/$deb Version`;
 		my $pkg=`LC_ALL=C dpkg -f ./${cachedir}archives/$deb Package`;
+		my $src=`LC_ALL=C dpkg -f ./${cachedir}archives/$deb Source`;
 		chomp ($ver);
 		chomp ($pkg);
-		push @dsclist, $pkg;
+		chomp ($src);
+		$src =~ s/ \(.*\)//;
+		push @dsclist, $src;
 		mkdir ("./tmp");
 		my $tmpdir = `mktemp -p ./tmp -d -t multistrap.XXXXXX`;
 		chomp ($tmpdir);
@@ -732,9 +734,13 @@ sub tidy_apt {
 		foreach my $a (@dsclist) {
 			$uniqdsc{$a}++;
 		}
-		my $str = join (" ", sort keys %uniqdsc);
-		print "(cd $sourcedir; apt-get -d $config_str source $str)";
-		system ("(cd $sourcedir; apt-get -d $config_str source $str)");
+		my $olddir = getcwd();
+		chdir ($sourcedir);
+		print "apt-get -d config_str source " . join (" ", sort keys %uniqdsc) . "\n";
+		foreach my $srcpkg (sort keys %uniqdsc) {
+			system ("apt-get -d $config_str source $srcpkg");
+		}
+		chdir ($olddir);
 	}
 	unlink ("${dir}etc/apt/sources.list")
 		if (-f "${dir}etc/apt/sources.list");
