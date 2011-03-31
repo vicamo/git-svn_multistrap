@@ -14,8 +14,9 @@ multistrap (2.1.13) unstable; urgency=low
     (Closes: #619069)
   * Improve source download method to get packages individually - avoids
     breakage if the repository is incomplete.
+  * Complete the support for 'flat' repositories (Closes: #619959)
 
- -- Neil Williams <codehelp@debian.org>  Thu, 31 Mar 2011 16:37:48 +0100
+ -- Neil Williams <codehelp@debian.org>  Thu, 31 Mar 2011 16:42:34 +0100
 
 multistrap (2.1.12) unstable; urgency=low
 
