@@ -524,9 +524,15 @@ sub force_unpack {
 		my $ver=`LC_ALL=C dpkg -f ./${cachedir}archives/$deb Version`;
 		my $pkg=`LC_ALL=C dpkg -f ./${cachedir}archives/$deb Package`;
 		my $src=`LC_ALL=C dpkg -f ./${cachedir}archives/$deb Source`;
+		my $multi=`LC_ALL=C dpkg -f ./${cachedir}archives/$deb Multi-Arch`;
 		chomp ($ver);
 		chomp ($pkg);
 		chomp ($src);
+		chomp ($multi);
+		if ($multi eq "same") {
+			$multi=":".`LC_ALL=C dpkg -f ./${cachedir}archives/$deb Architecture`;
+			chomp ($multi);
+		}
 		$src =~ s/ \(.*\)//;
 		push @dsclist, $src;
 		mkdir ("./tmp");
@@ -540,7 +546,7 @@ sub force_unpack {
 			next;
 		}
 		my @lines = split("\n", $datatar);
-		open (LIST, ">>./${dpkgdir}info/${pkg}.list");
+		open (LIST, ">>./${dpkgdir}info/${pkg}${multi}.list");
 		foreach my $l (@lines) {
 			chomp ($l);
 			$l =~ s:^\.::;
@@ -556,9 +562,9 @@ sub force_unpack {
 		open (AVAIL, ">>./${dpkgdir}available");
 		open (STATUS, ">>./${dpkgdir}status");
 		foreach my $mscript (@maint) {
-			rename "./${tmpdir}/$mscript", "./${dpkgdir}info/$pkg.$mscript";
+			rename "./${tmpdir}/$mscript", "./${dpkgdir}info/$pkg${multi}.$mscript";
 			if ( $mscript eq "control" ) {
-				open (MSCRIPT, "./${dpkgdir}info/$pkg.$mscript");
+				open (MSCRIPT, "./${dpkgdir}info/$pkg${multi}.$mscript");
 				my @scr=<MSCRIPT>;
 				close (MSCRIPT);
 				my @avail = grep(!/^$/, @scr);
@@ -570,10 +576,10 @@ sub force_unpack {
 			}
 		}
 		close (AVAIL);
-		if ( -f "./${dpkgdir}info/$pkg.conffiles") {
+		if ( -f "./${dpkgdir}info/$pkg${multi}.conffiles") {
 			print STATUS "Conffiles:\n";
 			printf (_g(" -> Processing conffiles for %s\n"), $pkg);
-			open (CONF, "./${dpkgdir}info/$pkg.conffiles");
+			open (CONF, "./${dpkgdir}info/$pkg${multi}.conffiles");
 			my @lines=<CONF>;
 			close (CONF);
 			foreach my $line (@lines) {
@@ -704,6 +710,7 @@ sub check_bin_sh {
 	# (always expects a diversion to already exist).
 	# (works OK in subsequent upgrades.) #546528
 	unlink ("$dir/var/lib/dpkg/info/dash.postinst");
+	unlink ("$dir/var/lib/dpkg/info/dash:${host}.postinst");
 	# now ensure that a usable shell is available as /bin/sh
 	if (not -l "$dir/bin/sh") {
 		print (_g("I: ./bin/sh symbolic link does not exist.\n"));
