@@ -54,7 +54,6 @@ echo "#!/bin/sh" > $dir/tmp/set.sh
 echo >> $dir/tmp/set.sh
 echo "export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true LC_ALL=C LANGUAGE=C LANG=C" >> $dir/tmp/set.sh
 echo "echo debconf dpkg-cross/default-arch select $CROSSARCH|debconf-set-selections" >> $dir/tmp/set.sh
-echo "dpkg-reconfigure dpkg-cross" >> $dir/tmp/set.sh
 echo "Setting debconf dpkg-cross/default-arch to $CROSSARCH"
 sudo chroot $dir sh /tmp/set.sh
 sudo rm $dir/tmp/set.sh
