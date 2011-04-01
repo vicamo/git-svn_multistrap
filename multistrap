@@ -247,7 +247,7 @@ foreach my $pkg (values %keyrings) {
 if ((defined $k) and (not defined $noauth)) {
 	# the keyring package must be available to the external apt
 	# and apt refuses to allow fakeroot to do this.
-	my $str = "";
+	$str = "";
 	my $e=`LC_ALL=C printenv`;
 	if ($e !~ /\nFAKEROOTKEY=[0-9]+\n/) {
 		if (($e =~ /\nUSER=root\n/)) {
