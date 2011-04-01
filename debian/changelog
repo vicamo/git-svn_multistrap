@@ -15,8 +15,9 @@ multistrap (2.1.13) unstable; urgency=low
   * Improve source download method to get packages individually - avoids
     breakage if the repository is incomplete.
   * Complete the support for 'flat' repositories (Closes: #619959)
+  * Update config files for build and cross chroot (Closes: #610631)
 
- -- Neil Williams <codehelp@debian.org>  Thu, 31 Mar 2011 16:42:34 +0100
+ -- Neil Williams <codehelp@debian.org>  Fri, 01 Apr 2011 20:15:06 +0100
 
 multistrap (2.1.12) unstable; urgency=low
 
