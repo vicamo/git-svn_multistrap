@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: multistrap 2.1.6\n"
 "Report-Msgid-Bugs-To: codehelp@debian.org\n"
-"POT-Creation-Date: 2011-03-05 15:05+0000\n"
+"POT-Creation-Date: 2011-03-27 07:16+0200\n"
 "PO-Revision-Date: 2011-02-21 21:30+0100\n"
 "Last-Translator: Chris Leick <c.leick@vollbio.de>\n"
 "Language-Team: German <debian-l10n-german@lists.debian.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #. type: =head1
-#: pod/multistrap:3 device-table.pl:155
+#: pod/multistrap:3 device-table.pl:149
 msgid "Name"
 msgstr "NAME"
 
@@ -28,7 +28,7 @@ msgid "multistrap - multiple repository bootstraps"
 msgstr "multistrap - Bootstraps für mehrere Depots"
 
 #. type: =head1
-#: pod/multistrap:7 device-table.pl:159
+#: pod/multistrap:7 device-table.pl:153
 msgid "Synopsis"
 msgstr "ÜBERSICHT"
 
@@ -47,7 +47,7 @@ msgstr ""
 "\n"
 
 #. type: =head1
-#: pod/multistrap:13 device-table.pl:164
+#: pod/multistrap:13 device-table.pl:158
 msgid "Options"
 msgstr "OPTIONEN"
 
@@ -1584,12 +1584,6 @@ msgstr ""
 
 #. type: textblock
 #: pod/multistrap:571
-#| msgid ""
-#| "additional adds a second round of C<apt-get install> to the multistrap "
-#| "process - after the initial unpacking. The additional package will then "
-#| "be downloaded and unpacked. If running natively, the additional package "
-#| "is downloaded, unpacked and configured after all the rest of the packages "
-#| "have been downloaded, unpacked and configured."
 msgid ""
 "Additional adds a second round of C<apt-get install> to the multistrap "
 "process - after the initial unpacking. The additional package will then be "
@@ -1868,14 +1862,14 @@ msgstr ""
 "eine Pastebin-Website ablegen und in Ihrer Nachricht die URL angeben."
 
 #. type: textblock
-#: device-table.pl:157
+#: device-table.pl:151
 msgid "device-table.pl - parses simple device tables and passes to mknod"
 msgstr ""
 "device-table.pl - wertet einfache Gerätetabellen aus und übergibt sie an "
 "Mknod"
 
 #. type: verbatim
-#: device-table.pl:161
+#: device-table.pl:155
 #, no-wrap
 msgid ""
 " device-table.pl [-n|--dry-run] [-d DIR] [-f FILE]\n"
@@ -1887,7 +1881,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: device-table.pl:166
+#: device-table.pl:160
 msgid ""
 "By default, F<device-table.pl> writes out the device nodes in the current "
 "working directory. Use the directory option to write out elsewhere."
@@ -1897,7 +1891,7 @@ msgstr ""
 "anderswo auszugeben."
 
 #. type: textblock
-#: device-table.pl:169
+#: device-table.pl:163
 msgid ""
 "multistrap contains a default device-table file, use the file option to "
 "override the default F</usr/share/multistrap/device-table.txt>"
@@ -1907,14 +1901,14 @@ msgstr ""
 "überschreiben."
 
 #. type: textblock
-#: device-table.pl:172
+#: device-table.pl:166
 msgid "Use the dry-run option to see the commands that would be run."
 msgstr ""
 "Benutzen Sie die Option »dry-run«, um zu sehen welche Befehle ausgeführt "
 "würden."
 
 #. type: textblock
-#: device-table.pl:174
+#: device-table.pl:168
 msgid ""
 "Device nodes need fakeroot or another way to use root access. If F<device-"
 "table.pl> is already being run under fakeroot or equivalent, the existing "
@@ -1928,7 +1922,7 @@ msgstr ""
 "Fakeroot-Gebrauch zu unterbinden."
 
 #. type: textblock
-#: device-table.pl:179
+#: device-table.pl:173
 msgid ""
 "Note that fakeroot does not support changing the actual ownerships, for "
 "that, run the final packing into a tarball under fakeroot as well, or use "
@@ -1940,12 +1934,12 @@ msgstr ""
 "ausführen."
 
 #. type: =head1
-#: device-table.pl:183
+#: device-table.pl:177
 msgid "Device table format"
 msgstr "Gerätetabellenformat"
 
 #. type: textblock
-#: device-table.pl:185
+#: device-table.pl:179
 msgid ""
 "Device table files are tab separated value files (TSV). All lines in the "
 "device table must have exactly 10 entries, each separated by a single tab, "
@@ -1957,12 +1951,12 @@ msgstr ""
 "beginnen müssen."
 
 #. type: textblock
-#: device-table.pl:189
+#: device-table.pl:183
 msgid "Device table entries take the form of:"
 msgstr "Gerätetabelleneinträge haben das Format:"
 
 #. type: verbatim
-#: device-table.pl:191
+#: device-table.pl:185
 #, no-wrap
 msgid ""
 " <name> <type> <mode> <uid> <gid> <major> <minor> <start> <inc> <count>\n"
@@ -1972,12 +1966,12 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: device-table.pl:193
+#: device-table.pl:187
 msgid "where name is the file name, type can be one of:"
 msgstr "wobei Name der Dateiname ist. Typ kann einer der folgenden sein:"
 
 #. type: verbatim
-#: device-table.pl:195
+#: device-table.pl:189
 #, no-wrap
 msgid ""
 " f A regular file\n"
@@ -1999,7 +1993,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: device-table.pl:203
+#: device-table.pl:197
 msgid ""
 "symlinks and hardlinks are extensions to the device table, just for F<device-"
 "table.pl>, other device table parsers might not handle these types. The "
@@ -2014,7 +2008,7 @@ msgstr ""
 "Verweises selbst, z.B."
 
 #. type: verbatim
-#: device-table.pl:209
+#: device-table.pl:203
 #, no-wrap
 msgid ""
 " /proc/self/fd/0 s /dev/stdin - - - - - - -\n"
@@ -2024,6 +2018,6 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: device-table.pl:211
+#: device-table.pl:205
 msgid "See http://wiki.debian.org/DeviceTableScripting"
 msgstr "Siehe http://wiki.debian.org/DeviceTableScripting"
