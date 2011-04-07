@@ -22,7 +22,8 @@ use File::Basename;
 use POSIX qw(locale_h);
 use Locale::gettext;
 use vars qw/ @list @seq $file $dir $line @cmd $i $dry
- $msg $progname $ourversion $fakeroot /;
+ $msg $progname $ourversion $fakeroot
+ $name $type $mode $link $uid $gid $major $minor $start $step $count /;
 
 @list =();
 @seq = ();
@@ -91,31 +92,46 @@ foreach $line (@list) {
 	next if ($line =~ /^#/);
 	next if ($line =~ /^$/);
 	@cmd = split (/\t/, $line);
-	next if (not defined $cmd[1]);
 	next if (scalar @cmd != 10);
-	if ($cmd[1] eq "s") {
-		push @seq, "ln -s $cmd[0] .$cmd[2]";
+	#  0      1      2      3     4    5        6       7      8      9
+	($name, $type, $mode, $uid, $gid, $major, $minor, $start, $step, $count) = split (/\t/, $line);
+	next if (not defined $type or not defined $count);
+	if ($type eq "s") {
+		$link = $mode;
+		push @seq, "ln -s $name .$link";
 		next;
 	}
-	if ($cmd[1] eq "h") {
-		push @seq, "ln $cmd[0] .$cmd[2]";
+	if ($type eq "h") {
+		$link = $mode;
+		push @seq, "ln $name .$link";
 		next;
 	}
-	if ($cmd[1] eq "d"){
-		push @seq, "mkdir -m $cmd[2] -p .$cmd[0]";
+	if ($type eq "d"){
+		push @seq, "mkdir -m $mode -p .$name";
 		next;
 	}
-	if ($cmd[9] =~ /-/) {
-		push @seq, "mknod .$cmd[0] $cmd[1] $cmd[5] $cmd[6]";
-		push @seq, "chmod $cmd[2] .$cmd[0]";
-		push @seq, "chown $cmd[3]:$cmd[4] .$cmd[0]";
+	if ($count =~ /-/) {
+		push @seq, "mknod .$name $type $major $minor";
+		push @seq, "chmod $mode .$name";
+		push @seq, "chown $uid:$gid .$name";
 	} else {
-		for ($i = 0; $i < $cmd[9]; $i += $cmd[8]) {
-			push @seq, "mknod .$cmd[0]$i $cmd[1] $cmd[5] $cmd[6]";
-			push @seq, "chmod $cmd[2] .$cmd[0]$i";
-			push @seq, "chown $cmd[3]:$cmd[4] .$cmd[0]$i";
+		for ($i = $start; $i < $count; $i += $step) {
+			my $inc = $minor + $i;
+			push @seq, "mknod .$name$i $type $major $inc";
+			push @seq, "chmod $mode .$name$i";
+			push @seq, "chown $uid:$gid .$name$i";
 		}
 	}
+	undef $name;
+	undef $type;
+	undef $mode;
+	undef $uid;
+	undef $gid;
+	undef $major;
+	undef $minor;
+	undef $start;
+	undef $step;
+	undef $count;
 }
 if (defined $dry) {
 	print join ("\n", @seq);
