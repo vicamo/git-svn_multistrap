@@ -1,8 +1,9 @@
 multistrap (2.1.14) unstable; urgency=low
 
   * Improve device-table incrementing
+  * Improve multi-arch field handling for foreign and allowed.
 
- -- Neil Williams <codehelp@debian.org>  Thu, 07 Apr 2011 15:23:15 +0100
+ -- Neil Williams <codehelp@debian.org>  Sat, 09 Apr 2011 09:22:01 +0100
 
 multistrap (2.1.13) unstable; urgency=low
 

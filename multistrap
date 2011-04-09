@@ -529,9 +529,15 @@ sub force_unpack {
 		chomp ($pkg);
 		chomp ($src);
 		chomp ($multi);
-		if ($multi eq "same") {
+		if (($multi eq "same") or ($multi eq "foreign") or ($multi eq "allowed")) {
 			$multi=":".`LC_ALL=C dpkg -f ./${cachedir}archives/$deb Architecture`;
 			chomp ($multi);
+		} else {
+			# Translators: Please do not translate 'same', 'foreign' or 'allowed'
+			my $msg = sprintf(_g("Warning: unrecognised value '%s' for Multi-Arch field in %s. ".
+				"(Expecting 'same', 'foreign' or 'allowed'.)"), $multi, $deb);
+			warn ("$msg\n");
+			$multi = '';
 		}
 		$src =~ s/ \(.*\)//;
 		push @dsclist, $src;
