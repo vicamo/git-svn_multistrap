@@ -529,10 +529,19 @@ sub force_unpack {
 		chomp ($pkg);
 		chomp ($src);
 		chomp ($multi);
-		if (($multi eq "same") or ($multi eq "foreign") or ($multi eq "allowed")) {
-			$multi=":".`LC_ALL=C dpkg -f ./${cachedir}archives/$deb Architecture`;
-			chomp ($multi);
-		} else {
+		if (($multi eq "foreign") or ($multi eq "allowed")) {
+			$multi = '';
+		} elsif ($multi eq "same") {
+			# actually need dpkg multi-arch support implemented before this can be active.
+			#$multi=":".`LC_ALL=C dpkg -f ./${cachedir}archives/$deb Architecture`;
+			#chomp ($multi);
+			$multi = '';
+			if ($multi eq ":all") {
+				my $msg = sprintf(_g("Warning: invalid value '%s' for Multi-Arch field in Architecture: all package: %s. "), $multi, $deb);
+				warn ("$msg\n");
+				$multi = '';
+			}
+		} elsif ($multi ne '') {
 			# Translators: Please do not translate 'same', 'foreign' or 'allowed'
 			my $msg = sprintf(_g("Warning: unrecognised value '%s' for Multi-Arch field in %s. ".
 				"(Expecting 'same', 'foreign' or 'allowed'.)"), $multi, $deb);

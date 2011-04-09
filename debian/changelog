@@ -1,7 +1,8 @@
 multistrap (2.1.14) unstable; urgency=low
 
   * Improve device-table incrementing
-  * Improve multi-arch field handling for foreign and allowed.
+  * Disable multi-arch field handling for same and wrap foreign and
+    allowed. dpkg does not currently support changes in /var/lib/dpkg/info
 
  -- Neil Williams <codehelp@debian.org>  Sat, 09 Apr 2011 09:22:01 +0100
 
