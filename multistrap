@@ -751,19 +751,54 @@ sub check_bin_sh {
 
 sub tidy_apt {
 	print _g("I: Tidying up apt cache and list data.\n");
+	if ($unpack eq "true") {
+		opendir (DEBS, "${dir}${cachedir}/archives/")
+			or die (_g("Cannot read apt archives directory.\n"));
+		my @files=grep(!m:\.\.?$:, readdir DEBS);
+		closedir (DEBS);
+		foreach my $file (@files) {
+			next if (-d $file);
+			next unless ($file =~ /\.deb$/);
+			if (defined $sourcedir) {
+				my $srcname = `LC_ALL dpkg -f ${dir}${cachedir}archives/$file Source`;
+				chomp ($srcname);
+				push @dsclist, $srcname;
+				system ("mv ${dir}${cachedir}archives/$file $sourcedir/$file");
+			} else {
+				unlink ("${dir}${cachedir}archives/$file");
+			}
+		}
+	}
 	if (defined $sourcedir) {
+		print "Checking ${dir}${dpkgdir}status\n";
+		if (-f "${dir}${dpkgdir}status") {
+			open (STATUS, "${dir}${dpkgdir}status");
+			my @lines=<STATUS>;
+			close (STATUS);
+			foreach my $line (@lines) {
+				if ($line =~ /^Source: (.*)$/) {
+					my $c = $1;
+					$c =~ s/\(.*\)$//;
+					$c =~ s/ //g;
+					push @dsclist, $c;
+				}
+			}
+		}
 		my %uniqdsc=();
 		foreach my $a (@dsclist) {
 			$uniqdsc{$a}++;
 		}
 		my $olddir = getcwd();
 		chdir ($sourcedir);
-		print "apt-get -d config_str source " . join (" ", sort keys %uniqdsc) . "\n";
-		foreach my $srcpkg (sort keys %uniqdsc) {
-			system ("apt-get -d $config_str source $srcpkg");
+		if (scalar keys %uniqdsc > 0) {
+			print "apt-get -d $config_str source " . join (" ", sort keys %uniqdsc) . "\n";
+			foreach my $srcpkg (sort keys %uniqdsc) {
+				system ("apt-get -d $config_str source $srcpkg");
+			}
 		}
 		chdir ($olddir);
 	}
+	$sourcedir=undef;
 	unlink ("${dir}etc/apt/sources.list")
 		if (-f "${dir}etc/apt/sources.list");
 	opendir (DEBS, "${dir}${libdir}lists/")
@@ -782,22 +817,6 @@ sub tidy_apt {
 		next if (-d $file);
 		next unless ($file =~ /\.bin$/);
 		unlink ("${dir}${cachedir}$file");
-	}
-	if ($unpack eq "true") {
-		opendir (DEBS, "${dir}${cachedir}/archives/")
-			or die (_g("Cannot read apt archives directory.\n"));
-		my @files=grep(!m:\.\.?$:, readdir DEBS);
-		closedir (DEBS);
-		foreach my $file (@files) {
-			next if (-d $file);
-			next unless ($file =~ /\.deb$/);
-			if (defined $sourcedir) {
-				system ("mv ${dir}${cachedir}archives/$file $sourcedir/$file");
-			} else {
-				unlink ("${dir}${cachedir}archives/$file");
-			}
-		}
-		$sourcedir=undef;
 	}
 }
 
@@ -1055,7 +1074,8 @@ sub cascade {
 			}
 			my @d = split(' ', lc($keys{$section}{'debootstrap'}));
 			push @debootstrap, @d;
-			my @b = split(' ', lc($keys{$section}{'bootstrap'}));
+			my @b = split(' ', lc($keys{$section}{'bootstrap'}))
+				if (defined $keys{$section}{'bootstrap'});
 			push @debootstrap, @b;
 			my @a = split (' ', lc($keys{$section}{'aptsources'}));
 			push @aptsources, @a;
@@ -1090,10 +1110,12 @@ sub cascade {
 				if (not exists $components{$section} and not exists $flatfile{$section});
 			$omitdebsrc{$section}=$section if ((defined $keys{$section}{'omitdebsrc'})
 				and ($keys{$section}{'omitdebsrc'} eq "true"));
-			push @reinstall, split (/ /, lc($keys{$section}{'reinstall'}));
+			push @reinstall, split (/ /, lc($keys{$section}{'reinstall'}))
+				if (defined $keys{$section}{'reinstall'});
 			$components{$section}='main' if (not defined $components{$section});
 			$keyrings{$section}=$keys{$section}{'keyring'} if (not exists $keyrings{$section});
-			push @extrapkgs, split (' ', lc($keys{$section}{'additional'}));
+			push @extrapkgs, split (' ', lc($keys{$section}{'additional'}))
+				if (defined $keys{$section}{'additional'});
 		}
 	}
 	my %uniq=();
