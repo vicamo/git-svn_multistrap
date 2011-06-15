@@ -5,8 +5,10 @@ multistrap (2.1.14) unstable; urgency=low
     allowed. dpkg does not currently support changes in /var/lib/dpkg/info
   * Read the dpkg status file to look for source packages even when no
     packages needed to be downloaded or unpacked. (Closes: #623563)
+  * Clean up the retainsources behaviour (Closes: #627179)
+  * Implement some code for omitpreinst support.
 
- -- Neil Williams <codehelp@debian.org>  Wed, 11 May 2011 20:30:03 +0100
+ -- Neil Williams <codehelp@debian.org>  Wed, 15 Jun 2011 21:44:44 +0100
 
 multistrap (2.1.13) unstable; urgency=low
 

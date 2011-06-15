@@ -764,10 +764,11 @@ sub handle_source_packages {
 			next if (-d $file);
 			next unless ($file =~ /\.deb$/);
 			if (defined $sourcedir) {
-				my $srcname = `LC_ALL dpkg -f ${dir}${cachedir}archives/$file Source`;
+				my $srcname = `LC_ALL=C dpkg -f ${dir}${cachedir}archives/$file Source`;
 				chomp ($srcname);
+				$srcname =~ s/ \(.*\)//;
 				if ($srcname eq "") {
-					my $srcname = `LC_ALL dpkg -f ${dir}${cachedir}archives/$file Package`;
+					my $srcname = `LC_ALL=C dpkg -f ${dir}${cachedir}archives/$file Package`;
 					chomp ($srcname);
 				}
 				push @dsclist, $srcname;
@@ -779,12 +780,23 @@ sub handle_source_packages {
 		open (STATUS, "${dir}${dpkgdir}status");
 		my @lines=<STATUS>;
 		close (STATUS);
+		my $pkg;
+		my $src;
 		foreach my $line (@lines) {
+			if ($line =~ /^Package: (.*)$/) {
+				$pkg = $1;
+			}
 			if ($line =~ /^Source: (.*)$/) {
 				my $c = $1;
 				$c =~ s/\(.*\)$//;
 				$c =~ s/ //g;
 				push @dsclist, $c;
+				$src = $c;
+			}
+			if ($line =~ /^$/) {
+				push @dsclist, $pkg if (not defined $src and defined $pkg);
+				undef $pkg;
+				undef $src;
 			}
 		}
 	}
@@ -801,7 +813,6 @@ sub handle_source_packages {
 		}
 	}
 	chdir ($olddir);
-	$sourcedir=undef;
 }
 
 sub tidy_apt {
@@ -820,6 +831,7 @@ sub tidy_apt {
 				unlink ("${dir}${cachedir}archives/$file");
 			}
 		}
+		$sourcedir=undef;
 	}
 	unlink ("${dir}etc/apt/sources.list")
 		if (-f "${dir}etc/apt/sources.list");
@@ -871,17 +883,19 @@ sub native {
 		}
 	}
 	&run_native_hooks_start(sort @{$hooks{'N'}}) if (defined ($hooks{'N'}));
-	opendir (PRI, "${dir}/var/lib/dpkg/info") or return;
-	my @preinsts=grep(/\.preinst$/, readdir PRI);
-	closedir (PRI);
-	printf (_g("I: Running preinst scripts with 'install' argument.\n"));
-	my $f = join (" ", @reinstall);
-	foreach my $script (sort @preinsts) {
-		my $t = $script;
-		$t =~ s/\.preinst//;
-		next if ($t =~ /$f/);
-		next if ($script =~ /bash/);
-		system ("$str $env chroot $dir /var/lib/dpkg/info/$script install");
+	if (not defined $omitpreinst) {
+		opendir (PRI, "${dir}/var/lib/dpkg/info") or return;
+		my @preinsts=grep(/\.preinst$/, readdir PRI);
+		closedir (PRI);
+		printf (_g("I: Running preinst scripts with 'install' argument.\n"));
+		my $f = join (" ", @reinstall);
+		foreach my $script (sort @preinsts) {
+			my $t = $script;
+			$t =~ s/\.preinst//;
+			next if ($t =~ /$f/);
+			next if ($script =~ /bash/);
+			system ("$str $env chroot $dir /var/lib/dpkg/info/$script install");
+		}
 	}
 	my $retval = 0;
 	$retval = system ("$str $env chroot $dir dpkg --configure -a");
