@@ -379,6 +379,7 @@ if (defined $err and $err != 0) {
 }
 &add_extra_packages;
 system ("cp $configsh $dir/") if ((defined $configsh) and (-f $configsh));
+&handle_source_packages;
 (not defined $tidy) ? system ("apt-get $config_str update") : &tidy_apt;
 &guard_lib64($dir);
 
@@ -449,9 +450,11 @@ if (not defined $warn_count) {
 	exit $warn_count;
 }
 
+######### sub routine start ##########
+
 sub our_version {
 	my $query = `dpkg-query -W -f='\${Version}' multistrap 2>/dev/null`;
-	($query ne "") ? return $query : return "2.1.5";
+	($query ne "") ? return $query : return "2.1.15";
 }
 
 sub add_extra_packages {
@@ -549,6 +552,7 @@ sub force_unpack {
 			$multi = '';
 		}
 		$src =~ s/ \(.*\)//;
+		$src = $pkg if ($src eq "");
 		push @dsclist, $src;
 		mkdir ("./tmp");
 		my $tmpdir = `mktemp -p ./tmp -d -t multistrap.XXXXXX`;
@@ -749,8 +753,8 @@ sub check_bin_sh {
 	}
 }
 
-sub tidy_apt {
-	print _g("I: Tidying up apt cache and list data.\n");
+sub handle_source_packages {
+	return if (not defined $sourcedir);
 	if ($unpack eq "true") {
 		opendir (DEBS, "${dir}${cachedir}/archives/")
 			or die (_g("Cannot read apt archives directory.\n"));
@@ -762,43 +766,61 @@ sub tidy_apt {
 			if (defined $sourcedir) {
 				my $srcname = `LC_ALL dpkg -f ${dir}${cachedir}archives/$file Source`;
 				chomp ($srcname);
+				if ($srcname eq "") {
+					my $srcname = `LC_ALL dpkg -f ${dir}${cachedir}archives/$file Package`;
+					chomp ($srcname);
+				}
 				push @dsclist, $srcname;
+			}
+		}
+	}
+	print "Checking ${dir}${dpkgdir}status\n";
+	if (-f "${dir}${dpkgdir}status") {
+		open (STATUS, "${dir}${dpkgdir}status");
+		my @lines=<STATUS>;
+		close (STATUS);
+		foreach my $line (@lines) {
+			if ($line =~ /^Source: (.*)$/) {
+				my $c = $1;
+				$c =~ s/\(.*\)$//;
+				$c =~ s/ //g;
+				push @dsclist, $c;
+			}
+		}
+	}
+	my %uniqdsc=();
+	foreach my $a (@dsclist) {
+		$uniqdsc{$a}++;
+	}
+	my $olddir = getcwd();
+	chdir ($sourcedir);
+	if (scalar keys %uniqdsc > 0) {
+		print "apt-get -d $config_str source " . join (" ", sort keys %uniqdsc) . "\n";
+		foreach my $srcpkg (sort keys %uniqdsc) {
+			system ("apt-get -d $config_str source $srcpkg");
+		}
+	}
+	chdir ($olddir);
+	$sourcedir=undef;
+}
+
+sub tidy_apt {
+	print _g("I: Tidying up apt cache and list data.\n");
+	if ($unpack eq "true") {
+		opendir (DEBS, "${dir}${cachedir}/archives/")
+			or die (_g("Cannot read apt archives directory.\n"));
+		my @files=grep(!m:\.\.?$:, readdir DEBS);
+		closedir (DEBS);
+		foreach my $file (@files) {
+			next if (-d $file);
+			next unless ($file =~ /\.deb$/);
+			if (defined $sourcedir) {
 				system ("mv ${dir}${cachedir}archives/$file $sourcedir/$file");
 			} else {
 				unlink ("${dir}${cachedir}archives/$file");
 			}
 		}
 	}
-	if (defined $sourcedir) {
-		print "Checking ${dir}${dpkgdir}status\n";
-		if (-f "${dir}${dpkgdir}status") {
-			open (STATUS, "${dir}${dpkgdir}status");
-			my @lines=<STATUS>;
-			close (STATUS);
-			foreach my $line (@lines) {
-				if ($line =~ /^Source: (.*)$/) {
-					my $c = $1;
-					$c =~ s/\(.*\)$//;
-					$c =~ s/ //g;
-					push @dsclist, $c;
-				}
-			}
-		}
-		my %uniqdsc=();
-		foreach my $a (@dsclist) {
-			$uniqdsc{$a}++;
-		}
-		my $olddir = getcwd();
-		chdir ($sourcedir);
-		if (scalar keys %uniqdsc > 0) {
-			print "apt-get -d $config_str source " . join (" ", sort keys %uniqdsc) . "\n";
-			foreach my $srcpkg (sort keys %uniqdsc) {
-				system ("apt-get -d $config_str source $srcpkg");
-			}
-		}
-		chdir ($olddir);
-	}
-	$sourcedir=undef;
 	unlink ("${dir}etc/apt/sources.list")
 		if (-f "${dir}etc/apt/sources.list");
 	opendir (DEBS, "${dir}${libdir}lists/")
