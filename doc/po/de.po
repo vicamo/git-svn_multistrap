@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: multistrap 2.1.6\n"
 "Report-Msgid-Bugs-To: codehelp@debian.org\n"
-"POT-Creation-Date: 2011-04-09 09:24+0200\n"
+"POT-Creation-Date: 2011-06-18 16:23+0200\n"
 "PO-Revision-Date: 2011-02-21 21:30+0100\n"
 "Last-Translator: Chris Leick <c.leick@vollbio.de>\n"
 "Language-Team: German <debian-l10n-german@lists.debian.org>\n"
@@ -595,11 +595,18 @@ msgstr ""
 # FIXME missing bracket
 #. type: textblock
 #: pod/multistrap:220
+#, fuzzy
+#| msgid ""
+#| "'source' is the apt source to use for this Section. (To use a local "
+#| "source on the same machine, ensure you use C<copy://> not C<file://>, so "
+#| "that apt is told to copy the packages into the rootfs instead of assuming "
+#| "it can try to download them later - because that \"later\" will never "
+#| "actually happen."
 msgid ""
-"'source' is the apt source to use for this Section. (To use a local source "
-"on the same machine, ensure you use C<copy://> not C<file://>, so that apt "
-"is told to copy the packages into the rootfs instead of assuming it can try "
-"to download them later - because that \"later\" will never actually happen."
+"'source' is the apt source to use for this Section. To use a local source on "
+"the same machine, ensure you use C<copy://> not C<file://>, so that apt is "
+"told to copy the packages into the rootfs instead of assuming it can try to "
+"download them later - because that \"later\" will never actually happen."
 msgstr ""
 "»source« ist die APT-Quelle, die für diesen Abschnitt benutzt wird. Um eine "
 "lokale Quelle auf der gleichen Maschine zu benutzen, stellen Sie sicher, "
@@ -1611,9 +1618,11 @@ msgstr ""
 "gesandt werden, die diesen Mechanismus nutzen (oder die Pakete, die das "
 "spezielle Paket am normalen Funktionieren hindern würden)."
 
-#. type: textblock
+#. type: =head1
 #: pod/multistrap:582
-msgid "head1 Debconf preseeding"
+#, fuzzy
+#| msgid "head1 Debconf preseeding"
+msgid "Debconf preseeding"
 msgstr "head1 Debconf-Voreinstellungen"
 
 #. type: textblock

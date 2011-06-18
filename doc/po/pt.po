@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: multistrap 2.1.12\n"
-"POT-Creation-Date: 2011-04-09 09:24+0200\n"
+"POT-Creation-Date: 2011-06-18 16:23+0200\n"
 "PO-Revision-Date: 2011-02-21 15:07+0000\n"
 "Last-Translator: Américo Monteiro <a_monteiro@netcabo.pt>\n"
 "Language-Team: Portuguese <traduz@debianpt.org>\n"
@@ -583,11 +583,18 @@ msgstr ""
 
 #. type: textblock
 #: pod/multistrap:220
+#, fuzzy
+#| msgid ""
+#| "'source' is the apt source to use for this Section. (To use a local "
+#| "source on the same machine, ensure you use C<copy://> not C<file://>, so "
+#| "that apt is told to copy the packages into the rootfs instead of assuming "
+#| "it can try to download them later - because that \"later\" will never "
+#| "actually happen."
 msgid ""
-"'source' is the apt source to use for this Section. (To use a local source "
-"on the same machine, ensure you use C<copy://> not C<file://>, so that apt "
-"is told to copy the packages into the rootfs instead of assuming it can try "
-"to download them later - because that \"later\" will never actually happen."
+"'source' is the apt source to use for this Section. To use a local source on "
+"the same machine, ensure you use C<copy://> not C<file://>, so that apt is "
+"told to copy the packages into the rootfs instead of assuming it can try to "
+"download them later - because that \"later\" will never actually happen."
 msgstr ""
 "'source' é a fonte do apt a usar para esta Secção (Para usar uma fonte local "
 "na mesma máquina, assegure-se de usar C<copy://> e não C<file://>, para que "
@@ -1575,9 +1582,11 @@ msgstr ""
 "os pacotes que requerem o uso destes mecanismos (ou dos pacotes que iram "
 "prevenir um determinado pacote de operar normalmente)."
 
-#. type: textblock
+#. type: =head1
 #: pod/multistrap:582
-msgid "head1 Debconf preseeding"
+#, fuzzy
+#| msgid "head1 Debconf preseeding"
+msgid "Debconf preseeding"
 msgstr "Pré-semear Debconf head1"
 
 #. type: textblock

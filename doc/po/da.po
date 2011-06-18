@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Multistrap documentation\n"
-"POT-Creation-Date: 2011-04-09 09:24+0200\n"
+"POT-Creation-Date: 2011-06-18 16:23+0200\n"
 "PO-Revision-Date: 2011-03-20 19:25+0200\n"
 "Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"
 "Language-Team: Danish <debian-l10n-danish@lists.debian.org>\n"
@@ -614,10 +614,10 @@ msgstr ""
 #. type: textblock
 #: pod/multistrap:220
 msgid ""
-"'source' is the apt source to use for this Section. (To use a local source "
-"on the same machine, ensure you use C<copy://> not C<file://>, so that apt "
-"is told to copy the packages into the rootfs instead of assuming it can try "
-"to download them later - because that \"later\" will never actually happen."
+"'source' is the apt source to use for this Section. To use a local source on "
+"the same machine, ensure you use C<copy://> not C<file://>, so that apt is "
+"told to copy the packages into the rootfs instead of assuming it can try to "
+"download them later - because that \"later\" will never actually happen."
 msgstr ""
 
 #. type: textblock
@@ -1543,9 +1543,9 @@ msgid ""
 "prevent the particular package from operating normally)."
 msgstr ""
 
-#. type: textblock
+#. type: =head1
 #: pod/multistrap:582
-msgid "head1 Debconf preseeding"
+msgid "Debconf preseeding"
 msgstr ""
 
 #. type: textblock
