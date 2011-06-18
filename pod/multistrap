@@ -217,7 +217,7 @@ manner.
  keyring=emdebian-archive-keyring
  suite=lenny
 
-'source' is the apt source to use for this Section. (To use a local
+'source' is the apt source to use for this Section. To use a local
 source on the same machine, ensure you use C<copy://> not C<file://>,
 so that apt is told to copy the packages into the rootfs instead of
 assuming it can try to download them later - because that "later" will
@@ -579,7 +579,7 @@ just workarounds and wishlist bugs should be filed in Debian against
 packages which require the use of these mechanisms (or the packages
 which would prevent the particular package from operating normally).
 
-head1 Debconf preseeding
+=head1 Debconf preseeding
 
 Adding a debconf seed can help in configuring packages to a particular
 setting instead of the package default when running the configuration
