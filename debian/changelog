@@ -1,3 +1,9 @@
+multistrap (2.1.16) unstable; urgency=low
+
+  * Allow empty aptsources.
+
+ -- Neil Williams <codehelp@debian.org>  Fri, 08 Jul 2011 20:03:27 +0100
+
 multistrap (2.1.15) unstable; urgency=low
 
   * Clean up the retainsources behaviour (Closes: #627179)

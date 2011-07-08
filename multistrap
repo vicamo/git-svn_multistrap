@@ -136,14 +136,14 @@ if ((not defined $arch) or ($arch eq "")) {
 	printf (_g("Using foreign architecture: %s\n"), $arch);
 }
 $foreign++ if ($host ne $arch);
-
-unless (keys %sources and @aptsources) {
+unless (keys %sources) {
 	my $msg = sprintf(_g("No sources defined for a foreign multistrap.
 	Using your existing apt sources. To use different sources,
 	list them with aptsources= in '%s'."), $file);
 	warn ("$progname: $msg\n");
 	$warn_count++;
-	$deflist = prepare_sources_list();
+	my $l = prepare_sources_list();
+	$deflist = join ("", @$l);
 }
 
 # Translators: fields are: programname, architecture, host architecture.
@@ -1113,7 +1113,10 @@ sub cascade {
 			my @b = split(' ', lc($keys{$section}{'bootstrap'}))
 				if (defined $keys{$section}{'bootstrap'});
 			push @debootstrap, @b;
-			my @a = split (' ', lc($keys{$section}{'aptsources'}));
+			my @a=();
+			if (exists $keys{$section}{'aptsources'}) {
+				@a = split (' ', lc($keys{$section}{'aptsources'}));
+			}
 			push @aptsources, @a;
 			my @i = split (' ', $keys{$section}{'include'})
 				if (defined $keys{$section}{'include'});
