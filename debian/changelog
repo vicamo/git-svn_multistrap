@@ -1,8 +1,8 @@
 multistrap (2.1.16) unstable; urgency=low
 
-  * Allow empty aptsources.
+  * Allow empty aptsources lines. (Closes: #633525)
 
- -- Neil Williams <codehelp@debian.org>  Fri, 08 Jul 2011 20:03:27 +0100
+ -- Neil Williams <codehelp@debian.org>  Mon, 11 Jul 2011 12:21:09 +0100
 
 multistrap (2.1.15) unstable; urgency=low
 
