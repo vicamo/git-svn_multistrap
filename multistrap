@@ -35,7 +35,8 @@ use vars qw/ $progname $ourversion $dstrap $extra @aptsources $mirror
  $omitpreinst @reinstall $tgzname %uniq %required $check @check %uniq
  $explicit_suite $allow_recommends %omitdebsrc @dsclist @sectoutput
  %flatfile %important $addimportant @debconf $hookdir %hooks
- $warn_count /;
+ $warn_count $use_shortcut @foreignarches $olddpkg 
+ %foreignpkgs /;
 
 setlocale(LC_MESSAGES, "");
 textdomain("multistrap");
@@ -43,7 +44,7 @@ $progname = basename($0);
 $ourversion = &our_version();
 $unpack = "true";
 %omitdebsrc=();
-
+%foreignpkgs=();
 while( @ARGV ) {
 	$_= shift( @ARGV );
 	last if m/^--$/;
@@ -53,6 +54,8 @@ while( @ARGV ) {
 	} elsif (/^(-\?|-h|--help|--version)$/) {
 	&usageversion();
 		exit( 0 );
+	} elsif (/^(-s|--shortcut)$/) {
+		$use_shortcut = shift(@ARGV);
 	} elsif (/^(-f|--file)$/) {
 		$file = shift(@ARGV);
 	} elsif (/^(-a|--arch)$/) {
@@ -72,6 +75,16 @@ while( @ARGV ) {
 		$dryrun++;
 	} else {
 		die "$progname: "._g("Unknown option")." $_.\n";
+	}
+}
+if (defined $use_shortcut) {
+	my $short = "/usr/share/multistrap/".$use_shortcut.".conf";
+	if (-f $short) {
+		$file = $short;
+	}
+	$short = "/etc/multistrap.d/".$use_shortcut.".conf";
+	if (-f $short) {
+		$file = $short;
 	}
 }
 $msg = sprintf (_g("Need a configuration file - use %s -f\n"), $progname);
@@ -160,6 +173,7 @@ if (not -d "$dir") {
 }
 $dir = realpath ($dir);
 $dir .= ($dir =~ m:/$:) ? '' : "/";
+# add a do_it wrapper to check the retval of system
 system ("mkdir -p ${dir}${cachedir}") if (not -d "${dir}${cachedir}");
 system ("mkdir -p ${dir}${libdir}") if (not -d "${dir}${libdir}");
 system ("mkdir -p ${dir}${dpkgdir}") if (not -d "${dir}${dpkgdir}");
@@ -194,7 +208,19 @@ if (not -d "${dir}etc/network") {
 if (not -d "${dir}dev") {
 	mkdir "${dir}dev";
 }
-
+if ($olddpkg != 0) {
+	if (not -d "${dir}etc/dpkg/dpkg.cfg.d/") {
+		system ("mkdir -p ${dir}etc/dpkg/dpkg.cfg.d/");
+	}
+	if (not -f "${dir}etc/dpkg/dpkg.cfg.d/multiarch") {
+		open (MA, ">${dir}etc/dpkg/dpkg.cfg.d/multiarch");
+		foreach my $farch (@foreignarches) {
+			print MA "foreign-architecture $farch\n";
+		}
+		close (MA);
+	}
+}
+die;
 &guard_lib64($dir);
 
 system ("rm -rf ${dir}etc/apt/sources.list.d/*");
@@ -280,15 +306,13 @@ if ((defined $k) and (not defined $noauth)) {
 		}
 		foreach my $gpg (@files) {
 			next if ($gpg =~ /removed/);
-			system ("gpg --no-default-keyring ".
+			$retval = system ("gpg --no-default-keyring ".
 				"--homedir=${dir}/etc/apt/trusted.gpg.d/ ".
 				"--keyring=multistrap.gpg ".
-				" --import ${xdir}/usr/share/keyrings/${gpg} 2>/dev/null");
-			if (-f "${dir}/etc/apt/trusted.gpg.d/multistrap.gpg") {
-				system ("cp ${dir}/etc/apt/trusted.gpg.d/multistrap.gpg ${dir}/etc/apt/trusted.gpg.d/trustdb.gpg");
-			} else {
-				die (_g("Secure Apt handling failed - try without authentication."));
-			}
+				" --import ${xdir}/usr/share/keyrings/${gpg}");
+			$retval /= 256;
+			die (_g("Secure Apt handling failed - try without authentication."))
+				if ($retval != 0);
 		}
 		system ("rm -rf ${xdir}");
 	}
@@ -370,7 +394,7 @@ if ((defined $setupsh) and (-x $setupsh)) {
 		$warn_count++;
 	}
 }
-# run first set of hooks
+# run first set of hooks - probably unnecessary re setupscript.
 &run_download_hooks(sort @{$hooks{'D'}}) if (defined $hooks{'D'});
 my $err = &native if (not defined ($foreign) and $unpack eq "true");
 if (defined $err and $err != 0) {
@@ -1012,6 +1036,9 @@ cleanup=true
 noauth=false
 # extract all downloaded archives (default is true)
 unpack=true
+# enable MultiArch for the specified architectures
+# default is empty
+multiarch=
 # aptsources is a list of sections to be used for downloading packages
 # and lists and placed in the /etc/apt/sources.list.d/multistrap.sources.list
 # of the target. Order is not important
@@ -1046,6 +1073,7 @@ will be created - it is not packed into a .tgz once complete.
 }
 
 sub cascade {
+	$olddpkg = &check_multiarch_dpkg;
 	$file = shift;
 	$config = Config::Auto::parse($file, format => 'ini');
 	if (not defined $config or (scalar keys %$config) == 0) {
@@ -1108,7 +1136,14 @@ sub cascade {
 					push (@{$hooks{'N'}}, $fl) if ($hf =~ /^native/);
 				}
 			}
-			my @d = split(' ', lc($keys{$section}{'debootstrap'}));
+			my @ma=();
+			if ($olddpkg != 0) {
+				@ma = split(' ',lc($keys{$section}{'multiarch'}))
+					if (defined $keys{$section}{'multiarch'});
+				}
+			push @foreignarches, @ma;
+			my @d=();
+			@d = split(' ', lc($keys{$section}{'debootstrap'}));
 			push @debootstrap, @d;
 			my @b = split(' ', lc($keys{$section}{'bootstrap'}))
 				if (defined $keys{$section}{'bootstrap'});
@@ -1138,10 +1173,32 @@ sub cascade {
 			# don't set suite or component if URL is of apt-ftparchive trailing-slash form
 			# regexp is: optional string in '[]', string without '[' or ']', string ending in '/'
 			$flatfile{$section}++ if (($sources{$section} =~ /^(\[.*\] )*[^\[\]]+ .+\/$/));
-			if (ref ($keys{$section}{'packages'}) eq 'ARRAY') {
-				$packages{$section}=join(' ', @{$keys{$section}{'packages'}}) if (not exists $packages{$section});
+			if (exists $keys{$section}{'architecture'}) {
+				my $frgn_arch = $keys{$section}{'architecture'};
+				my @tmp=();
+				if (ref ($keys{$section}{'packages'}) eq 'ARRAY') {
+					foreach my $p (@{$keys{$section}{'packages'}}) {
+						push @tmp, "$p:$frgn_arch";
+					}
+				} else {
+					foreach my $p (split(' ', $keys{$section}{'packages'})) {
+						push @tmp, "$p:$frgn_arch";
+					}
+				}
+				if ($olddpkg == 0) {
+					$packages{$section} = join(' ', @tmp);
+				} else {
+					my $dpkgmsg = sprintf (_g("ERR: Unsupportable option: 'architecture'. ".
+					"Current dpkg version does not support MultiArch. ".
+					"Packages for '%s' have been ignored.\n"), $section);
+					warn $dpkgmsg;
+				}
 			} else {
-				$packages{$section}=join(' ', $keys{$section}{'packages'}) if (not exists $packages{$section});
+				if (ref ($keys{$section}{'packages'}) eq 'ARRAY') {
+					$packages{$section}=join(' ', @{$keys{$section}{'packages'}}) if (not exists $packages{$section});
+				} else {
+					$packages{$section}=join(' ', $keys{$section}{'packages'}) if (not exists $packages{$section});
+				}
 			}
 			$suites{$section}=$keys{$section}{'suite'}
 				if (not exists $suites{$section} and not exists $flatfile{$section});
@@ -1168,6 +1225,39 @@ sub cascade {
 		$uniq{$x}++;
 	}
 	@extrapkgs = keys %uniq;
+}
+
+# returns zero on success, non-zero on fail
+sub check_multiarch_dpkg {
+	my $distro;
+	my $version;
+	my $retval = system ("which lsb_release >/dev/null");
+	$retval /= 256;
+	if ($retval == 1) {
+		# have to assume this is Debian, not Ubuntu
+		$distro = "debian";
+	} else {
+		$distro = lc(`lsb_release -is`);
+		chomp ($distro);
+	}
+	if ($distro eq "debian") {
+		$version = `dpkg -l dpkg|grep dpkg`;
+		chomp ($version);
+		$version =~ s/^ii[ ]+dpkg[ ]+([0-9\.]+)[ ]+.+$/$1/;
+		# fill in the version which gets this support in Debian
+		$retval = system("dpkg --compare-versions $version '>=' 1.20");
+		$retval /= 256;
+		return $retval;
+	} else {
+		# only Ubuntu explicitly supported here
+		# looking for >= 1.16.0~ubuntu4
+		$version = `dpkg -l dpkg|grep dpkg`;
+		chomp ($version);
+		$version =~ s/^ii[ ]+dpkg[ ]+([^ ]+)[ ]+.+$/$1/;
+		$retval = system("dpkg --compare-versions $version '>=' 1.16.0~ubuntu4");
+		$retval /= 256;
+		return $retval;
+	}
 }
 
 sub _g {
@@ -1272,9 +1362,15 @@ sub dump_config {
 	print "additional:\t\t$plural".join (", ", sort @extrapkgs)."\n" if (scalar @extrapkgs > 0);
 	print "reinstall:\t\t".join (", ", sort (@reinstall))."\n" if (scalar @reinstall > 0);
 	if (defined $arch and $arch ne "") {
-		printf ("arch:\t\t\t"._g("Architecture to download: %s\n"), $arch);
+		printf ("Architecture:\t\t"._g("Architecture to download: %s\n"), $arch);
 	} else {
 		$msg .= sprintf(_g("Cannot determine architecture from '%s'.\n"), $file);
+	}
+	if ($olddpkg != 0) {
+		printf "MultiArch:\t\t%s\n",_g("Currently installed dpkg does not support MultiArch.");
+	} else {
+		$plural = ngettext("Foreign architecture", "Foreign architectures", scalar @foreignarches);
+		printf ("MultiArch:\t\t%s: %s\n", $plural, join(" ", sort @foreignarches));
 	}
 	if (defined $dir and $dir ne "") {
 		printf ("dir:\t\t\t"._g("Output directory: '%s'\n"), $dir);

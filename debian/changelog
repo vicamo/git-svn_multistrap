@@ -1,8 +1,11 @@
 multistrap (2.1.16) unstable; urgency=low
 
   * Allow empty aptsources lines. (Closes: #633525)
+  * Add support for MultiArch configuration files and checks for a
+    suitable version of dpkg.
+  * Allow multiple keyring packages to be imported. (Closes: #635584)
 
- -- Neil Williams <codehelp@debian.org>  Mon, 11 Jul 2011 12:21:09 +0100
+ -- Neil Williams <codehelp@debian.org>  Fri, 29 Jul 2011 13:36:42 +0200
 
 multistrap (2.1.15) unstable; urgency=low
 

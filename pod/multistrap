@@ -67,6 +67,9 @@ Example configuration:
  # whether to add the /suite to be explicit about where apt
  # needs to look for packages. Default is false.
  explicitsuite=false
+ # enable MultiArch for the specified architectures
+ # default is empty
+ multiarch=
  # aptsources is a list of sections to be used
  # the /etc/apt/sources.list.d/multistrap.sources.list
  # of the target. Order is not important
@@ -674,5 +677,43 @@ people on the debian-embedded@lists.debian.org mailing list and
 #emdebian IRC channel on irc.oftc.net can also help if your config file
 does not parse correctly. You would need to put the C<--simulate> output
 on a pastebin website and put the URL in your message.
+
+=head1 MultiArch support
+
+To enable multiarch inside a chroot, there is no need to set the second
+architecture in C<apt>, C<apt> will ask C<dpkg> which will look in
+F</etc/dpkg/dpkg.cfg> or F</etc/dpkg/dpkg.cfg.d/> and then retrieve the
+Packages data for each architecture specified using the option:
+
+ foreign-architecture armel
+
+For multiple architectures, specify the option once for each
+architecture.
+
+Using the MultiArch option in the C<General> section of your C<multistrap>
+configuration file will create a file F</etc/dpkg/dpkg.cfg.d/multiarch>
+which will implement this support. This option can be repeated (for
+compatibility with how dpkg works) or as a space-delimited list of
+architectures on a single line.
+
+See also http://wiki.debian.org/Multiarch/
+
+ [General]
+ ...
+ MultiArch=armel armhf
+
+Each Section will install packages from the base architecture unless
+the C<Architecture> option is specified for particular sections.
+
+ [Foreign]
+ packages=libgcc1 libc6
+ architecture=armel
+ source=http://ftp.uk.debian.org/debian
+ keyring=debian-archive-keyring
+ suite=sid
+
+In the C<--simulate> output, the architecture(s) specified in the
+MultiArch option will be listed under the "Foreign architectures"
+listing.
 
 =cut

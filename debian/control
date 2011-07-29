@@ -13,7 +13,7 @@ Vcs-Svn: http://www.emdebian.org/svn/current/host/trunk/multistrap/trunk/
 Package: multistrap
 Section: admin
 Architecture: all
-Depends: ${perl:Depends}, ${misc:Depends}, apt,
+Depends: ${perl:Depends}, ${misc:Depends}, apt (>= 0.8.15.2),
  libconfig-auto-perl, libparse-debian-packages-perl
 Recommends: emdebian-archive-keyring
 Suggests: fakeroot
@@ -32,7 +32,9 @@ Description: multiple repository bootstrap based on apt
  packages have been unpacked but before being configured.
  .
  Unlike debootstrap, multistrap relies on working versions of
- dpkg and apt outside the final filesystem.
+ dpkg and apt outside the final filesystem. If dpkg supports
+ MultiArch, foreign architecture libraries can be installed,
+ where available.
  .
  Multistrap supercedes emdebian-rootfs and replaces the previous
  support for preparing root filesystems for specific machines and
