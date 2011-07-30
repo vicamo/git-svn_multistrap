@@ -1135,7 +1135,7 @@ sub cascade {
 				}
 			}
 			my @ma=();
-			if ($olddpkg != 0) {
+			if ($olddpkg == 0) {
 				@ma = split(' ',lc($keys{$section}{'multiarch'}))
 					if (defined $keys{$section}{'multiarch'});
 				}
@@ -1240,20 +1240,20 @@ sub check_multiarch_dpkg {
 		chomp ($distro);
 	}
 	if ($distro eq "debian") {
-		$version = `dpkg -l dpkg|grep dpkg`;
+		$version = `dpkg -s dpkg|grep Version`;
 		chomp ($version);
-		$version =~ s/^ii[ ]+dpkg[ ]+([0-9\.]+)[ ]+.+$/$1/;
+		$version =~ s/^Version: //;
 		# fill in the version which gets this support in Debian
-		$retval = system("dpkg --compare-versions $version '>=' 1.20");
+		$retval = system("dpkg --compare-versions $version '>=' 1.16.1multiarch1");
 		$retval /= 256;
 		# returns 1 for Debian.
 		return $retval;
 	} else {
 		# only Ubuntu explicitly supported here
 		# looking for >= 1.16.0~ubuntu4
-		$version = `dpkg -l dpkg|grep dpkg`;
+		$version = `dpkg -s dpkg|grep Version`;
 		chomp ($version);
-		$version =~ s/^ii[ ]+dpkg[ ]+([^ ]+)[ ]+.+$/$1/;
+		$version =~ s/^Version: //;
 		$retval = system("dpkg --compare-versions $version '>=' 1.16.0~ubuntu4");
 		$retval /= 256;
 		return $retval;
