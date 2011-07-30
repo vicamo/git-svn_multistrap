@@ -6,8 +6,9 @@ multistrap (2.1.16) unstable; urgency=low
   * Allow multiple keyring packages to be imported. (Closes: #635584)
   * Add support for shortcuts to use configuration files in known
     locations like /usr/share/multistrap and /etc/multistrap.d/
+  * Package an example of multiarch support.
 
- -- Neil Williams <codehelp@debian.org>  Sat, 30 Jul 2011 09:38:38 +0200
+ -- Neil Williams <codehelp@debian.org>  Sat, 30 Jul 2011 11:06:47 +0200
 
 multistrap (2.1.15) unstable; urgency=low
 

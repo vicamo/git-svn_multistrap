@@ -2,6 +2,7 @@ multistrap ./usr/sbin/
 doc/multistrap/man/* ./usr/share/man/
 examples/device_table.txt ./usr/share/doc/multistrap/examples/
 examples/multistrap-example.conf ./usr/share/doc/multistrap/examples/
+examples/multiarch.conf ./usr/share/doc/multistrap/examples/
 examples/setup.sh ./usr/share/doc/multistrap/examples/
 examples/config.sh ./usr/share/doc/multistrap/examples/
 examples/sid.conf ./usr/share/multistrap/
