@@ -52,7 +52,7 @@ while( @ARGV ) {
 		unshift(@ARGV,$_);
 		last;
 	} elsif (/^(-\?|-h|--help|--version)$/) {
-	&usageversion();
+		&usageversion();
 		exit( 0 );
 	} elsif (/^(-s|--shortcut)$/) {
 		$use_shortcut = shift(@ARGV);
@@ -79,13 +79,9 @@ while( @ARGV ) {
 }
 if (defined $use_shortcut) {
 	my $short = "/usr/share/multistrap/".$use_shortcut.".conf";
-	if (-f $short) {
-		$file = $short;
-	}
+	$file = $short if (-f $short);
 	$short = "/etc/multistrap.d/".$use_shortcut.".conf";
-	if (-f $short) {
-		$file = $short;
-	}
+	$file = $short if (-f $short);
 }
 $msg = sprintf (_g("Need a configuration file - use %s -f\n"), $progname);
 die ($msg)
@@ -116,6 +112,7 @@ if (defined $omitrequired and defined $addimportant) {
 	if (defined $dryrun) {
 		warn("\n");
 		&dump_config;
+		exit 0;
 	}
 	exit (7);
 }
@@ -129,8 +126,10 @@ foreach my $line (@aptsources) {
 	$uniq{$line}++;
 }
 @aptsources=sort keys %uniq;
-
-&dump_config if (defined $dryrun);
+if (defined $dryrun) {
+	&dump_config;
+	exit 0;
+}
 if (not defined $dir or not defined $arch) {
 	&dump_config;
 	exit 3;
@@ -165,33 +164,27 @@ if ($dir =~ /^$/) {
 	my $msg = _g("No directory specified!");
 	die "$progname: $msg\n";
 }
-if (not -d "$dir") {
-	my $ret = system ("mkdir -p $dir");
-	$ret /= 256 if (defined $ret);
-	my $msg = sprintf (_g("Unable to create directory '%s'"),$dir);
-	die "$progname: $msg\n" if ($ret != 0);
-}
+&mkdir_fatal ($dir);
 $dir = realpath ($dir);
 $dir .= ($dir =~ m:/$:) ? '' : "/";
-# add a do_it wrapper to check the retval of system
-system ("mkdir -p ${dir}${cachedir}") if (not -d "${dir}${cachedir}");
-system ("mkdir -p ${dir}${libdir}") if (not -d "${dir}${libdir}");
-system ("mkdir -p ${dir}${dpkgdir}") if (not -d "${dir}${dpkgdir}");
-system ("mkdir -p ${dir}etc/apt/sources.list.d/")
+system_fatal ("mkdir -p ${dir}${cachedir}") if (not -d "${dir}${cachedir}");
+system_fatal ("mkdir -p ${dir}${libdir}") if (not -d "${dir}${libdir}");
+system_fatal ("mkdir -p ${dir}${dpkgdir}") if (not -d "${dir}${dpkgdir}");
+system_fatal ("mkdir -p ${dir}etc/apt/sources.list.d/")
 	if (not -d "${dir}etc/apt/sources.list.d/");
-system ("mkdir -p ${dir}etc/apt/trusted.gpg.d/")
+system_fatal ("mkdir -p ${dir}etc/apt/trusted.gpg.d/")
 	if (not -d "${dir}etc/apt/trusted.gpg.d/");
-system ("mkdir -p ${dir}etc/apt/preferences.d/")
+system_fatal ("mkdir -p ${dir}etc/apt/preferences.d/")
 	if (not -d "${dir}etc/apt/preferences.d/");
-system ("mkdir -p ${dir}usr/share/info/")
+system_fatal ("mkdir -p ${dir}usr/share/info/")
 	if (not -d "${dir}usr/share/info/");
-system ("touch ${dir}usr/share/info/dir");
+system_fatal ("touch ${dir}usr/share/info/dir");
 
 @dirs = qw/ alternatives info parts updates/;
 @touch = qw/ diversions statoverride status lock/;
 foreach my $dpkgd (@dirs) {
 	if (not -d "${dir}${dpkgdir}$dpkgd") {
-		mkdir "${dir}${dpkgdir}$dpkgd";
+		mkdir_fatal ("${dir}${dpkgdir}$dpkgd");
 	}
 }
 foreach my $file (@touch) {
@@ -202,15 +195,15 @@ utime(time, time, "${dir}etc/shells") or
 	(open(F, ">${dir}etc/shells") && close F );
 
 if (not -d "${dir}etc/network") {
-	mkdir "${dir}etc/network";
+	mkdir_fatal ("${dir}etc/network");
 }
 
 if (not -d "${dir}dev") {
-	mkdir "${dir}dev";
+	mkdir_fatal ("${dir}dev");
 }
-if ($olddpkg != 0) {
+if ($olddpkg == 0) {
 	if (not -d "${dir}etc/dpkg/dpkg.cfg.d/") {
-		system ("mkdir -p ${dir}etc/dpkg/dpkg.cfg.d/");
+		system_fatal ("mkdir -p ${dir}etc/dpkg/dpkg.cfg.d/");
 	}
 	if (not -f "${dir}etc/dpkg/dpkg.cfg.d/multiarch") {
 		open (MA, ">${dir}etc/dpkg/dpkg.cfg.d/multiarch");
@@ -220,28 +213,28 @@ if ($olddpkg != 0) {
 		close (MA);
 	}
 }
-die;
+
 &guard_lib64($dir);
 
-system ("rm -rf ${dir}etc/apt/sources.list.d/*");
+system_fatal ("rm -rf ${dir}etc/apt/sources.list.d/*");
 unlink ("${dir}etc/apt/sources.list")
 	if (-f "${dir}etc/apt/sources.list");
 
 foreach $repo (sort keys %suites) {
 	if (not -e "${dir}${cachedir}") {
-		mkdir "${dir}${cachedir}";
+		mkdir_fatal ("${dir}${cachedir}");
 	}
 	if (not -e "$dir/${libdir}lists") {
-		mkdir "$dir/${libdir}lists";
+		mkdir_fatal ("$dir/${libdir}lists");
 	}
 	if (not -e "$dir/${libdir}lists/partial") {
-		mkdir "$dir/${libdir}lists/partial";
+		mkdir_fatal ("$dir/${libdir}lists/partial");
 	}
 	if (not -e "$dir/${cachedir}archives") {
-		mkdir "$dir/${cachedir}archives";
+		mkdir_fatal ("$dir/${cachedir}archives");
 	}
 	if (not -e "$dir/${cachedir}archives/partial") {
-		mkdir "$dir/${cachedir}archives/partial";
+		mkdir_fatal ("$dir/${cachedir}archives/partial");
 	}
 }
 foreach my $aptsrc (@debootstrap) {
@@ -309,18 +302,23 @@ if ((defined $k) and (not defined $noauth)) {
 			$retval = system ("gpg --no-default-keyring ".
 				"--homedir=${dir}/etc/apt/trusted.gpg.d/ ".
 				"--keyring=multistrap.gpg ".
-				" --import ${xdir}/usr/share/keyrings/${gpg}");
+				" --import ${xdir}/usr/share/keyrings/${gpg} 2>/dev/null");
 			$retval /= 256;
 			die (_g("Secure Apt handling failed - try without authentication."))
 				if ($retval != 0);
 		}
+		if (-f "${dir}/etc/apt/trusted.gpg.d/multistrap.gpg") {
+			system_fatal ("cp ${dir}/etc/apt/trusted.gpg.d/multistrap.gpg ${dir}/etc/apt/trusted.gpg.d/trustdb.gpg"); 
+		} else { 
+			die (_g("Secure Apt handling failed - try without authentication.")); 
+		} 
 		system ("rm -rf ${xdir}");
 	}
 }
 $config_str = '';
 $config_str .= " -o Apt::Architecture=$arch";
 $config_str .= " -o Dir::Etc::TrustedParts=${dir}${etcdir}trusted.gpg.d";
-$config_str .= " -o Dir::Etc::Trusted=${dir}${etcdir}trusted.gpg";
+$config_str .= " -o Dir::Etc::Trusted=${dir}${etcdir}trusted.gpg.d/trusted.gpg";
 $config_str .= " -o Apt::Get::AllowUnauthenticated=true"
 	if (defined $noauth);
 $config_str .= " -o Apt::Get::Download-Only=true";
@@ -578,7 +576,7 @@ sub force_unpack {
 		$src =~ s/ \(.*\)//;
 		$src = $pkg if ($src eq "");
 		push @dsclist, $src;
-		mkdir ("./tmp");
+		mkdir_fatal ("./tmp");
 		my $tmpdir = `mktemp -p ./tmp -d -t multistrap.XXXXXX`;
 		chomp ($tmpdir);
 		my $datatar = `LC_ALL=C dpkg -X ./${cachedir}archives/$deb ${dir}`;
@@ -646,7 +644,7 @@ sub force_unpack {
 		close (SEED);
 		my $sfile = basename($seed);
 		printf (_g("I: Copying debconf preseed data to %s.\n"), $sfile);
-		mkdir ("${dir}/tmp/preseeds");
+		mkdir_fatal ("${dir}/tmp/preseeds");
 		open (SEED, ">${dir}tmp/preseeds/$sfile");
 		print SEED @s;
 		close (SEED);
@@ -736,7 +734,7 @@ sub guard_lib64 {
 		chdir ("$dir");
 		if ($host eq 'i386' and $arch eq 'amd64') {
 			printf (_g("I: Replaced ./lib64 -> /lib symbolic link with new %slib64 directory.\n"), $dir);
-			mkdir ("${dir}lib64");
+			mkdir_fatal ("${dir}lib64");
 		} else {
 			printf (_g("I: Setting %slib64 -> %slib symbolic link.\n"), $dir, $dir);
 			symlink "./lib", "lib64";
@@ -1192,6 +1190,7 @@ sub cascade {
 					"Current dpkg version does not support MultiArch. ".
 					"Packages for '%s' have been ignored.\n"), $section);
 					warn $dpkgmsg;
+					$warn_count++;
 				}
 			} else {
 				if (ref ($keys{$section}{'packages'}) eq 'ARRAY') {
@@ -1247,6 +1246,7 @@ sub check_multiarch_dpkg {
 		# fill in the version which gets this support in Debian
 		$retval = system("dpkg --compare-versions $version '>=' 1.20");
 		$retval /= 256;
+		# returns 1 for Debian.
 		return $retval;
 	} else {
 		# only Ubuntu explicitly supported here
@@ -1257,6 +1257,26 @@ sub check_multiarch_dpkg {
 		$retval = system("dpkg --compare-versions $version '>=' 1.16.0~ubuntu4");
 		$retval /= 256;
 		return $retval;
+	}
+}
+
+sub system_fatal {
+	my $cmd = shift;
+	my $retval = system ("$cmd");
+	my $err = $!;
+	$retval /= 256;
+	return if ($retval == 0);
+	my $msg = sprintf(_g("ERR: system call failed: '%s' %s"), $cmd, $err);
+	die ("$msg\n");
+}
+
+sub mkdir_fatal {
+	my $d = shift;
+	if (not -d "$d") {
+		my $ret = system ("mkdir -p $d");
+		$ret /= 256 if (defined $ret);
+		my $msg = sprintf (_g("Unable to create directory '%s'"),$d);
+		die "$progname: $msg\n" if ($ret != 0);
 	}
 }
 
@@ -1415,5 +1435,4 @@ sub dump_config {
 		warn ("\n$msg\n");
 		exit 1;
 	}
-	exit 0;
 }

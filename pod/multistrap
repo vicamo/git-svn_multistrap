@@ -27,6 +27,8 @@ bare summary.
 
 -f|--file - configuration file for multistrap [required]
 
+-s|--shortcut - shortened version of -f for files in known locations.
+
 --tidy-up - remove apt cache data, downloaded Packages files and
 the apt package cache. Same as cleanup=true.
 
@@ -50,6 +52,9 @@ extra packages and the mirror to use for each bootstrap.
 The aim is to create a complete bootstrap / root filesystem with
 all packages installed and configured, instead of just the base
 system.
+
+In most cases, users will need to create a configuration file for
+each different multistrap usage.
 
 Example configuration:
 
@@ -114,6 +119,22 @@ more information on getting specific packages from specific suites.
 
 'Architecture' and 'directory' can be overridden on the command line.
 Some other general options also have command line options.
+
+=head1 Shortcuts
+
+In a similar manner to C<debootstrap>, C<multistrap> supports referring
+to configuration files in known locations by shortcuts. When using the
+C<--shortcut> option, C<multistrap> will look for files in
+F</usr/share/multistrap> and then F</etc/multistrap.d/>, appending a
+'.conf' suffix to the specified shortcut.
+
+These two commands are equivalent:
+
+ $ sudo multistrap -s sid
+ $ sudo multistrap -f /usr/share/multistrap/sid.conf
+ 
+Note that C<multistrap> will still fail if the configuration file
+itself does not set the directory or the architecture.
 
 =head1 Repositories
 
