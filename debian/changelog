@@ -7,8 +7,10 @@ multistrap (2.1.16) unstable; urgency=low
   * Add support for shortcuts to use configuration files in known
     locations like /usr/share/multistrap and /etc/multistrap.d/
   * Package an example of multiarch support.
+  * Simplify the test for a multiarch-aware dpkg, thanks to Steve
+    Langasek.
 
- -- Neil Williams <codehelp@debian.org>  Sat, 30 Jul 2011 11:06:47 +0200
+ -- Neil Williams <codehelp@debian.org>  Wed, 10 Aug 2011 21:35:22 +0100
 
 multistrap (2.1.15) unstable; urgency=low
 

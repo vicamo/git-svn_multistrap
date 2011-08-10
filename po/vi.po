@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: multistrap 2.1.7\n"
 "Report-Msgid-Bugs-To: multistrap@packages.debian.org\n"
-"POT-Creation-Date: 2011-07-29 15:12+0200\n"
+"POT-Creation-Date: 2011-08-10 21:35+0100\n"
 "PO-Revision-Date: 2010-09-29 19:59+0930\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
@@ -21,41 +21,41 @@ msgstr ""
 msgid "Unknown option"
 msgstr "Không rõ tuỳ chọn"
 
-#: ../multistrap:90
+#: ../multistrap:86
 #, perl-format
 msgid "Need a configuration file - use %s -f\n"
 msgstr "Yêu cầu một tập tin cấu hình: dùng « %s -f »\n"
 
 #. Translators: fields are programname, version string, include file.
 #. Translators: fields are: programname, versionstring, configfile.
-#: ../multistrap:103 ../multistrap:140
+#: ../multistrap:99 ../multistrap:139
 #, perl-format
 msgid "%s %s using %s\n"
 msgstr "%s %s dùng %s\n"
 
-#: ../multistrap:109
+#: ../multistrap:105
 msgid ""
 "Error: Cannot set 'add Priority: important' when packages of 'Priority: "
 "required' are being omitted.\n"
 msgstr ""
 
-#: ../multistrap:112
+#: ../multistrap:108
 #, fuzzy
 msgid "Please also check the included configuration file:"
 msgid_plural "Please also check the included configuration files:"
 msgstr[0] "Không bao gồm tập tin cấu hình nào.\n"
 
-#: ../multistrap:145 ../multistrap:147
+#: ../multistrap:144 ../multistrap:146
 #, perl-format
 msgid "Defaulting architecture to native: %s\n"
 msgstr "Mặc định là sử dụng kiến trúc sở hữu : %s\n"
 
-#: ../multistrap:149
+#: ../multistrap:148
 #, perl-format
 msgid "Using foreign architecture: %s\n"
 msgstr "Dùng kiến trúc ngoài: %s\n"
 
-#: ../multistrap:153
+#: ../multistrap:152
 #, perl-format
 msgid ""
 "No sources defined for a foreign multistrap.\n"
@@ -68,78 +68,73 @@ msgstr ""
 "\tdùng cú pháp « aptsources= »."
 
 #. Translators: fields are: programname, architecture, host architecture.
-#: ../multistrap:163
+#: ../multistrap:162
 #, perl-format
 msgid "%s building %s multistrap on '%s'\n"
 msgstr "%s đang xây dựng multistrap %s trên « %s »\n"
 
-#: ../multistrap:165
+#: ../multistrap:164
 msgid "No directory specified!"
 msgstr ""
 
-#: ../multistrap:171
-#, perl-format
-msgid "Unable to create directory '%s'"
-msgstr "Không thể tạo thư mục « %s »"
-
-#: ../multistrap:250 ../multistrap:255 ../multistrap:424 ../multistrap:429
+#: ../multistrap:243 ../multistrap:248 ../multistrap:422 ../multistrap:427
 msgid "Cannot open sources list"
 msgstr "Không mở được danh sách nguồn"
 
-#: ../multistrap:288
+#: ../multistrap:281
 #, perl-format
 msgid "I: Installing %s\n"
 msgstr "TIN: Đang cài đặt %s\n"
 
-#: ../multistrap:296
+#: ../multistrap:289
 #, perl-format
 msgid "Unable to download keyring package: '%s'"
 msgstr ""
 
-#: ../multistrap:314
+#: ../multistrap:307 ../multistrap:313
 msgid "Secure Apt handling failed - try without authentication."
 msgstr ""
 
 # « apt-get » và « update » thuộc về một câu lệnh nghĩa chữ
-#: ../multistrap:337
+#: ../multistrap:335
 #, perl-format
 msgid "Getting package lists: apt-get %s update\n"
 msgstr "Đang lấy các danh sách gói: apt-get %s update\n"
 
-#: ../multistrap:339
+#: ../multistrap:337
 #, perl-format
 msgid "apt update failed. Exit value: %d\n"
 msgstr "Tiến trình « apt update » (cập nhật) bị lỗi. Giá trị thoát: %d\n"
 
-#: ../multistrap:344
+#: ../multistrap:342
 msgid "I: Calculating required packages.\n"
 msgstr "TIN: Đang tính các gói yêu cầu.\n"
 
-#: ../multistrap:349
+#: ../multistrap:347
 #, perl-format
 msgid "I: Adding 'Priority: important': %s\n"
 msgstr ""
 
-#: ../multistrap:385
+#: ../multistrap:383
 #, perl-format
 msgid "apt download failed. Exit value: %d\n"
 msgstr "Tiến trình « apt download » (tải về) bị lỗi. Giá trị thoát: %d\n"
 
-#: ../multistrap:393
+#: ../multistrap:391
 #, perl-format
 msgid "setupscript '%s' returned %d.\n"
 msgstr ""
 
-#: ../multistrap:401
+#: ../multistrap:399
 #, fuzzy
 msgid "Native mode configuration reported an error!\n"
 msgstr "TIN: Chế độ sở hữu — cấu hình các gói chưa mở . . .\n"
 
-#: ../multistrap:414
+#: ../multistrap:412
 msgid "Cannot read apt sources list directory.\n"
 msgstr "Không đọc được thư mục danh sách nguồn apt.\n"
 
-#: ../multistrap:446
+#: ../multistrap:444
 #, perl-format
 msgid ""
 "\n"
@@ -149,7 +144,7 @@ msgstr ""
 "Hệ thống multistrap đã được cài đặt thành công vào %s.\n"
 "\n"
 
-#: ../multistrap:448
+#: ../multistrap:446
 #, fuzzy, perl-format
 msgid ""
 "\n"
@@ -162,7 +157,7 @@ msgstr[0] ""
 "Hệ thống multistrap đã được cài đặt thành công vào %s.\n"
 "\n"
 
-#: ../multistrap:454
+#: ../multistrap:452
 #, perl-format
 msgid ""
 "\n"
@@ -171,7 +166,7 @@ msgstr ""
 "\n"
 "Đang nén hệ thống multistrap trong « %s » thành một kho lưu tên: « %s ».\n"
 
-#: ../multistrap:460
+#: ../multistrap:458
 #, perl-format
 msgid ""
 "\n"
@@ -180,7 +175,7 @@ msgstr ""
 "\n"
 "Đang gỡ bỏ thư mục xây dựng: « %s »\n"
 
-#: ../multistrap:465
+#: ../multistrap:463
 #, perl-format
 msgid ""
 "\n"
@@ -190,7 +185,7 @@ msgstr ""
 "Hệ thống multistrap đã được đóng gói thành công thành « %s ».\n"
 "\n"
 
-#: ../multistrap:467
+#: ../multistrap:465
 #, fuzzy, perl-format
 msgid ""
 "\n"
@@ -200,30 +195,30 @@ msgstr ""
 "Hệ thống multistrap đã được đóng gói thành công thành « %s ».\n"
 "\n"
 
-#: ../multistrap:500 ../multistrap:541 ../multistrap:784 ../multistrap:846
+#: ../multistrap:498 ../multistrap:539 ../multistrap:782 ../multistrap:844
 msgid "Cannot read apt archives directory.\n"
 msgstr "Không đọc được thư mục kho lưu apt.\n"
 
-#: ../multistrap:513
+#: ../multistrap:511
 msgid "I: Calculating obsolete packages\n"
 msgstr "TIN: Đang tính các gói cũ\n"
 
-#: ../multistrap:527 ../multistrap:531
+#: ../multistrap:525 ../multistrap:529
 #, perl-format
 msgid "I: Removing %s\n"
 msgstr "TIN: Đang gỡ bỏ %s\n"
 
-#: ../multistrap:548
+#: ../multistrap:546
 #, perl-format
 msgid "Using directory %s for unpacking operations\n"
 msgstr "Đang sử dụng thư mục %s cho thao tác giải nén\n"
 
-#: ../multistrap:550
+#: ../multistrap:548
 #, perl-format
 msgid "I: Extracting %s...\n"
 msgstr "TIN: Đang giải nén %s...\n"
 
-#: ../multistrap:567
+#: ../multistrap:565
 #, perl-format
 msgid ""
 "Warning: invalid value '%s' for Multi-Arch field in Architecture: all "
@@ -231,14 +226,14 @@ msgid ""
 msgstr ""
 
 #. Translators: Please do not translate 'same', 'foreign' or 'allowed'
-#: ../multistrap:573
+#: ../multistrap:571
 #, perl-format
 msgid ""
 "Warning: unrecognised value '%s' for Multi-Arch field in %s. (Expecting "
 "'same', 'foreign' or 'allowed'.)"
 msgstr ""
 
-#: ../multistrap:588
+#: ../multistrap:586
 #, perl-format
 msgid ""
 "dpkg -X failed with error code %s\n"
@@ -247,127 +242,127 @@ msgstr ""
 "« dpkg -X » bị lỗi với mã lỗi %s\n"
 "Đang bỏ qua...\n"
 
-#: ../multistrap:624
+#: ../multistrap:622
 #, perl-format
 msgid " -> Processing conffiles for %s\n"
 msgstr " -> Đang xử lý các tập tin cấu hình cho %s\n"
 
-#: ../multistrap:641
+#: ../multistrap:639
 msgid "I: Unpacking complete.\n"
 msgstr "TIN: Hoàn tất mở gói.\n"
 
-#: ../multistrap:648
+#: ../multistrap:646
 #, perl-format
 msgid "I: Copying debconf preseed data to %s.\n"
 msgstr ""
 
 #. Translators: the plural is followed by a single repeat for each
-#: ../multistrap:660
+#: ../multistrap:658
 #, perl-format
 msgid "I: Running %d post-download hook\n"
 msgid_plural "I: Running %d post-download hooks\n"
 msgstr[0] ""
 
 #. Translators: this is a single instance, naming the hook
-#: ../multistrap:664
+#: ../multistrap:662
 #, perl-format
 msgid "I: Running post-download hook: '%s'\n"
 msgstr ""
 
-#: ../multistrap:667
+#: ../multistrap:665
 #, perl-format
 msgid "I: post-download hook '%s' reported an error: %d\n"
 msgstr ""
 
 #. Translators: the plural is followed by a single repeat for each
-#: ../multistrap:677
+#: ../multistrap:675
 #, perl-format
 msgid "I: Starting %d native hook\n"
 msgid_plural "I: Starting %d native hooks\n"
 msgstr[0] ""
 
 #. Translators: this is a single instance, naming the hook
-#: ../multistrap:681
+#: ../multistrap:679
 #, perl-format
 msgid "I: Starting native hook: '%s'\n"
 msgstr ""
 
 #. Translators: the plural is followed by a single repeat for each
-#: ../multistrap:693
+#: ../multistrap:691
 #, perl-format
 msgid "I: Stopping %d native hook\n"
 msgid_plural "I: Stopping %d native hooks\n"
 msgstr[0] ""
 
 #. Translators: this is a single instance, naming the hook
-#: ../multistrap:697
+#: ../multistrap:695
 #, perl-format
 msgid "I: Stopping native hook: '%s'\n"
 msgstr ""
 
 #. Translators: the plural is followed by a single repeat for each
-#: ../multistrap:709
+#: ../multistrap:707
 #, perl-format
 msgid "I: Running %d post-configuration hook\n"
 msgid_plural "I: Running %d post-configuration hooks\n"
 msgstr[0] ""
 
 #. Translators: this is a single instance, naming the hook
-#: ../multistrap:713
+#: ../multistrap:711
 #, perl-format
 msgid "I: Running post-configuration hook: '%s'\n"
 msgstr ""
 
-#: ../multistrap:732
+#: ../multistrap:730
 #, fuzzy, perl-format
 msgid "I: Unlinking unsafe %slib64 -> /lib symbolic link.\n"
 msgstr "TIN: Đang đặt liên kết tượng trưng « ./lib64 » -> « ./lib ».\n"
 
-#: ../multistrap:738
+#: ../multistrap:736
 #, fuzzy, perl-format
 msgid "I: Replaced ./lib64 -> /lib symbolic link with new %slib64 directory.\n"
 msgstr ""
 "INF: ./lib64 -> liên kết tượng trưng « /lib » được đặt lại thành « ./lib ».\n"
 
-#: ../multistrap:741
+#: ../multistrap:739
 #, fuzzy, perl-format
 msgid "I: Setting %slib64 -> %slib symbolic link.\n"
 msgstr "TIN: Đang đặt liên kết tượng trưng « ./lib64 » -> « ./lib ».\n"
 
-#: ../multistrap:759
+#: ../multistrap:757
 #, fuzzy
 msgid "I: ./bin/sh symbolic link does not exist.\n"
 msgstr "LỖI: Liên kết tượng trưng « ./bin/sh » không tồn tại.\n"
 
-#: ../multistrap:761
+#: ../multistrap:759
 #, fuzzy
 msgid "I: Setting ./bin/sh -> ./bin/dash\n"
 msgstr "TIN: Đang đặt liên kết tượng trưng « ./bin/sh -> ./bin/dash »\n"
 
-#: ../multistrap:766
+#: ../multistrap:764
 #, fuzzy
 msgid "I: ./bin/dash not found. Setting ./bin/sh -> ./bin/bash\n"
 msgstr ""
 "TIN: Không tìm thấy « ./bin/dash ». Đang đặt « ./bin/sh -> ./bin/bash »\n"
 
-#: ../multistrap:773
+#: ../multistrap:771
 #, perl-format
 msgid "I: Shell found OK in %s:\n"
 msgstr ""
 
-#: ../multistrap:843
+#: ../multistrap:841
 msgid "I: Tidying up apt cache and list data.\n"
 msgstr "TIN: Đang làm sạch vùng nhớ tạm và dữ liệu danh sách của apt.\n"
 
-#: ../multistrap:863
+#: ../multistrap:861
 msgid "Cannot read apt lists directory.\n"
 msgstr "Không đọc được thư mục danh sách apt.\n"
 
-#: ../multistrap:871
+#: ../multistrap:869
 msgid "Cannot read apt cache directory.\n"
 msgstr "Không đọc được thư mục nhớ tạm apt.\n"
 
-#: ../multistrap:887
+#: ../multistrap:885
 #, perl-format
 msgid ""
 "I: dpkg configuration settings:\n"
@@ -376,7 +371,7 @@ msgstr ""
 "TIN: Thiết lập cấu hình dpkg:\n"
 "\t%s\n"
 
-#: ../multistrap:889
+#: ../multistrap:887
 msgid ""
 "W: Cannot use 'chroot' when fakeroot is in use. Skipping package "
 "configuration.\n"
@@ -384,46 +379,46 @@ msgstr ""
 "CB: Không thể sử dụng « chroot » khi cũng dùng fakeroot. Vì thế đang bỏ qua "
 "bước cấu hình gói.\n"
 
-#: ../multistrap:892
+#: ../multistrap:890
 msgid "I: Native mode - configuring unpacked packages . . .\n"
 msgstr "TIN: Chế độ sở hữu — cấu hình các gói chưa mở . . .\n"
 
-#: ../multistrap:905
+#: ../multistrap:903
 #, perl-format
 msgid "I: Running debconf for seed file: %s\n"
 msgstr ""
 
-#: ../multistrap:914
+#: ../multistrap:912
 #, fuzzy
 msgid "I: Running preinst scripts with 'install' argument.\n"
 msgstr ""
 "TIN: Đang chạy các văn lệnh cài đặt sẵn với đối số « upgrade » (nâng cấp).\n"
 
-#: ../multistrap:928
+#: ../multistrap:926
 msgid "ERR: dpkg configure reported an error.\n"
 msgstr ""
 
-#: ../multistrap:946
+#: ../multistrap:944
 #, perl-format
 msgid "Cannot open %s directory. %s\n"
 msgstr "Không mở được thư mục %s. %s\n"
 
-#: ../multistrap:980
+#: ../multistrap:978
 #, perl-format
 msgid "cannot open apt sources list. %s"
 msgstr "không mở được danh sách nguồn apt. %s"
 
-#: ../multistrap:986
+#: ../multistrap:984
 #, perl-format
 msgid "cannot open apt sources.list directory %s\n"
 msgstr "không mở được thư mục danh sách nguồn « apt sources.list » %s\n"
 
-#: ../multistrap:991
+#: ../multistrap:989
 #, perl-format
 msgid "cannot open /etc/apt/sources.list.d/%s %s"
 msgstr "không mở được /etc/apt/sources.list.d/%s %s"
 
-#: ../multistrap:1003
+#: ../multistrap:1001
 #, fuzzy, perl-format
 msgid ""
 "\n"
@@ -567,188 +562,198 @@ msgstr ""
 "Nó không phải được đóng gói thành một .tgz một khi hoàn tất.\n"
 "\n"
 
-#: ../multistrap:1072
+#: ../multistrap:1070
 msgid "failed to write usage:"
 msgstr "lỗi ghi cách sử dụng:"
 
-#: ../multistrap:1080
+#: ../multistrap:1078
 #, perl-format
 msgid "Failed to parse '%s'!\n"
 msgstr ""
 
-#: ../multistrap:1166
+#: ../multistrap:1164
 #, perl-format
 msgid "ERR: Cannot find include file: '%s' for '%s'"
 msgstr ""
 
-#: ../multistrap:1191
+#: ../multistrap:1189
 #, perl-format
 msgid ""
 "ERR: Unsupportable option: 'architecture'. Current dpkg version does not "
 "support MultiArch. Packages for '%s' have been ignored.\n"
 msgstr ""
 
-#: ../multistrap:1269
+#: ../multistrap:1242
+#, perl-format
+msgid "ERR: system call failed: '%s' %s"
+msgstr ""
+
+#: ../multistrap:1251
+#, perl-format
+msgid "Unable to create directory '%s'"
+msgstr "Không thể tạo thư mục « %s »"
+
+#: ../multistrap:1262
 #, perl-format
 msgid "The supplied configuration file '%s' cannot be parsed correctly."
 msgstr "Không thể phân tích đúng tập tin cấu hình « %s » được cung cấp."
 
-#: ../multistrap:1283
+#: ../multistrap:1276
 #, perl-format
 msgid "ERR: The '%s' section is not defined.\n"
 msgstr "LỖI: chưa xác định phần « %s ».\n"
 
-#: ../multistrap:1287
+#: ../multistrap:1280
 #, fuzzy
 msgid "Including configuration file from:"
 msgid_plural "Including configuration files from:"
 msgstr[0] "Gồm có tập tin cấu hình từ : "
 
-#: ../multistrap:1291
+#: ../multistrap:1284
 msgid "No included configuration files.\n"
 msgstr "Không bao gồm tập tin cấu hình nào.\n"
 
-#: ../multistrap:1312
+#: ../multistrap:1305
 msgid "Not listed as a 'Bootstrap' section."
 msgstr ""
 
-#: ../multistrap:1319
+#: ../multistrap:1312
 msgid "Section to install"
 msgid_plural "Sections to install"
 msgstr[0] ""
 
-#: ../multistrap:1321
+#: ../multistrap:1314
 msgid "Section for updates"
 msgid_plural "Sections for updates"
 msgstr[0] ""
 
-#: ../multistrap:1328
+#: ../multistrap:1321
 msgid "Omit deb-src from sources.list for sections:"
 msgstr "Bỏ sót deb-src khỏi sources.list cho các phần:"
 
-#: ../multistrap:1330
+#: ../multistrap:1323
 msgid "None."
 msgstr ""
 
-#: ../multistrap:1338
+#: ../multistrap:1331
 msgid "Explicit suite selection: Yes\n"
 msgstr "Chọn dứt khoát bộ ứng dụng: Có\n"
 
-#: ../multistrap:1340
+#: ../multistrap:1333
 msgid "Explicit suite selection: No - let apt use latest.\n"
 msgstr "Chọn dứt khoát bộ ứng dụng: Không, cho phép apt dùng bộ mới nhất.\n"
 
-#: ../multistrap:1343
+#: ../multistrap:1336
 msgid "Recommended packages are added to the selection.\n"
 msgstr "Các gói khuyến khích được thêm vào vùng chọn.\n"
 
-#: ../multistrap:1345
+#: ../multistrap:1338
 msgid "Recommended packages are ignored.\n"
 msgstr "Các gói khuyến khích bị bỏ qua.\n"
 
-#: ../multistrap:1347
+#: ../multistrap:1340
 msgid "Debconf preseed file"
 msgid_plural "Debconf preseed files"
 msgstr[0] ""
 
-#: ../multistrap:1350
+#: ../multistrap:1343
 msgid "Download hook: "
 msgid_plural ""
 msgstr[0] ""
 
-#: ../multistrap:1354
+#: ../multistrap:1347
 msgid "Native hook: "
 msgid_plural ""
 msgstr[0] ""
 
-#: ../multistrap:1358
+#: ../multistrap:1351
 msgid "Completion hook: "
 msgid_plural ""
 msgstr[0] ""
 
-#: ../multistrap:1361
+#: ../multistrap:1354
 msgid "Extra Package: "
 msgid_plural "Extra Packages: "
 msgstr[0] ""
 
-#: ../multistrap:1365
+#: ../multistrap:1358
 #, fuzzy, perl-format
 msgid "Architecture to download: %s\n"
 msgstr "Kiến trúc: %s\n"
 
-#: ../multistrap:1367
+#: ../multistrap:1360
 #, perl-format
 msgid "Cannot determine architecture from '%s'.\n"
 msgstr "Không thể quyết định kiến trúc từ « %s ».\n"
 
-#: ../multistrap:1370
+#: ../multistrap:1363
 msgid "Currently installed dpkg does not support MultiArch."
 msgstr ""
 
-#: ../multistrap:1372
+#: ../multistrap:1365
 #, fuzzy
 msgid "Foreign architecture"
 msgid_plural "Foreign architectures"
 msgstr[0] "Dùng kiến trúc ngoài: %s\n"
 
-#: ../multistrap:1376
+#: ../multistrap:1369
 #, perl-format
 msgid "Output directory: '%s'\n"
 msgstr "Thư mục kết xuất: « %s »\n"
 
-#: ../multistrap:1378
+#: ../multistrap:1371
 #, perl-format
 msgid "Cannot determine directory from '%s'.\n"
 msgstr "Không thể quyết định thư mục từ « %s ».\n"
 
-#: ../multistrap:1381 ../multistrap:1383
+#: ../multistrap:1374 ../multistrap:1376
 #, perl-format
 msgid "extract all downloaded archives: %s\n"
 msgstr "giải nén mỗi kho nén được tải về: %s\n"
 
-#: ../multistrap:1386
+#: ../multistrap:1379
 msgid "Script to be run after unpacking"
 msgstr ""
 
-#: ../multistrap:1388
+#: ../multistrap:1381
 msgid "'Priority required' packages are not included."
 msgstr ""
 
-#: ../multistrap:1390
+#: ../multistrap:1383
 msgid "'Priority: required' packages are included."
 msgstr ""
 
-#: ../multistrap:1393
+#: ../multistrap:1386
 msgid "'Priority: important' packages are included.\n"
 msgstr ""
 
-#: ../multistrap:1395
+#: ../multistrap:1388
 #, fuzzy
 msgid "'Priority: important' packages are ignored.\n"
 msgstr "Các gói khuyến khích bị bỏ qua.\n"
 
-#: ../multistrap:1398
+#: ../multistrap:1391
 msgid "remove apt cache data: true\n"
 msgstr "gỡ bỏ dữ liệu nhớ tạm apt: đúng\n"
 
-#: ../multistrap:1400
+#: ../multistrap:1393
 msgid "remove apt cache data: false\n"
 msgstr "gỡ bỏ dữ liệu nhớ tạm apt: sai\n"
 
-#: ../multistrap:1403
+#: ../multistrap:1396
 msgid "allow the use of unauthenticated repositories: true\n"
 msgstr "cho phép sử dụng kho lưu trữ chưa xác thực: đúng\n"
 
-#: ../multistrap:1405
+#: ../multistrap:1398
 msgid "allow the use of unauthenticated repositories: false\n"
 msgstr "cho phép sử dụng kho lưu trữ chưa xác thực: sai\n"
 
-#: ../multistrap:1408
+#: ../multistrap:1401
 #, perl-format
 msgid "Sources will be retained in: %s\n"
 msgstr "Các nguồn sẽ được giữ lại trong: %s\n"
 
-#: ../multistrap:1411
+#: ../multistrap:1404
 #, perl-format
 msgid "Tarball name: '%s'\n"
 msgstr ""

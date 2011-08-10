@@ -1228,36 +1228,9 @@ sub cascade {
 
 # returns zero on success, non-zero on fail
 sub check_multiarch_dpkg {
-	my $distro;
-	my $version;
-	my $retval = system ("which lsb_release >/dev/null");
+	my $retval = system ("dpkg --print-foreign-architecture > /dev/null 2>&1");
 	$retval /= 256;
-	if ($retval == 1) {
-		# have to assume this is Debian, not Ubuntu
-		$distro = "debian";
-	} else {
-		$distro = lc(`lsb_release -is`);
-		chomp ($distro);
-	}
-	if ($distro eq "debian") {
-		$version = `dpkg -s dpkg|grep Version`;
-		chomp ($version);
-		$version =~ s/^Version: //;
-		# fill in the version which gets this support in Debian
-		$retval = system("dpkg --compare-versions $version '>=' 1.16.1multiarch1");
-		$retval /= 256;
-		# returns 1 for Debian.
-		return $retval;
-	} else {
-		# only Ubuntu explicitly supported here
-		# looking for >= 1.16.0~ubuntu4
-		$version = `dpkg -s dpkg|grep Version`;
-		chomp ($version);
-		$version =~ s/^Version: //;
-		$retval = system("dpkg --compare-versions $version '>=' 1.16.0~ubuntu4");
-		$retval /= 256;
-		return $retval;
-	}
+	return $retval;
 }
 
 sub system_fatal {
