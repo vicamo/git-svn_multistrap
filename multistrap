@@ -25,11 +25,11 @@ use Parse::Debian::Packages;
 use POSIX qw(locale_h);
 use Locale::gettext;
 
-use vars qw/ $progname $ourversion $dstrap $extra @aptsources $mirror
+use vars qw/ $progname $ourversion $dstrap $extra @aptsources
  @archives $deb $cachedir $config_str %packages $retval $str $retries
- $dir $include $arch $foreign $suite $url $unpack $sourcedir $msg $etcdir
+ $dir $include $arch $foreign $url $unpack $sourcedir $msg $etcdir
  @e $sourcesname $libdir $dpkgdir @debootstrap %suites %components $chk
- $component $repo @dirs @touch %sources $section %keys $host $key $value
+ $repo @dirs @touch %sources $section %keys $host $key $value
  $type $file $config $tidy $noauth $keyring %keyrings $deflist $cfgdir
  @extrapkgs @includes %source $setupsh $configsh $omitrequired $dryrun
  $omitpreinst @reinstall $tgzname %uniq %required $check @check %uniq
@@ -246,9 +246,9 @@ foreach my $aptsrc (@debootstrap) {
 	} elsif (-d "${dir}etc/apt/") {
 		open (SOURCES, ">>${dir}etc/apt/sources.list.d/multistrap-${aptsrc}.list") 
 			or die _g("Cannot open sources list"). $!;
-		$mirror = $sources{$aptsrc};
-		$suite = (exists $flatfile{$aptsrc}) ? "" : $suites{$aptsrc};
-		$component = (exists $flatfile{$aptsrc}) ? "" 
+		my $mirror = $sources{$aptsrc};
+		my $suite = (exists $flatfile{$aptsrc}) ? "" : $suites{$aptsrc};
+		my $component = (exists $flatfile{$aptsrc}) ? "" 
 			: (defined $components{$aptsrc}) ? $components{$aptsrc} : "main";
 		if (defined $mirror and defined $suite) {
 			print SOURCES "deb $mirror $suite $component\n";
@@ -425,9 +425,9 @@ foreach my $aptsrc (@aptsources) {
 	} elsif (-d "${dir}etc/apt/") {
 		open (SOURCES, ">>${dir}etc/apt/sources.list.d/multistrap-${aptsrc}.list") 
 			or die _g("Cannot open sources list"). $!;
-		$mirror = $sources{$aptsrc};
-		$suite = (exists $flatfile{$aptsrc}) ? "" : $suites{$aptsrc};
-		$component = (exists $flatfile{$aptsrc}) ? "" 
+		my $mirror = $sources{$aptsrc};
+		my $suite = (exists $flatfile{$aptsrc}) ? "" : $suites{$aptsrc};
+		my $component = (exists $flatfile{$aptsrc}) ? "" 
 			: (defined $components{$aptsrc}) ? $components{$aptsrc} : "main";
 		if (defined $mirror and defined $suite) {
 			print SOURCES "deb $mirror $suite $component\n";
