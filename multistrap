@@ -97,7 +97,8 @@ $cfgdir=dirname($file);
 cascade($file);
 # Translators: fields are programname, version string, include file.
 printf (_g("%s %s using %s\n"), $progname, $ourversion, $file);
-
+$host = `dpkg --print-architecture`;
+chomp($host);
 foreach my $inc (@includes) {
 	cascade($inc);
 }
@@ -137,8 +138,6 @@ if (not defined $dir or not defined $arch) {
 
 # Translators: fields are: programname, versionstring, configfile.
 printf (_g("%s %s using %s\n"), $progname, $ourversion, $file);
-$host = `dpkg --print-architecture`;
-chomp ($host);
 if ((not defined $arch) or ($arch eq "")) {
 	$arch = $host;
 	printf (_g("Defaulting architecture to native: %s\n"),$arch);
@@ -1358,7 +1357,7 @@ sub dump_config {
 	if (defined $arch and $arch ne "") {
 		printf ("Architecture:\t\t"._g("Architecture to download: %s\n"), $arch);
 	} else {
-		$msg .= sprintf(_g("Cannot determine architecture from '%s'.\n"), $file);
+		$msg .= sprintf(_g("Cannot determine architecture from '%s'. Using $host.\n"), $file);
 	}
 	if ($olddpkg != 0) {
 		printf "MultiArch:\t\t%s\n",_g("Currently installed dpkg does not support MultiArch.");
