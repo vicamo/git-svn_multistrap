@@ -307,13 +307,13 @@ if ((defined $k) and (not defined $noauth)) {
 			die (_g("Secure Apt handling failed - try without authentication."))
 				if ($retval != 0);
 		}
-		if (-f "${dir}/etc/apt/trusted.gpg.d/multistrap.gpg") {
-			system_fatal ("cp ${dir}/etc/apt/trusted.gpg.d/multistrap.gpg ${dir}/etc/apt/trusted.gpg.d/trustdb.gpg"); 
-		} else { 
-			die (_g("Secure Apt handling failed - try without authentication.")); 
-		} 
 		system ("rm -rf ${xdir}");
 	}
+	if (-f "${dir}/etc/apt/trusted.gpg.d/multistrap.gpg") {
+		system_fatal ("cp ${dir}/etc/apt/trusted.gpg.d/multistrap.gpg ${dir}/etc/apt/trusted.gpg.d/trustdb.gpg"); 
+	} else { 
+		die (_g("Secure Apt handling failed - try without authentication.")."\n"); 
+	} 
 }
 $config_str = '';
 $config_str .= " -o Apt::Architecture=$arch";
