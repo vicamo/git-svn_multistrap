@@ -1357,7 +1357,7 @@ sub dump_config {
 	if (defined $arch and $arch ne "") {
 		printf ("Architecture:\t\t"._g("Architecture to download: %s\n"), $arch);
 	} else {
-		$msg .= sprintf(_g("Cannot determine architecture from '%s'. Using $host.\n"), $file);
+		$msg .= sprintf(_g("Cannot determine architecture from '%s'. Using %s.\n"), $file, $host);
 	}
 	if ($olddpkg != 0) {
 		printf "MultiArch:\t\t%s\n",_g("Currently installed dpkg does not support MultiArch.");
