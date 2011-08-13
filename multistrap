@@ -324,7 +324,7 @@ $config_str .= " -o Apt::Get::AllowUnauthenticated=true"
 $config_str .= " -o Apt::Get::Download-Only=true";
 $config_str .= " -o Apt::Install-Recommends=false";
 $config_str .= " -o Dir=$dir";
-$config_str .= " -o Dir::Etc=${dir}${etcdir}";
+$config_str .= " -o Dir::Etc=${dir}${etcdir} -o APT::Default-Release=*";
 if (defined $deflist) {
 	$sourcesname = "sources.list.d/multistrap.sources.list";
 	$config_str .= " -o Dir::Etc::SourceList=${dir}${etcdir}$sourcesname";
@@ -1141,7 +1141,8 @@ sub cascade {
 				}
 			push @foreignarches, @ma;
 			my @d=();
-			@d = split(' ', lc($keys{$section}{'debootstrap'}));
+			@d = split(' ', lc($keys{$section}{'debootstrap'}))
+				if (defined $keys{$section}{'debootstrap'});
 			push @debootstrap, @d;
 			my @b = split(' ', lc($keys{$section}{'bootstrap'}))
 				if (defined $keys{$section}{'bootstrap'});
