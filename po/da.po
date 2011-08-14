@@ -224,8 +224,8 @@ msgid ""
 "Warning: invalid value '%s' for Multi-Arch field in Architecture: all "
 "package: %s. "
 msgstr ""
-"Advarsel: Ugyldig værdi »%s« for Multi-Arch-felt i arkitektur: Alle "
-"pakker: %s. "
+"Advarsel: Ugyldig værdi »%s« for Multi-Arch-felt i »Arkitektur: Alle« "
+"pakke: %s. "
 
 #. Translators: Please do not translate 'same', 'foreign' or 'allowed'
 #: ../multistrap:570
