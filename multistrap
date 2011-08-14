@@ -561,6 +561,7 @@ sub force_unpack {
 			#chomp ($multi);
 			$multi = '';
 			if ($multi eq ":all") {
+				# Translators: imagine "Architecture: all" in quotes.
 				my $msg = sprintf(_g("Warning: invalid value '%s' for Multi-Arch field in Architecture: all package: %s. "), $multi, $deb);
 				warn ("$msg\n");
 				$multi = '';
@@ -1340,14 +1341,17 @@ sub dump_config {
 	$plural = ngettext("Debconf preseed file", "Debconf preseed files", scalar @debconf);
 	printf("%s:\t%s\n", $plural, join(" ", sort @debconf)) if (scalar @debconf > 0);
 	if (defined ($hooks{'D'} and scalar @{$hooks{'D'}} > 0)) {
+		# Translators: leaving the plural blank to keep the lines shorter.
 		$plural = ngettext ("Download hook: ", "", scalar @{$hooks{'D'}});
 		print "download hooks:\t\t$plural".join (", ", sort @{$hooks{'D'}})."\n";
 	}
 	if (defined ($hooks{'N'} and scalar @{$hooks{'N'}} > 0)) {
+		# Translators: leaving the plural blank to keep the lines shorter.
 		$plural = ngettext ("Native hook: ", "", scalar @{$hooks{'N'}});
 		print "native hooks:\t\t$plural".join (", ", sort @{$hooks{'N'}})."\n";
 	}
 	if (defined ($hooks{'A'} and scalar @{$hooks{'A'}} > 0)) {
+		# Translators: leaving the plural blank to keep the lines shorter.
 		$plural = ngettext ("Completion hook: ", "", scalar @{$hooks{'A'}});
 		print "completion hooks:\t$plural".join (", ", sort @{$hooks{'A'}})."\n";
 	}
