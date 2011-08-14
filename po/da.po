@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: multistrap\n"
 "Report-Msgid-Bugs-To: multistrap@packages.debian.org\n"
 "POT-Creation-Date: 2011-08-13 12:15+0100\n"
-"PO-Revision-Date: 2011-02-20 17:30+01:00\n"
+"PO-Revision-Date: 2011-08-14 17:30+01:00\n"
 "Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"
 "Language-Team: Danish <debian-l10n-danish@lists.debian.org> \n"
 "Language: \n"
@@ -224,6 +224,8 @@ msgid ""
 "Warning: invalid value '%s' for Multi-Arch field in Architecture: all "
 "package: %s. "
 msgstr ""
+"Advarsel: Ugyldig værdi »%s« for Multi-Arch-felt i arkitektur: Alle "
+"pakker: %s. "
 
 #. Translators: Please do not translate 'same', 'foreign' or 'allowed'
 #: ../multistrap:570
@@ -232,6 +234,8 @@ msgid ""
 "Warning: unrecognised value '%s' for Multi-Arch field in %s. (Expecting "
 "'same', 'foreign' or 'allowed'.)"
 msgstr ""
+"Advarsel: Værdi er ikke genkendt »%s« for Multi-Arch-felt i %s. (Forventer "
+"»same«, »foreign« eller »allowed«)."
 
 #: ../multistrap:585
 #, perl-format
@@ -418,7 +422,7 @@ msgid "cannot open /etc/apt/sources.list.d/%s %s"
 msgstr "kan ikke åbne /etc/apt/sources.list.d/%s %s"
 
 #: ../multistrap:1000
-#, fuzzy, perl-format
+#, perl-format
 msgid ""
 "\n"
 "%s version %s\n"
@@ -526,6 +530,9 @@ msgstr ""
 "noauth=false\n"
 "# udpakker alle hentede arkiver (standard er true)\n"
 "unpack=true\n"
+"# aktiver MultiArch for de angivne arkitekturer\n"
+"# standard er tom\n"
+"multiarch=\n"
 "# aptsources er en liste over afsnit, som skal bruges til at hente pakker\n"
 "# og lister, og er placeret i mållisten\n"
 "# /etc/apt/sources.list.d/multistrap.sources. Rækkefølge er ikke vigtig\n"
@@ -576,11 +583,14 @@ msgid ""
 "ERR: Unsupportable option: 'architecture'. Current dpkg version does not "
 "support MultiArch. Packages for '%s' have been ignored.\n"
 msgstr ""
+"FEJL: Tilvalg ikke understøttet: »architecture« (arkitektur). Aktuel "
+"dpkg-version understøtter ikke MultiArch. Pakker for »%s« er blevet "
+"ignoreret\n"
 
 #: ../multistrap:1242
-#, fuzzy, perl-format
+#, perl-format
 msgid "ERR: system call failed: '%s' %s"
-msgstr "FEJL: Kan ikke finde include-fil: »%s« for »%s«"
+msgstr "FEJL: Systemkald fejlede: »%s« %s"
 
 #: ../multistrap:1251
 #, perl-format
@@ -683,20 +693,19 @@ msgid "Architecture to download: %s\n"
 msgstr "Arkitektur at hente: %s\n"
 
 #: ../multistrap:1360
-#, fuzzy, perl-format
+#, perl-format
 msgid "Cannot determine architecture from '%s'. Using %s.\n"
-msgstr "Kan ikke bestemme arkitektur fra »%s«.\n"
+msgstr "Kan ikke bestemme arkitektur fra »%s«. Bruger %s.\n"
 
 #: ../multistrap:1363
 msgid "Currently installed dpkg does not support MultiArch."
-msgstr ""
+msgstr "Aktuelt installeret dpkg understøtter ikke MultiArch."
 
 #: ../multistrap:1365
-#, fuzzy
 msgid "Foreign architecture"
 msgid_plural "Foreign architectures"
-msgstr[0] "Bruger fremmed arkitektur: %s\n"
-msgstr[1] "Bruger fremmed arkitektur: %s\n"
+msgstr[0] "Fremmed arkitektur"
+msgstr[1] "Fremmede arkitekturer"
 
 #: ../multistrap:1369
 #, perl-format
