@@ -11,8 +11,9 @@ multistrap (2.1.16) unstable; urgency=low
     Langasek.
   * Override APT::Default-Release (Closes: #637434)
   * [INTL:da] Danish translation of multistrap (Closes: #637776)
+  * Update French translation, patch from  Julien Patriarca.
 
- -- Neil Williams <codehelp@debian.org>  Sun, 14 Aug 2011 11:47:19 +0100
+ -- Neil Williams <codehelp@debian.org>  Fri, 26 Aug 2011 11:06:43 +0100
 
 multistrap (2.1.15) unstable; urgency=low
 
