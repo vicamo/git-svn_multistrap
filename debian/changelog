@@ -12,8 +12,10 @@ multistrap (2.1.16) unstable; urgency=low
   * Override APT::Default-Release (Closes: #637434)
   * [INTL:da] Danish translation of multistrap (Closes: #637776)
   * Update French translation, patch from  Julien Patriarca.
+  * [INTL:de] Initial German translation of multistrap (runtime)
+    (Closes: #639308)
 
- -- Neil Williams <codehelp@debian.org>  Fri, 26 Aug 2011 11:06:43 +0100
+ -- Neil Williams <codehelp@debian.org>  Fri, 26 Aug 2011 11:07:26 +0100
 
 multistrap (2.1.15) unstable; urgency=low
 
