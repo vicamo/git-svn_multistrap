@@ -14,8 +14,9 @@ multistrap (2.1.16) unstable; urgency=low
   * Update French translation, patch from  Julien Patriarca.
   * [INTL:de] Initial German translation of multistrap (runtime)
     (Closes: #639308)
+  * [INTL:pt] Updated Portuguese translation (Closes: #639444)
 
- -- Neil Williams <codehelp@debian.org>  Fri, 26 Aug 2011 11:07:26 +0100
+ -- Neil Williams <codehelp@debian.org>  Sat, 27 Aug 2011 11:13:17 +0100
 
 multistrap (2.1.15) unstable; urgency=low
 
