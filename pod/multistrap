@@ -477,7 +477,7 @@ section.
  addimportant=true
 
 Priority: important can only operate for all sections listed in the
-C<boostrap> option. This may cause some confusion when mixing suites.
+C<bootstrap> option. This may cause some confusion when mixing suites.
 
 It is not possible to enable addimportant and omitrequired in the
 same configuration. C<multistrap> will exit with error code 7 if

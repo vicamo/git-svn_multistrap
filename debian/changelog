@@ -16,7 +16,7 @@ multistrap (2.1.16) unstable; urgency=low
     (Closes: #639308)
   * [INTL:pt] Updated Portuguese translation (Closes: #639444)
 
- -- Neil Williams <codehelp@debian.org>  Sat, 27 Aug 2011 11:13:17 +0100
+ -- Neil Williams <codehelp@debian.org>  Tue, 06 Sep 2011 19:54:56 +0100
 
 multistrap (2.1.15) unstable; urgency=low
 

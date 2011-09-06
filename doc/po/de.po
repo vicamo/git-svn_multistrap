@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: multistrap 2.1.6\n"
 "Report-Msgid-Bugs-To: codehelp@debian.org\n"
-"POT-Creation-Date: 2011-07-30 10:32+0300\n"
+"POT-Creation-Date: 2011-09-06 19:54+0200\n"
 "PO-Revision-Date: 2011-02-21 21:30+0100\n"
 "Last-Translator: Chris Leick <c.leick@vollbio.de>\n"
 "Language-Team: German <debian-l10n-german@lists.debian.org>\n"
@@ -1346,9 +1346,13 @@ msgstr ""
 
 #. type: textblock
 #: pod/multistrap:479
+#, fuzzy
+#| msgid ""
+#| "Priority: important can only operate for all sections listed in the "
+#| "C<boostrap> option. This may cause some confusion when mixing suites."
 msgid ""
 "Priority: important can only operate for all sections listed in the "
-"C<boostrap> option. This may cause some confusion when mixing suites."
+"C<bootstrap> option. This may cause some confusion when mixing suites."
 msgstr ""
 "»Priority: important« kann nur für alle Abschnitte funktionieren, die in der "
 "Option C<boostrap> aufgelistet sind. Dies kann Verwirrung stiften, wenn "
