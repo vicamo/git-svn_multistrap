@@ -266,9 +266,8 @@ if ((defined $k) and (not defined $noauth)) {
 	# the keyring package must be available to the external apt
 	# and apt refuses to allow fakeroot to do this.
 	$str = "";
-	my $e=`LC_ALL=C printenv`;
-	if ($e !~ /\nFAKEROOTKEY=[0-9]+\n/) {
-		if (($e =~ /\nUSER=root\n/)) {
+	if (not exists $ENV{FAKEROOTKEY}) {
+		if ((exists $ENV{USER}) and ($ENV{USER} != root)) {
 			$str = "sudo" if (-f "/usr/bin/sudo");
 		}
 	} else {
@@ -302,7 +301,7 @@ if ((defined $k) and (not defined $noauth)) {
 				"--homedir=${dir}/etc/apt/trusted.gpg.d/ ".
 				"--keyring=multistrap.gpg ".
 				" --import ${xdir}/usr/share/keyrings/${gpg} 2>/dev/null");
-			$retval /= 256;
+			$retval >>= 8;
 			die (_g("Secure Apt handling failed - try without authentication."))
 				if ($retval != 0);
 		}
@@ -333,7 +332,8 @@ $config_str .= " -o Dir::State::Status=${dir}${dpkgdir}status";
 $config_str .= " -o Dir::Cache=${dir}${cachedir}";
 printf (_g("Getting package lists: apt-get %s update\n"), $config_str);
 $retval = system ("apt-get $config_str update");
-die (sprintf (_g("apt update failed. Exit value: %d\n"), ($retval/256)))
+$retval >>= 8;
+die (sprintf (_g("apt update failed. Exit value: %d\n"), $retval))
 	if ($retval != 0);
 my @s = ();
 $str = "";
@@ -379,15 +379,17 @@ $str = join (' ', sort keys %uniq);
 print "apt-get -y $config_str install $str\n";
 $retval = 0;
 $retval = system ("apt-get -y $config_str install $str");
-die (sprintf (_g("apt download failed. Exit value: %d\n"),($retval/256)))
+$retval >>= 8;
+die (sprintf (_g("apt download failed. Exit value: %d\n"),$retval))
 	if ($retval != 0);
 &force_unpack if ($unpack eq "true");
 system ("touch ${dir}${libdir}lists/lock");
 if ((defined $setupsh) and (-x $setupsh)) {
 	$retval = 0;
 	$retval = system ("$setupsh $dir $arch");
+	$retval >>= 8;
 	if ($retval != 0) {
-		warn sprintf(_g("setupscript '%s' returned %d.\n"), $setupsh, $retval/256);
+		warn sprintf(_g("setupscript '%s' returned %d.\n"), $setupsh, $retval);
 		$warn_count++;
 	}
 }
@@ -452,7 +454,7 @@ if (defined $tgzname) {
 	chdir ("$dir");
 	unlink $tgzname if (-f $tgzname);
 	my $retval = system ("tar -czf ../$tgzname .");
-	$retval /= 256;
+	$retval >>= 8;
 	if ($retval == 0) {
 		printf (_g("\nRemoving build directory: '%s'\n"), $dir);
 		system ("rm -rf $dir/*");
@@ -482,7 +484,7 @@ sub add_extra_packages {
 	if (scalar @extrapkgs > 0) {
 		$str = join (' ', @extrapkgs);
 		print "apt-get -y $config_str install $str\n";
-		$retval = system ("apt-get -y $config_str install $str");
+		system ("apt-get -y $config_str install $str");
 		&force_unpack (@extrapkgs) if ($unpack eq "true");
 		system ("touch ${dir}${libdir}lists/lock");
 		&native if (not defined ($foreign));
@@ -515,7 +517,7 @@ sub force_unpack {
 		chomp ($package);
 		if (exists $unpack{$package}) {
 			my $test=system("dpkg --compare-versions $unpack{$package} '<<' $version");
-			$test /= 256;
+			$test >>= 8;
 			# unlink version in $unpack if 0
 			# unlink $deb (current one) if 1
 			if ($test == 0) {
@@ -613,7 +615,7 @@ sub force_unpack {
 				print STATUS @avail;
 				print AVAIL "\n";
 				print STATUS "Status: install ok unpacked\n";
-				unlink ("./${dpkgdir}info/$mscript");
+				unlink ("./${dpkgdir}info/$pkg${multi}.$mscript");
 			}
 		}
 		close (AVAIL);
@@ -661,9 +663,10 @@ sub run_download_hooks {
 		# Translators: this is a single instance, naming the hook
 		printf (_g("I: Running post-download hook: '%s'\n"), basename($hookscript));
 		my $hookret = system ("$hookscript $dir");
+		$hookret >>= 8;
 		if ($hookret != 0) {
-			printf (_g("I: post-download hook '%s' reported an error: %d\n"), basename($hookscript), $hookret/256);
-			$warn_count += ($hookret < 0) ? $hookret/-256 : $hookret/256;
+			printf (_g("I: post-download hook '%s' reported an error: %d\n"), basename($hookscript), $hookret);
+			$warn_count += abs($hookret);
 		}
 	}
 }
@@ -678,8 +681,9 @@ sub run_native_hooks_start {
 		# Translators: this is a single instance, naming the hook
 		printf (_g("I: Starting native hook: '%s'\n"), basename($hookscript));
 		my $hookret = system ("$hookscript $dir start");
+		$hookret >>= 8;
 		if ($hookret != 0) {
-			$warn_count += ($hookret < 0) ? $hookret/-256 : $hookret/256;
+			$warn_count += abs($hookret);
 		}
 	}
 }
@@ -694,8 +698,9 @@ sub run_native_hooks_end {
 		# Translators: this is a single instance, naming the hook
 		printf (_g("I: Stopping native hook: '%s'\n"), basename($hookscript));
 		my $hookret = system ("$hookscript $dir end");
+		$hookret >>= 8;
 		if ($hookret != 0) {
-			$warn_count += ($hookret < 0) ? $hookret/-256 : $hookret/256;
+			$warn_count += abs($hookret);
 		}
 	}
 }
@@ -710,8 +715,9 @@ sub run_completion_hooks {
 		# Translators: this is a single instance, naming the hook
 		printf (_g("I: Running post-configuration hook: '%s'\n"), basename($hookscript));
 		my $hookret = system ("$hookscript $dir");
+		$hookret >>= 8;
 		if ($hookret != 0) {
-			$warn_count += ($hookret < 0) ? $hookret/-256 : $hookret/256;
+			$warn_count += abs($hookret);
 		}
 	}
 }
@@ -878,12 +884,11 @@ sub tidy_apt {
 
 # if native arch, do a few tasks just because we can and probably should.
 sub native {
-	my $e=`LC_ALL=C printenv`;
 	my $env = "DEBIAN_FRONTEND=noninteractive ".
 	"DEBCONF_NONINTERACTIVE_SEEN=true ".
 	"LC_ALL=C LANGUAGE=C LANG=C";
 	printf (_g("I: dpkg configuration settings:\n\t%s\n"), $env);
-	if ($e =~ /\nFAKEROOTKEY=[0-9]+\n/) {
+	if (exists $ENV{FAKEROOTKEY} {
 		warn (_g("W: Cannot use 'chroot' when fakeroot is in use. Skipping package configuration.\n"));
 		return;
 	}
@@ -921,7 +926,7 @@ sub native {
 	}
 	my $retval = 0;
 	$retval = system ("$str $env chroot $dir dpkg --configure -a");
-	$retval /= 256;
+	$retval >>=8;
 	if ($retval != 0) {
 		warn (_g("ERR: dpkg configure reported an error.\n"));
 	}
@@ -1230,7 +1235,7 @@ sub cascade {
 # returns zero on success, non-zero on fail
 sub check_multiarch_dpkg {
 	my $retval = system ("dpkg --print-foreign-architecture > /dev/null 2>&1");
-	$retval /= 256;
+	$retval >>=8;
 	return $retval;
 }
 
@@ -1238,7 +1243,7 @@ sub system_fatal {
 	my $cmd = shift;
 	my $retval = system ("$cmd");
 	my $err = $!;
-	$retval /= 256;
+	$retval >>= 8;
 	return if ($retval == 0);
 	my $msg = sprintf(_g("ERR: system call failed: '%s' %s"), $cmd, $err);
 	die ("$msg\n");
@@ -1248,7 +1253,7 @@ sub mkdir_fatal {
 	my $d = shift;
 	if (not -d "$d") {
 		my $ret = system ("mkdir -p $d");
-		$ret /= 256 if (defined $ret);
+		$ret >>= 8 if (defined $ret);
 		my $msg = sprintf (_g("Unable to create directory '%s'"),$d);
 		die "$progname: $msg\n" if ($ret != 0);
 	}

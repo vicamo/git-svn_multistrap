@@ -1,3 +1,12 @@
+multistrap (2.1.17) unstable; urgency=low
+
+  * [l10n] French manpages translation (Closes: #656418)
+  * Remove .control files inside the multistrap chroot.
+     (Closes: #668941)
+  * Improve fakeroot environment variable tests. (Closes: #647240)
+
+ -- Neil Williams <codehelp@debian.org>  Tue, 17 Apr 2012 19:50:05 +0100
+
 multistrap (2.1.16) unstable; urgency=low
 
   * Allow empty aptsources lines. (Closes: #633525)
