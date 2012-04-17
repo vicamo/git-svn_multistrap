@@ -275,7 +275,7 @@ if ((defined $k) and (not defined $noauth)) {
 	# and apt refuses to allow fakeroot to do this.
 	$str = "";
 	if (not exists $ENV{FAKEROOTKEY}) {
-		if ((exists $ENV{USER}) and ($ENV{USER} != "root")) {
+		if ((exists $ENV{USER}) and ($ENV{USER} ne "root")) {
 			$str = "sudo" if (-f "/usr/bin/sudo");
 		}
 	} else {
