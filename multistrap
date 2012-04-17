@@ -35,7 +35,7 @@ use vars qw/ $progname $ourversion $dstrap $extra @aptsources
  $omitpreinst @reinstall $tgzname %uniq %required $check @check %uniq
  $explicit_suite $allow_recommends %omitdebsrc @dsclist @sectoutput
  %flatfile %important $addimportant @debconf $hookdir %hooks
- $warn_count $use_shortcut @foreignarches $olddpkg 
+ $warn_count $use_shortcut @foreignarches $olddpkg $ignorenative
  %foreignpkgs $ignorenative /;
 
 setlocale(LC_MESSAGES, "");
@@ -146,7 +146,7 @@ if ((not defined $arch) or ($arch eq "")) {
 } else {
 	printf (_g("Using foreign architecture: %s\n"), $arch);
 }
-$foreign++ if ($host ne $arch);
+$foreign++ if (($host ne $arch) and (not defined $ignorenative));
 unless (keys %sources) {
 	my $msg = sprintf(_g("No sources defined for a foreign multistrap.
 	Using your existing apt sources. To use different sources,
@@ -1118,6 +1118,8 @@ sub cascade {
 				if (defined $keys{$section}{'omitpreinst'} and (not defined $omitpreinst));
 			$tidy++ if ((defined $keys{$section}{'cleanup'}) and ($keys{$section}{'cleanup'} eq "true"));
 			$noauth++ if ((defined $keys{$section}{'noauth'}) and ($keys{$section}{'noauth'} eq "true"));
+			$ignorenative++ if ((defined $keys{$section}{'ignorenativearch'}) and
+				(lc($keys{$section}{'ignorenativearch'}) eq 'true'));
 			$preffile = lc($keys{$section}{'aptpreferences'})
 				if (defined $keys{$section}{'aptpreferences'} and (not defined $preffile));
 			undef $preffile if ((defined $preffile) and (not -f $preffile));

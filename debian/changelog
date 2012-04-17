@@ -6,8 +6,9 @@ multistrap (2.1.17) unstable; urgency=low
   * Improve fakeroot environment variable tests. (Closes: #647240)
   * Implement support to copy an apt preferences file into place.
     (Closes: #616420)
+  * Support not configuring packages for native arch. (Closes: #651885)
 
- -- Neil Williams <codehelp@debian.org>  Tue, 17 Apr 2012 20:06:32 +0100
+ -- Neil Williams <codehelp@debian.org>  Tue, 17 Apr 2012 21:05:48 +0100
 
 multistrap (2.1.16) unstable; urgency=low
 
