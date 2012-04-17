@@ -29,14 +29,14 @@ use vars qw/ $progname $ourversion $dstrap $extra @aptsources
  @archives $deb $cachedir $config_str %packages $retval $str $retries
  $dir $include $arch $foreign $url $unpack $sourcedir $msg $etcdir
  @e $sourcesname $libdir $dpkgdir @debootstrap %suites %components $chk
- $repo @dirs @touch %sources $section %keys $host $key $value
+ $repo @dirs @touch %sources $section %keys $host $key $value $preffile
  $type $file $config $tidy $noauth $keyring %keyrings $deflist $cfgdir
  @extrapkgs @includes %source $setupsh $configsh $omitrequired $dryrun
  $omitpreinst @reinstall $tgzname %uniq %required $check @check %uniq
  $explicit_suite $allow_recommends %omitdebsrc @dsclist @sectoutput
  %flatfile %important $addimportant @debconf $hookdir %hooks
  $warn_count $use_shortcut @foreignarches $olddpkg 
- %foreignpkgs /;
+ %foreignpkgs $ignorenative /;
 
 setlocale(LC_MESSAGES, "");
 textdomain("multistrap");
@@ -178,7 +178,15 @@ system_fatal ("mkdir -p ${dir}etc/apt/preferences.d/")
 system_fatal ("mkdir -p ${dir}usr/share/info/")
 	if (not -d "${dir}usr/share/info/");
 system_fatal ("touch ${dir}usr/share/info/dir");
-
+if (defined $preffile) {
+	open (PREF, "$preffile") or die ("$progname: $preffile $!");
+	my @prefs=<PREF>;
+	close (PREF);
+	my $name = basename($preffile);
+	open (MPREF, ">${dir}etc/apt/preferences.d/$name") or die ("$progname: $name $!");
+	print MPREF @prefs;
+	close (MPREF);
+}
 @dirs = qw/ alternatives info parts updates/;
 @touch = qw/ diversions statoverride status lock/;
 foreach my $dpkgd (@dirs) {
@@ -267,7 +275,7 @@ if ((defined $k) and (not defined $noauth)) {
 	# and apt refuses to allow fakeroot to do this.
 	$str = "";
 	if (not exists $ENV{FAKEROOTKEY}) {
-		if ((exists $ENV{USER}) and ($ENV{USER} != root)) {
+		if ((exists $ENV{USER}) and ($ENV{USER} != "root")) {
 			$str = "sudo" if (-f "/usr/bin/sudo");
 		}
 	} else {
@@ -888,13 +896,13 @@ sub native {
 	"DEBCONF_NONINTERACTIVE_SEEN=true ".
 	"LC_ALL=C LANGUAGE=C LANG=C";
 	printf (_g("I: dpkg configuration settings:\n\t%s\n"), $env);
-	if (exists $ENV{FAKEROOTKEY} {
+	if (exists $ENV{FAKEROOTKEY}) {
 		warn (_g("W: Cannot use 'chroot' when fakeroot is in use. Skipping package configuration.\n"));
 		return;
 	}
 	print _g("I: Native mode - configuring unpacked packages . . .\n");
 	my $str = "";
-	if ($e =~ /\nUSER=root\n/) {
+	if ($ENV{USER} eq 'root') {
 		$str = "sudo" if (-f "/usr/bin/sudo");
 	}
 	# check that we have a workable shell inside the chroot
@@ -1110,6 +1118,9 @@ sub cascade {
 				if (defined $keys{$section}{'omitpreinst'} and (not defined $omitpreinst));
 			$tidy++ if ((defined $keys{$section}{'cleanup'}) and ($keys{$section}{'cleanup'} eq "true"));
 			$noauth++ if ((defined $keys{$section}{'noauth'}) and ($keys{$section}{'noauth'} eq "true"));
+			$preffile = lc($keys{$section}{'aptpreferences'})
+				if (defined $keys{$section}{'aptpreferences'} and (not defined $preffile));
+			undef $preffile if ((defined $preffile) and (not -f $preffile));
 			$sourcedir = $keys{$section}{'retainsources'}
 				if ((defined $keys{$section}{'retainsources'}) and (-d $keys{$section}{'retainsources'}));
 			$explicit_suite++ if ((defined $keys{$section}{'explicitsuite'}) and
