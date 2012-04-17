@@ -1,4 +1,4 @@
-multistrap (2.1.17) unstable; urgency=low
+multistrap (2.1.17) experimental; urgency=low
 
   * [l10n] French manpages translation (Closes: #656418)
   * Remove .control files inside the multistrap chroot.
@@ -7,8 +7,9 @@ multistrap (2.1.17) unstable; urgency=low
   * Implement support to copy an apt preferences file into place.
     (Closes: #616420)
   * Support not configuring packages for native arch. (Closes: #651885)
+  * Upload to experimental. 
 
- -- Neil Williams <codehelp@debian.org>  Tue, 17 Apr 2012 21:05:48 +0100
+ -- Neil Williams <codehelp@debian.org>  Tue, 17 Apr 2012 21:14:30 +0100
 
 multistrap (2.1.16) unstable; urgency=low
 
