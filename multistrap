@@ -376,7 +376,10 @@ foreach my $sect (sort keys %packages) {
 	}
 }
 chomp($str);
-$str .= " " . join (' ', values %keyrings) . " "; 
+foreach my $keystr (values %keyrings) {
+	next if (not defined $keystr);
+	$str .= " " . $keystr . " ";
+}
 chomp($str);
 %uniq=();
 @s = split (/ /, $str);
@@ -1216,7 +1219,7 @@ sub cascade {
 				if (ref ($keys{$section}{'packages'}) eq 'ARRAY') {
 					$packages{$section}=join(' ', @{$keys{$section}{'packages'}}) if (not exists $packages{$section});
 				} else {
-					$packages{$section}=join(' ', $keys{$section}{'packages'}) if (not exists $packages{$section});
+					$packages{$section}=join(' ', $keys{$section}{'packages'}) if (exists $packages{$section});
 				}
 			}
 			$suites{$section}=$keys{$section}{'suite'}

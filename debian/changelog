@@ -2,8 +2,11 @@ multistrap (2.1.18) experimental; urgency=low
 
   * Reverse logic of ignorenativearch, thanks to 
     Andres Salomon <dilinger@queued.net>. (Closes: #669211)
+  * Fix logic in dump_config for missing packages lines.
+    (Closes: #669206)
+  * Check values of the keyring hash. (Closes: #669205)
 
- -- Neil Williams <codehelp@debian.org>  Wed, 18 Apr 2012 21:15:51 +0100
+ -- Neil Williams <codehelp@debian.org>  Wed, 18 Apr 2012 21:25:47 +0100
 
 multistrap (2.1.17) experimental; urgency=low
 
