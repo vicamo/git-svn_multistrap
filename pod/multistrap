@@ -372,7 +372,8 @@ option.
 
 A native multistrap can be used directly with chroot, so
 C<multistrap> runs C<dpkg --configure -a> at the end of the
-multistrap process. 
+multistrap process, unless the B<ignorenativearch> option is set
+to true in the B<General> section of the configuration file.
 
 =head1 Daemons in chroots
 
@@ -499,6 +500,13 @@ The multistrap default is to turn recommends OFF.
 Set the allowrecommends option to true in the General section
 to use typical Debian behaviour.
 
+=head1 Default release
+
+If your system specifies a default-release for apt, this can cause
+problems when trying to create a bootstrap which does not include
+the default suite. To counter this, C<multistrap> sets a wildcard for
+the Default Release within the bootstrap. See also: apt preferences.
+
 =head1 Explicit suite specification
 
 Sometimes, apt needs to be told to get a particular package from a
@@ -539,6 +547,28 @@ or other temporary locations - if the package migrates into another
 suite and is removed from the temporary suite (as with 
 *-proposed-updates), multistrap will not be able to find the
 package.
+
+Explicit suite handling can be very hard to get right. In general, it
+is best to create a small bootstrap chroot of your native arch, then
+chroot into it, add the relevant apt sources and work out exactly
+what commands are necessary to get the correct mix of packages. Avoid
+specifying explicit versions to sort out problems, work with suites
+only. Apt preferences / pinning may be useful here, see Apt preferences.
+
+=head1 Apt preferences
+
+If a suitable file is listed in the B<aptpreferences> option of the
+B<General> section of the configuration file, this file will be copied
+into the apt preferences directory of the bootstrap before apt is first
+used.
+
+When an apt preferences file B<is> provided, the C<Default-Release>
+behaviour of C<multistrap> is disabled.
+
+As with other external scripts and files, the content of the apt
+preferences file is beyond the scope of this manpage. C<multistrap>
+does not try to verify the supplied file other than ensuring that it
+can be read.
 
 =head1 Omitting deb-src listings
 

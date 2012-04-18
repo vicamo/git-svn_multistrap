@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: multistrap 2.1.4\n"
-"POT-Creation-Date: 2012-03-07 20:54+0000\n"
+"POT-Creation-Date: 2012-04-18 21:15+0200\n"
 "PO-Revision-Date: 2011-12-22 08:18+0100\n"
 "Last-Translator: Julien Patriarca <patriarcaj@gmail.com>\n"
 "Language-Team: French <debian-l10n-french@lists.debian.org>\n"
@@ -1022,21 +1022,27 @@ msgstr ""
 
 #. type: textblock
 #: pod/multistrap:373
+#, fuzzy
+#| msgid ""
+#| "A native multistrap can be used directly with chroot, so C<multistrap> "
+#| "runs C<dpkg --configure -a> at the end of the multistrap process."
 msgid ""
 "A native multistrap can be used directly with chroot, so C<multistrap> runs "
-"C<dpkg --configure -a> at the end of the multistrap process."
+"C<dpkg --configure -a> at the end of the multistrap process, unless the "
+"B<ignorenativearch> option is set to true in the B<General> section of the "
+"configuration file."
 msgstr ""
 "Un multistrap natif peut être directement utilisé avec chroot, ainsi "
 "C<multistrap> exécute C<dpkg --configure -a> à la fin du processus du "
 "multistrap."
 
 #. type: =head1
-#: pod/multistrap:377
+#: pod/multistrap:378
 msgid "Daemons in chroots"
 msgstr "Démons dans les chroots"
 
 #. type: textblock
-#: pod/multistrap:379
+#: pod/multistrap:380
 msgid ""
 "Depending on which system you using to provide the packages for "
 "C<multistrap>, native chroots should generally not allow daemons to start "
@@ -1050,7 +1056,7 @@ msgstr ""
 "d'installation."
 
 #. type: verbatim
-#: pod/multistrap:384
+#: pod/multistrap:385
 #, no-wrap
 msgid ""
 " setupscript=/usr/share/multistrap/chroot.sh\n"
@@ -1060,19 +1066,19 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: pod/multistrap:386
+#: pod/multistrap:387
 msgid "F<chroot.sh> copes with systems using F<sysvinit> and F<upstart>."
 msgstr ""
 "F<chroot.sh> sait fonctionner avec les systèmes utilisant F<sysvinit> et "
 "F<upstart>."
 
 #. type: textblock
-#: pod/multistrap:388
+#: pod/multistrap:389
 msgid "See also"
 msgstr "Voir également"
 
 #. type: verbatim
-#: pod/multistrap:390
+#: pod/multistrap:391
 #, no-wrap
 msgid ""
 " http://people.debian.org/~hmh/invokerc.d-policyrc.d-specification.txt\n"
@@ -1082,12 +1088,12 @@ msgstr ""
 "\n"
 
 #. type: =head1
-#: pod/multistrap:392
+#: pod/multistrap:393
 msgid "Cascading configuration"
 msgstr "Configuration en cascade"
 
 #. type: textblock
-#: pod/multistrap:394
+#: pod/multistrap:395
 msgid ""
 "To support multiple variants of a basic (common) configuration, "
 "C<multistrap> allows configuration files to include other (more general)  "
@@ -1103,12 +1109,12 @@ msgstr ""
 "configurations."
 
 #. type: textblock
-#: pod/multistrap:400
+#: pod/multistrap:401
 msgid "Base file:"
 msgstr "Fichier de base :"
 
 #. type: verbatim
-#: pod/multistrap:402
+#: pod/multistrap:403
 #, no-wrap
 msgid ""
 " /usr/share/multistrap/crosschroot.conf\n"
@@ -1118,12 +1124,12 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: pod/multistrap:404
+#: pod/multistrap:405
 msgid "Variations:"
 msgstr "Variations :"
 
 #. type: verbatim
-#: pod/multistrap:406
+#: pod/multistrap:407
 #, no-wrap
 msgid ""
 " /usr/share/multistrap/armel.conf\n"
@@ -1133,7 +1139,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: pod/multistrap:408
+#: pod/multistrap:409
 msgid ""
 "Specifying just the armel.conf file will get the rest of the settings from "
 "crosschroot.conf so that common changes only need to be made in a single "
@@ -1144,7 +1150,7 @@ msgstr ""
 "communes ne doivent être réalisées que dans un seul fichier."
 
 #. type: textblock
-#: pod/multistrap:412
+#: pod/multistrap:413
 msgid ""
 "It is B<strongly> recommended that any changes to the configuration files "
 "involved in any particular cascade are tested using the C<--simulate> option "
@@ -1164,12 +1170,12 @@ msgstr ""
 "option non définie."
 
 #. type: =head1
-#: pod/multistrap:420
+#: pod/multistrap:421
 msgid "Machine:variant support"
 msgstr "Gestion des variantes de Machines"
 
 #. type: textblock
-#: pod/multistrap:422
+#: pod/multistrap:423
 msgid ""
 "The old packages.conf variables from emsandbox can all be converted into "
 "C<multistrap> configuration variables. The machine:variant support in "
@@ -1181,7 +1187,7 @@ msgstr ""
 "sh> et F<setup.sh>"
 
 #. type: textblock
-#: pod/multistrap:427
+#: pod/multistrap:428
 msgid ""
 "Note: B<machine:variant support is likely to be replaced by the hook "
 "functionality described below.>"
@@ -1190,7 +1196,7 @@ msgstr ""
 "remplacée par le déclencheur décrit ci-dessous>"
 
 #. type: textblock
-#: pod/multistrap:430
+#: pod/multistrap:431
 msgid ""
 "Once C<multistrap> has unpacked the downloaded packages, the C<setup.sh> can "
 "be called, passing the location and architecture of the root filesystem, so "
@@ -1208,7 +1214,7 @@ msgstr ""
 "vers le répertoire root du système de fichiers racine."
 
 #. type: textblock
-#: pod/multistrap:438
+#: pod/multistrap:439
 msgid ""
 "One advantage of using machine:variant support is that the entire "
 "rootfilesystem can be managed by a single call to multistrap - this is "
@@ -1220,7 +1226,7 @@ msgstr ""
 "racines dans l'espace utilisateur."
 
 #. type: textblock
-#: pod/multistrap:442
+#: pod/multistrap:443
 msgid ""
 "To enable machine:variant support, specify the path to the scripts to be "
 "called in the variant configuration file (General section):"
@@ -1230,7 +1236,7 @@ msgstr ""
 "(Section Générale) : "
 
 #. type: verbatim
-#: pod/multistrap:445
+#: pod/multistrap:446
 #, no-wrap
 msgid ""
 " [General]\n"
@@ -1246,12 +1252,12 @@ msgstr ""
 "\n"
 
 #. type: =head1
-#: pod/multistrap:451
+#: pod/multistrap:452
 msgid "Restricting package selection"
 msgstr "Restriction de la sélection des paquets"
 
 #. type: textblock
-#: pod/multistrap:453
+#: pod/multistrap:454
 msgid ""
 "C<multistrap> includes Required packages by default, the current list of "
 "packages on your own machine can be seen using:"
@@ -1260,7 +1266,7 @@ msgstr ""
 "paquets sur votre machine personnelle peut être visualisée en utilisant : "
 
 #. type: verbatim
-#: pod/multistrap:456
+#: pod/multistrap:457
 #, no-wrap
 msgid ""
 " grep-available  -FPriority 'required' -sPackage\n"
@@ -1270,7 +1276,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: pod/multistrap:458
+#: pod/multistrap:459
 msgid ""
 "(The actual list is calculated from the downloaded Packages files and may "
 "differ from the output of C<grep-available>.)"
@@ -1279,7 +1285,7 @@ msgstr ""
 "différer de la sortie de C<grep-available>.)"
 
 #. type: textblock
-#: pod/multistrap:461
+#: pod/multistrap:462
 msgid ""
 "If the OmitRequired option is set to true, these packages will not be added "
 "- whilst useful, this option can easily lead to a useless rootfs. Only the "
@@ -1293,12 +1299,12 @@ msgstr ""
 "paquets seront également ajoutées mais aucun autre."
 
 #. type: =head1
-#: pod/multistrap:467
+#: pod/multistrap:468
 msgid "Adding Priority: important packages"
 msgstr "Ajout des paquet de priorité « important »"
 
 #. type: textblock
-#: pod/multistrap:469
+#: pod/multistrap:470
 msgid ""
 "C<multistrap> can imitate C<debootstrap> by automatically adding all "
 "packages from all sections where the downloaded Packages file lists the "
@@ -1316,7 +1322,7 @@ msgstr ""
 "paquets, réglez l'option addimportant sur vrai dans la section générale."
 
 #. type: verbatim
-#: pod/multistrap:477
+#: pod/multistrap:478
 #, no-wrap
 msgid ""
 " addimportant=true\n"
@@ -1326,7 +1332,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: pod/multistrap:479
+#: pod/multistrap:480
 msgid ""
 "Priority: important can only operate for all sections listed in the "
 "C<bootstrap> option. This may cause some confusion when mixing suites."
@@ -1336,7 +1342,7 @@ msgstr ""
 "de mélanges de suites."
 
 #. type: textblock
-#: pod/multistrap:482
+#: pod/multistrap:483
 msgid ""
 "It is not possible to enable addimportant and omitrequired in the same "
 "configuration. C<multistrap> will exit with error code 7 if any "
@@ -1350,12 +1356,12 @@ msgstr ""
 "d'autres fichiers de configuration.)"
 
 #. type: =head1
-#: pod/multistrap:488
+#: pod/multistrap:489
 msgid "Recommends behaviour"
 msgstr "Comportements recommandés"
 
 #. type: textblock
-#: pod/multistrap:490
+#: pod/multistrap:491
 msgid ""
 "The Debian default behaviour after the Lenny release was to consider "
 "recommended packages as extra packages to be installed when any one package "
@@ -1372,14 +1378,14 @@ msgstr ""
 "recommandés et ainsi de suite. "
 
 #. type: textblock
-#: pod/multistrap:497
+#: pod/multistrap:498
 msgid "The multistrap default is to turn recommends OFF."
 msgstr ""
 "Le comportement par défaut de multistrap est de désactiver les paquets "
 "recommandés."
 
 #. type: textblock
-#: pod/multistrap:499
+#: pod/multistrap:500
 msgid ""
 "Set the allowrecommends option to true in the General section to use typical "
 "Debian behaviour."
@@ -1388,12 +1394,26 @@ msgstr ""
 "(oui) dans la section générale pour utiliser ce comportement usuel de Debian."
 
 #. type: =head1
-#: pod/multistrap:502
+#: pod/multistrap:503
+msgid "Default release"
+msgstr ""
+
+#. type: textblock
+#: pod/multistrap:505
+msgid ""
+"If your system specifies a default-release for apt, this can cause problems "
+"when trying to create a bootstrap which does not include the default suite. "
+"To counter this, C<multistrap> sets a wildcard for the Default Release "
+"within the bootstrap. See also: apt preferences."
+msgstr ""
+
+#. type: =head1
+#: pod/multistrap:510
 msgid "Explicit suite specification"
 msgstr "Spécification claire de la version de la distribution"
 
 #. type: textblock
-#: pod/multistrap:504
+#: pod/multistrap:512
 msgid ""
 "Sometimes, apt needs to be told to get a particular package from a "
 "particular suite, ignoring a more recent version in another suite in the "
@@ -1404,7 +1424,7 @@ msgstr ""
 "récente d'une autre version de la distribution dans la même liste de sources."
 
 #. type: textblock
-#: pod/multistrap:508
+#: pod/multistrap:516
 msgid ""
 "C<multistrap> can operate with and without the explicit suite option, the "
 "default is to let apt use the most recent version from the collection of "
@@ -1416,7 +1436,7 @@ msgstr ""
 "indiquées."
 
 #. type: textblock
-#: pod/multistrap:512
+#: pod/multistrap:520
 msgid ""
 "Explicit suite specification has no effect on the final installed system - "
 "if your aptsources includes a repository which in turn includes a newer "
@@ -1429,7 +1449,7 @@ msgstr ""
 "get upgrade> sur la machine installera la nouvelle version."
 
 #. type: textblock
-#: pod/multistrap:517
+#: pod/multistrap:525
 msgid ""
 "Also, when specifying packages to get from a specific suite, apt will also "
 "try and ensure that the dependencies for that package are also from the same "
@@ -1447,7 +1467,7 @@ msgstr ""
 "également."
 
 #. type: textblock
-#: pod/multistrap:524
+#: pod/multistrap:532
 msgid ""
 "When using this support in Lenny, ensure that each section uses the suite "
 "(oldstable, stable, testing, sid) and B<not> the codename (etch, lenny, "
@@ -1461,12 +1481,12 @@ msgstr ""
 "précédentes distributions ne peuvent utiliser le nom de code."
 
 #. type: textblock
-#: pod/multistrap:529
+#: pod/multistrap:537
 msgid "To test, on Lenny, try:"
 msgstr "Pour tester, sur Lenny essayez :"
 
 #. type: verbatim
-#: pod/multistrap:531
+#: pod/multistrap:539
 #, no-wrap
 msgid ""
 " $ sudo apt-get install apt/stable\n"
@@ -1476,12 +1496,12 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: pod/multistrap:533
+#: pod/multistrap:541
 msgid "Compare with"
 msgstr "Comparer avec"
 
 #. type: verbatim
-#: pod/multistrap:535
+#: pod/multistrap:543
 #, no-wrap
 msgid ""
 " $ sudo apt-get install apt/lenny\n"
@@ -1491,7 +1511,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: pod/multistrap:537
+#: pod/multistrap:545
 msgid ""
 "When using explicitsuite, take care in using stable-proposed-updates or "
 "other temporary locations - if the package migrates into another suite and "
@@ -1503,13 +1523,54 @@ msgstr ""
 "dans une autre suite et est supprimé de la suite temporaire (comme avec *-"
 "proposed-updates), multistrap ne pourra pas trouver le paquet."
 
+#. type: textblock
+#: pod/multistrap:551
+msgid ""
+"Explicit suite handling can be very hard to get right. In general, it is "
+"best to create a small bootstrap chroot of your native arch, then chroot "
+"into it, add the relevant apt sources and work out exactly what commands are "
+"necessary to get the correct mix of packages. Avoid specifying explicit "
+"versions to sort out problems, work with suites only. Apt preferences / "
+"pinning may be useful here, see Apt preferences."
+msgstr ""
+
 #. type: =head1
-#: pod/multistrap:543
+#: pod/multistrap:558
+#, fuzzy
+#| msgid "WWW references"
+msgid "Apt preferences"
+msgstr "références WWW"
+
+#. type: textblock
+#: pod/multistrap:560
+msgid ""
+"If a suitable file is listed in the B<aptpreferences> option of the "
+"B<General> section of the configuration file, this file will be copied into "
+"the apt preferences directory of the bootstrap before apt is first used."
+msgstr ""
+
+#. type: textblock
+#: pod/multistrap:565
+msgid ""
+"When an apt preferences file B<is> provided, the C<Default-Release> "
+"behaviour of C<multistrap> is disabled."
+msgstr ""
+
+#. type: textblock
+#: pod/multistrap:568
+msgid ""
+"As with other external scripts and files, the content of the apt preferences "
+"file is beyond the scope of this manpage. C<multistrap> does not try to "
+"verify the supplied file other than ensuring that it can be read."
+msgstr ""
+
+#. type: =head1
+#: pod/multistrap:573
 msgid "Omitting deb-src listings"
 msgstr "Omission de la lecture de deb-src"
 
 #. type: textblock
-#: pod/multistrap:545
+#: pod/multistrap:575
 msgid ""
 "Some multistrap environments do not need access to the Debian sources of "
 "packages being installed, typically this is required when preparing a build "
@@ -1521,7 +1582,7 @@ msgstr ""
 "utilisant multistrap."
 
 #. type: textblock
-#: pod/multistrap:549
+#: pod/multistrap:579
 msgid ""
 "To turn off this additional source (and save both download time and apt-"
 "cache size), use the omitdebsrc field in each Section."
@@ -1531,7 +1592,7 @@ msgstr ""
 "dans chaque Section."
 
 #. type: verbatim
-#: pod/multistrap:552
+#: pod/multistrap:582
 #, no-wrap
 msgid ""
 " [Baked]\n"
@@ -1551,7 +1612,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: pod/multistrap:559
+#: pod/multistrap:589
 msgid ""
 "omitdebsrc is necessary when using packages from debian-ports where packages "
 "do not have sources, except \"unreleased\"."
@@ -1561,12 +1622,12 @@ msgstr ""
 "delivrée »."
 
 #. type: =head1
-#: pod/multistrap:562
+#: pod/multistrap:592
 msgid "fakeroot"
 msgstr "fakeroot"
 
 #. type: textblock
-#: pod/multistrap:564
+#: pod/multistrap:594
 msgid ""
 "Foreign architecture bootstraps can operate under C<fakeroot> (C<multistrap> "
 "is designed to do as much as it can within a single call to make this "
@@ -1581,7 +1642,7 @@ msgstr ""
 "C<chroot> et C<chroot> en lui même ne fonctionnera pas sous C<fakeroot>."
 
 #. type: textblock
-#: pod/multistrap:570
+#: pod/multistrap:600
 msgid ""
 "Therefore, if C<multistrap> detects that C<fakeroot> is in use, native mode "
 "configuration is skipped with a reminder warning."
@@ -1590,7 +1651,7 @@ msgstr ""
 "le mode de configuration natif est sauté avec un message de rappel."
 
 #. type: textblock
-#: pod/multistrap:573
+#: pod/multistrap:603
 msgid ""
 "The same problem applies to C<apt-get install> and therefore the "
 "installation of the keyring package on the host system is also skipped if "
@@ -1601,12 +1662,12 @@ msgstr ""
 "détecté."
 
 #. type: =head1
-#: pod/multistrap:577
+#: pod/multistrap:607
 msgid "Handling problematic packages"
 msgstr "Gestion des paquets problématiques"
 
 #. type: textblock
-#: pod/multistrap:579
+#: pod/multistrap:609
 msgid ""
 "Sometimes, a particular package will fail to even unpack properly if other "
 "packages have not already been unpacked. This can happen if dpkg diversions "
@@ -1620,7 +1681,7 @@ msgstr ""
 "autre paquet."
 
 #. type: textblock
-#: pod/multistrap:584
+#: pod/multistrap:614
 msgid ""
 "Multistrap offers two ways to handle these problems. A package can be listed "
 "as C<reinstall> or as C<additional>. Each section in the C<multistrap> "
@@ -1633,7 +1694,7 @@ msgstr ""
 "tant que C<reinstall> ou C<additional> ou bien les deux."
 
 #. type: textblock
-#: pod/multistrap:589
+#: pod/multistrap:619
 msgid ""
 "Reinstall means that the package will be downloaded and unpacked as normal - "
 "alongside all the other packages, but will then be reinstalled at the end by "
@@ -1646,7 +1707,7 @@ msgstr ""
 "C<dpkg>  continuera alors le reste de la configuration de ce paquet."
 
 #. type: textblock
-#: pod/multistrap:595
+#: pod/multistrap:625
 msgid ""
 "Additional adds a second round of C<apt-get install> to the multistrap "
 "process - after the initial unpacking. The additional package will then be "
@@ -1661,7 +1722,7 @@ msgstr ""
 "été téléchargés, dépaquetés et configurés."
 
 #. type: textblock
-#: pod/multistrap:601
+#: pod/multistrap:631
 msgid ""
 "Neither C<reinstall> nor C<additional> should be seen as more than just "
 "workarounds and wishlist bugs should be filed in Debian against packages "
@@ -1675,12 +1736,12 @@ msgstr ""
 "de se comporter normalement)."
 
 #. type: =head1
-#: pod/multistrap:606
+#: pod/multistrap:636
 msgid "Debconf preseeding"
 msgstr "Préconfiguration Debconf"
 
 #. type: textblock
-#: pod/multistrap:608
+#: pod/multistrap:638
 msgid ""
 "Adding a debconf seed can help in configuring packages to a particular "
 "setting instead of the package default when running the configuration non-"
@@ -1694,7 +1755,7 @@ msgstr ""
 "préconfiguration."
 
 #. type: textblock
-#: pod/multistrap:613
+#: pod/multistrap:643
 msgid ""
 "Multiple seed files can be specified using the debconfseed field in the "
 "[General] section, separated by spaces:"
@@ -1704,7 +1765,7 @@ msgstr ""
 "espaces :"
 
 #. type: verbatim
-#: pod/multistrap:616
+#: pod/multistrap:646
 #, no-wrap
 msgid ""
 " debconfseed=seed1 seed2\n"
@@ -1714,7 +1775,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: pod/multistrap:618
+#: pod/multistrap:648
 msgid ""
 "Files which do not exist or which cannot be opened will be silently ignored. "
 "Check the results of the parsing using the C<--simulate> option to "
@@ -1725,12 +1786,12 @@ msgstr ""
 "l'option C<--simulate> à C<multistrap>."
 
 #. type: =head1
-#: pod/multistrap:622
+#: pod/multistrap:652
 msgid "Hooks"
 msgstr "Détournements"
 
 #. type: textblock
-#: pod/multistrap:624
+#: pod/multistrap:654
 msgid ""
 "If a hook directory is specified in the General section of the C<multistrap> "
 "configuration file, the hook scripts which are executable will be run from "
@@ -1742,12 +1803,12 @@ msgstr ""
 "répertoire multistrap aux étapes suivantes :"
 
 #. type: =item
-#: pod/multistrap:630
+#: pod/multistrap:660
 msgid "download hooks"
 msgstr "Déclencheurs téléchargés"
 
 #. type: textblock
-#: pod/multistrap:632
+#: pod/multistrap:662
 msgid ""
 "Executed before unpacking is started, immediately after the packages have "
 "been downloaded. Download hooks are executable scripts in the specified hook "
@@ -1759,12 +1820,12 @@ msgstr ""
 "fichier commençant par B<download>."
 
 #. type: =item
-#: pod/multistrap:636
+#: pod/multistrap:666
 msgid "native hooks"
 msgstr "Déclencheurs natifs."
 
 #. type: textblock
-#: pod/multistrap:638
+#: pod/multistrap:668
 msgid ""
 "Native hook scripts are executed only in native mode, immediately before "
 "starting the configuration of the downloaded packages and again upon "
@@ -1778,7 +1839,7 @@ msgstr ""
 "démarré ou arrêté."
 
 #. type: textblock
-#: pod/multistrap:643
+#: pod/multistrap:673
 msgid ""
 "Native scripts are executable scripts in the specified hook directory with a "
 "filename beginning with B<native>."
@@ -1787,12 +1848,12 @@ msgstr ""
 "indiqué avec un nom de fichier commençant par B<native>."
 
 #. type: =item
-#: pod/multistrap:646
+#: pod/multistrap:676
 msgid "completion hooks"
 msgstr "Déclencheurs de complétion"
 
 #. type: textblock
-#: pod/multistrap:648
+#: pod/multistrap:678
 msgid ""
 "Executed immediately before the tarball is created or C<multistrap> exits if "
 "not configured to create a tarball."
@@ -1801,7 +1862,7 @@ msgstr ""
 "quitte s'il n'est pas configuré pour la créer."
 
 #. type: textblock
-#: pod/multistrap:651
+#: pod/multistrap:681
 msgid ""
 "Completion scripts are executable scripts in the specified hook directory "
 "with a filename beginning with C<completion>."
@@ -1810,7 +1871,7 @@ msgstr ""
 "indiqué avec un nom commençant par C<completion>."
 
 #. type: textblock
-#: pod/multistrap:656
+#: pod/multistrap:686
 msgid ""
 "Hooks are passed the absolute path to the directory which will be the top "
 "level directory of the chroot or multistrap system. Hooks which cannot be "
@@ -1820,7 +1881,7 @@ msgstr ""
 "sera le niveau parent du chroot ou du système multistrap. "
 
 #. type: textblock
-#: pod/multistrap:661
+#: pod/multistrap:691
 msgid ""
 "All hooks of one type are sorted into alphabetical order before being run."
 msgstr ""
@@ -1828,7 +1889,7 @@ msgstr ""
 "avant d'être lancés."
 
 #. type: textblock
-#: pod/multistrap:664
+#: pod/multistrap:694
 msgid ""
 "Note that C<multistrap> does not rollback the effects of hooks in the case "
 "of errors. However, C<multistrap> will report the accumulated errors as "
@@ -1844,12 +1905,12 @@ msgstr ""
 "de l'opération."
 
 #. type: =head1
-#: pod/multistrap:670
+#: pod/multistrap:700
 msgid "Output"
 msgstr "Sortie"
 
 #. type: textblock
-#: pod/multistrap:672
+#: pod/multistrap:702
 msgid ""
 "C<multistrap> can produce a lot of output - informational messages appear on "
 "STDOUT, errors and warnings on STDERR. Calls to C<apt> and C<dpkg> respect "
@@ -1863,7 +1924,7 @@ msgstr ""
 "seulement, si désiré."
 
 #. type: textblock
-#: pod/multistrap:677
+#: pod/multistrap:707
 msgid ""
 "C<multistrap> accumulates error states from non-fatal processes within the "
 "operation and reports these as warnings on STDERR as well as exiting with "
@@ -1876,12 +1937,12 @@ msgstr ""
 "déclencheurs qui signalent des valeurs de retour différentes de zéro."
 
 #. type: =head1
-#: pod/multistrap:682
+#: pod/multistrap:712
 msgid "Bugs"
 msgstr "Bogues"
 
 #. type: textblock
-#: pod/multistrap:684
+#: pod/multistrap:714
 msgid ""
 "As C<multistrap> gets more complex, bugs will creep into the package.  "
 "Please report all bugs to the Debian BTS using the C<reportbug> tool and "
@@ -1899,7 +1960,7 @@ msgstr ""
 "rapport dans votre rapport de bogue."
 
 #. type: textblock
-#: pod/multistrap:691
+#: pod/multistrap:721
 msgid ""
 "The C<--simulate> option output is regularly expanded to help users debug "
 "problems in the configuration files."
@@ -1908,7 +1969,7 @@ msgstr ""
 "les utilisateurs à pister les problèmes dans les fichiers de configuration."
 
 #. type: textblock
-#: pod/multistrap:694
+#: pod/multistrap:724
 msgid ""
 "Please also check (and update) the Multistrap wiki at http://wiki.debian.org/"
 "Multistrap and the Multistrap webpage content at http://www.emdebian.org/"
@@ -1927,12 +1988,12 @@ msgstr ""
 "copier et coller et indiquer l'adresse dans votre message."
 
 #. type: =head1
-#: pod/multistrap:702
+#: pod/multistrap:732
 msgid "MultiArch support"
 msgstr "Support de MultiArch"
 
 #. type: textblock
-#: pod/multistrap:704
+#: pod/multistrap:734
 msgid ""
 "To enable multiarch inside a chroot, there is no need to set the second "
 "architecture in C<apt>, C<apt> will ask C<dpkg> which will look in F</etc/"
@@ -1946,7 +2007,7 @@ msgstr ""
 "utilisant cette option :"
 
 #. type: verbatim
-#: pod/multistrap:709
+#: pod/multistrap:739
 #, no-wrap
 msgid ""
 " foreign-architecture armel\n"
@@ -1956,7 +2017,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: pod/multistrap:711
+#: pod/multistrap:741
 msgid ""
 "For multiple architectures, specify the option once for each architecture."
 msgstr ""
@@ -1964,7 +2025,7 @@ msgstr ""
 "pour chaque architecture."
 
 #. type: textblock
-#: pod/multistrap:714
+#: pod/multistrap:744
 msgid ""
 "Using the MultiArch option in the C<General> section of your C<multistrap> "
 "configuration file will create a file F</etc/dpkg/dpkg.cfg.d/multiarch> "
@@ -1979,12 +2040,12 @@ msgstr ""
 "délimitée par des espaces des architectures sur une seule ligne."
 
 #. type: textblock
-#: pod/multistrap:720
+#: pod/multistrap:750
 msgid "See also http://wiki.debian.org/Multiarch/"
 msgstr "Voir aussi : http://wiki.debian.org/Multiarch"
 
 #. type: verbatim
-#: pod/multistrap:722
+#: pod/multistrap:752
 #, no-wrap
 msgid ""
 " [General]\n"
@@ -1998,7 +2059,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: pod/multistrap:726
+#: pod/multistrap:756
 msgid ""
 "Each Section will install packages from the base architecture unless the "
 "C<Architecture> option is specified for particular sections."
@@ -2007,7 +2068,7 @@ msgstr ""
 "l'option C<Architecture> n'est pas indiquée dans des sections particulières."
 
 #. type: verbatim
-#: pod/multistrap:729
+#: pod/multistrap:759
 #, no-wrap
 msgid ""
 " [Foreign]\n"
@@ -2027,7 +2088,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: pod/multistrap:736
+#: pod/multistrap:766
 msgid ""
 "In the C<--simulate> output, the architecture(s) specified in the MultiArch "
 "option will be listed under the \"Foreign architectures\" listing."
@@ -2518,9 +2579,6 @@ msgstr "Voir http://wiki.debian.org/DeviceTableScripting"
 #~ msgid "<ulink url=\"splitout_tdeb.html\">dplitout_tdeb</ulink> manpage."
 #~ msgstr ""
 #~ "page de manuel <ulink url=\"splitout_tdeb.html\">dplitout_tdeb</ulink>."
-
-#~ msgid "WWW references"
-#~ msgstr "références WWW"
 
 #~ msgid "<ulink url=\"http://www.emdebian.org/\">Emdebian.org website</ulink>"
 #~ msgstr "<ulink url=\"http://www.emdebian.org/\">site Emdebian.org</ulink>"
