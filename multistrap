@@ -36,7 +36,7 @@ use vars qw/ $progname $ourversion $dstrap $extra @aptsources
  $explicit_suite $allow_recommends %omitdebsrc @dsclist @sectoutput
  %flatfile %important $addimportant @debconf $hookdir %hooks
  $warn_count $use_shortcut @foreignarches $olddpkg $ignorenative
- %foreignpkgs $ignorenative /;
+ %foreignpkgs /;
 
 setlocale(LC_MESSAGES, "");
 textdomain("multistrap");
@@ -131,11 +131,6 @@ if (defined $dryrun) {
 	&dump_config;
 	exit 0;
 }
-if (not defined $dir or not defined $arch) {
-	&dump_config;
-	exit 3;
-}
-
 # Translators: fields are: programname, versionstring, configfile.
 printf (_g("%s %s using %s\n"), $progname, $ourversion, $file);
 if ((not defined $arch) or ($arch eq "")) {
@@ -146,7 +141,11 @@ if ((not defined $arch) or ($arch eq "")) {
 } else {
 	printf (_g("Using foreign architecture: %s\n"), $arch);
 }
-$foreign++ if (($host ne $arch) and (not defined $ignorenative));
+$foreign++ if (($host ne $arch) or (defined $ignorenative));
+if (not defined $dir or not defined $arch) {
+	&dump_config;
+	exit 3;
+}
 unless (keys %sources) {
 	my $msg = sprintf(_g("No sources defined for a foreign multistrap.
 	Using your existing apt sources. To use different sources,
@@ -330,7 +329,8 @@ $config_str .= " -o Apt::Get::AllowUnauthenticated=true"
 $config_str .= " -o Apt::Get::Download-Only=true";
 $config_str .= " -o Apt::Install-Recommends=false";
 $config_str .= " -o Dir=$dir";
-$config_str .= " -o Dir::Etc=${dir}${etcdir} -o APT::Default-Release=*";
+$config_str .= " -o Dir::Etc=${dir}${etcdir} -o APT::Default-Release=*"
+	if (not defined $preffile);
 if (defined $deflist) {
 	$sourcesname = "sources.list.d/multistrap.sources.list";
 	$config_str .= " -o Dir::Etc::SourceList=${dir}${etcdir}$sourcesname";
@@ -1108,14 +1108,15 @@ sub cascade {
 				if (defined $keys{$section}{'configscript'} and (not defined $configsh));
 			$tgzname = lc($keys{$section}{'tarballname'})
 				if (defined $keys{$section}{'tarballname'} and (not defined $tgzname));
+			chomp($tgzname);
+			undef $tgzname if ($tgzname eq '');
 			undef $configsh if ((defined $configsh) and (not -x $configsh));
 			$setupsh = lc($keys{$section}{'setupscript'})
 				if (defined $keys{$section}{'setupscript'} and (not defined $setupsh));
 			undef $setupsh if ((defined $setupsh) and (not -x $setupsh));
 			$omitrequired++ if (defined $keys{$section}{'omitrequired'} and (lc($keys{$section}{'omitrequired'}) eq "true"));
 			$addimportant++ if (defined $keys{$section}{'addimportant'} and (lc($keys{$section}{'addimportant'}) eq "true"));
-			$omitpreinst = lc($keys{$section}{'omitpreinst'})
-				if (defined $keys{$section}{'omitpreinst'} and (not defined $omitpreinst));
+			$omitpreinst++ if (defined $keys{$section}{'omitpreinst'} and ($keys{$section}{'omitpreinst'} eq "true"));
 			$tidy++ if ((defined $keys{$section}{'cleanup'}) and ($keys{$section}{'cleanup'} eq "true"));
 			$noauth++ if ((defined $keys{$section}{'noauth'}) and ($keys{$section}{'noauth'} eq "true"));
 			$ignorenative++ if ((defined $keys{$section}{'ignorenativearch'}) and
@@ -1247,7 +1248,7 @@ sub cascade {
 
 # returns zero on success, non-zero on fail
 sub check_multiarch_dpkg {
-	my $retval = system ("dpkg --print-foreign-architecture > /dev/null 2>&1");
+	my $retval = system ("dpkg --print-foreign-architectures > /dev/null 2>&1");
 	$retval >>=8;
 	return $retval;
 }
@@ -1383,7 +1384,7 @@ sub dump_config {
 	}
 	if ($olddpkg != 0) {
 		printf "MultiArch:\t\t%s\n",_g("Currently installed dpkg does not support MultiArch.");
-	} else {
+	} elsif (scalar (@foreignarches) > 0) {
 		$plural = ngettext("Foreign architecture", "Foreign architectures", scalar @foreignarches);
 		printf ("MultiArch:\t\t%s: %s\n", $plural, join(" ", sort @foreignarches));
 	}
@@ -1424,6 +1425,22 @@ sub dump_config {
 	}
 	if (defined $tgzname) {
 		printf ("tarballname:\t\t"._g("Tarball name: '%s'\n"), $tgzname);
+	}
+	if (not defined $foreign or not defined $ignorenative) {
+		if (defined $omitpreinst) {
+			printf ("omitpreinst:\t\t"._g("Preinst scripts are not executed.\n"));
+		} else {
+			printf ("omitpreinst:\t\t"._g("Preinst scripts are executed with the install argument.\n"));
+		}
+		printf ("ignorenativearch:\t"._g("Packages will be configured.\n"));
+	} else {
+		printf ("omitpreinst:\t\t"._g("Preinst scripts are not executed.\n"));
+		printf ("ignorenativearch:\t"._g("Packages will not be configured.\n"));
+	}
+	if (defined $preffile) {
+		printf ("aptpreferences:\t\t"._g("Apt preferences file to use: '%1'\n"), $preffile);
+	} else {
+		printf ("aptpreferences:\t\t"._g("No apt preferences file. Default release: *\n"));
 	}
 	print "\n";
 	if (defined $msg) {

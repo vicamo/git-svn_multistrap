@@ -1,3 +1,10 @@
+multistrap (2.1.18) experimental; urgency=low
+
+  * Reverse logic of ignorenativearch, thanks to 
+    Andres Salomon <dilinger@queued.net>. (Closes: #669211)
+
+ -- Neil Williams <codehelp@debian.org>  Wed, 18 Apr 2012 21:15:51 +0100
+
 multistrap (2.1.17) experimental; urgency=low
 
   * [l10n] French manpages translation (Closes: #656418)
