@@ -5,8 +5,9 @@ multistrap (2.1.18) experimental; urgency=low
   * Fix logic in dump_config for missing packages lines.
     (Closes: #669206)
   * Check values of the keyring hash. (Closes: #669205)
+  * Update pdebuild-cross conf files to get toolchains from Squeeze.
 
- -- Neil Williams <codehelp@debian.org>  Wed, 18 Apr 2012 21:25:47 +0100
+ -- Neil Williams <codehelp@debian.org>  Fri, 20 Apr 2012 20:01:30 +0100
 
 multistrap (2.1.17) experimental; urgency=low
 
