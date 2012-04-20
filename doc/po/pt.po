@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: multistrap 2.1.12\n"
-"POT-Creation-Date: 2012-04-18 21:15+0200\n"
+"POT-Creation-Date: 2012-04-20 21:37+0200\n"
 "PO-Revision-Date: 2011-02-21 15:07+0000\n"
 "Last-Translator: Américo Monteiro <a_monteiro@netcabo.pt>\n"
 "Language-Team: Portuguese <traduz@debianpt.org>\n"
@@ -1979,34 +1979,33 @@ msgstr ""
 #. type: textblock
 #: pod/multistrap:734
 msgid ""
-"To enable multiarch inside a chroot, there is no need to set the second "
-"architecture in C<apt>, C<apt> will ask C<dpkg> which will look in F</etc/"
-"dpkg/dpkg.cfg> or F</etc/dpkg/dpkg.cfg.d/> and then retrieve the Packages "
-"data for each architecture specified using the option:"
-msgstr ""
-
-#. type: verbatim
-#: pod/multistrap:739
-#, no-wrap
-msgid ""
-" foreign-architecture armel\n"
-"\n"
+"Multiarch support is experimental - please report issues and file bugs with "
+"full details of your setup, the full multistrap config file and the errors "
+"reported."
 msgstr ""
 
 #. type: textblock
-#: pod/multistrap:741
+#: pod/multistrap:738
 msgid ""
-"For multiple architectures, specify the option once for each architecture."
+"C<multistrap> overrides the existing multiarch support of the external "
+"system so that a MultiArch aware system can still create a non-MultiArch "
+"chroot from repositories which do not support all of the architectures "
+"supported by the external dpkg."
 msgstr ""
 
 #. type: textblock
-#: pod/multistrap:744
+#: pod/multistrap:743
 msgid ""
-"Using the MultiArch option in the C<General> section of your C<multistrap> "
-"configuration file will create a file F</etc/dpkg/dpkg.cfg.d/multiarch> "
-"which will implement this support. This option can be repeated (for "
-"compatibility with how dpkg works) or as a space-delimited list of "
-"architectures on a single line."
+"If multiarch is enabled within the multistrap chroot, C<multistrap> writes "
+"out the list into F</var/lib/dpkg/arch> inside the chroot."
+msgstr ""
+
+#. type: textblock
+#: pod/multistrap:746
+msgid ""
+"For multiple architectures, specify the option once and use a space "
+"separated list for the architecture list. Ensure you include what will be "
+"the host architecture of the chroot."
 msgstr ""
 
 #. type: textblock
@@ -2022,7 +2021,7 @@ msgstr "Veja também: http://wiki.debian.org/Multistrap"
 msgid ""
 " [General]\n"
 " ...\n"
-" MultiArch=armel armhf\n"
+" multiarch=i386 armel armhf\n"
 "\n"
 msgstr ""
 
@@ -2063,7 +2062,17 @@ msgstr ""
 #: pod/multistrap:766
 msgid ""
 "In the C<--simulate> output, the architecture(s) specified in the MultiArch "
-"option will be listed under the \"Foreign architectures\" listing."
+"option will be listed under the \"Foreign architectures\" listing. Packages "
+"for a specific architecture will be listed as the package name followed by a "
+"colon followed by the architecture."
+msgstr ""
+
+#. type: verbatim
+#: pod/multistrap:771
+#, no-wrap
+msgid ""
+" libgcc1:armel libc6:armel\n"
+"\n"
 msgstr ""
 
 #. type: textblock
