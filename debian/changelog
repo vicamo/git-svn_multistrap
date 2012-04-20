@@ -6,8 +6,9 @@ multistrap (2.1.18) experimental; urgency=low
     (Closes: #669206)
   * Check values of the keyring hash. (Closes: #669205)
   * Update pdebuild-cross conf files to get toolchains from Squeeze.
+  * Improve MultiArch support, still experimental
 
- -- Neil Williams <codehelp@debian.org>  Fri, 20 Apr 2012 20:01:30 +0100
+ -- Neil Williams <codehelp@debian.org>  Fri, 20 Apr 2012 21:36:54 +0100
 
 multistrap (2.1.17) experimental; urgency=low
 

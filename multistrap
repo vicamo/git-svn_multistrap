@@ -186,8 +186,8 @@ if (defined $preffile) {
 	print MPREF @prefs;
 	close (MPREF);
 }
-@dirs = qw/ alternatives info parts updates/;
-@touch = qw/ diversions statoverride status lock/;
+@dirs = qw/ alternatives info parts updates /;
+@touch = qw/ arch diversions statoverride status lock/;
 foreach my $dpkgd (@dirs) {
 	if (not -d "${dir}${dpkgdir}$dpkgd") {
 		mkdir_fatal ("${dir}${dpkgdir}$dpkgd");
@@ -207,7 +207,7 @@ if (not -d "${dir}etc/network") {
 if (not -d "${dir}dev") {
 	mkdir_fatal ("${dir}dev");
 }
-if ($olddpkg == 0) {
+if (($olddpkg == 0) and (scalar (@foreignarches) > 0)) {
 	if (not -d "${dir}etc/dpkg/dpkg.cfg.d/") {
 		system_fatal ("mkdir -p ${dir}etc/dpkg/dpkg.cfg.d/");
 	}
@@ -217,6 +217,12 @@ if ($olddpkg == 0) {
 			print MA "foreign-architecture $farch\n";
 		}
 		close (MA);
+		open (VMA, ">${dir}${dpkgdir}arch");
+		print MA "$host\n";
+		foreach my $farch (@foreignarches) {
+			print MA "$farch\n";
+		}
+		close (VMA);
 	}
 }
 
@@ -257,7 +263,17 @@ foreach my $aptsrc (@debootstrap) {
 		my $component = (exists $flatfile{$aptsrc}) ? "" 
 			: (defined $components{$aptsrc}) ? $components{$aptsrc} : "main";
 		if (defined $mirror and defined $suite) {
-			print SOURCES "deb $mirror $suite $component\n";
+			if ($olddpkg != 0) {
+				print SOURCES "deb $mirror $suite $component\n";
+			} else {
+				if (scalar (@foreignarches) == 0) {
+					print SOURCES "deb [arch=$arch] $mirror $suite $component\n";
+				} else {
+					foreach my $farch (@foreignarches) {
+						print SOURCES "deb [arch=$farch] $mirror $suite $component\n";
+					}
+				}
+			}
 			print SOURCES "deb-src $mirror $suite $component\n" if (not defined $omitdebsrc{$aptsrc});
 			close SOURCES;
 		}
@@ -442,7 +458,17 @@ foreach my $aptsrc (@aptsources) {
 		my $component = (exists $flatfile{$aptsrc}) ? "" 
 			: (defined $components{$aptsrc}) ? $components{$aptsrc} : "main";
 		if (defined $mirror and defined $suite) {
-			print SOURCES "deb $mirror $suite $component\n";
+			if ($olddpkg != 0) {
+				print SOURCES "deb $mirror $suite $component\n";
+			} else {
+				if (scalar (@foreignarches) == 0) {
+					print SOURCES "deb [arch=$arch] $mirror $suite $component\n";
+				} else {
+					foreach my $farch (@foreignarches) {
+						print SOURCES "deb [arch=$farch] $mirror $suite $component\n";
+					}
+				}
+			}
 			print SOURCES "deb-src $mirror $suite $component\n" if (not defined $omitdebsrc{$aptsrc});
 			close SOURCES;
 		}
@@ -1089,6 +1115,7 @@ will be created - it is not packed into a .tgz once complete.
 sub cascade {
 	$olddpkg = &check_multiarch_dpkg;
 	$file = shift;
+	my @req_arches=();
 	$config = Config::Auto::parse($file, format => 'ini');
 	if (not defined $config or (scalar keys %$config) == 0) {
 		die ("$progname: ". sprintf(_g("Failed to parse '%s'!\n"), $file));
@@ -1194,16 +1221,19 @@ sub cascade {
 			# don't set suite or component if URL is of apt-ftparchive trailing-slash form
 			# regexp is: optional string in '[]', string without '[' or ']', string ending in '/'
 			$flatfile{$section}++ if (($sources{$section} =~ /^(\[.*\] )*[^\[\]]+ .+\/$/));
-			if (exists $keys{$section}{'architecture'}) {
+			if ((exists $keys{$section}{'architecture'}) and 
+				($keys{$section}{'architecture'} ne "")) {
 				my $frgn_arch = $keys{$section}{'architecture'};
 				my @tmp=();
 				if (ref ($keys{$section}{'packages'}) eq 'ARRAY') {
 					foreach my $p (@{$keys{$section}{'packages'}}) {
 						push @tmp, "$p:$frgn_arch";
+						push @req_arches, $frgn_arch;
 					}
 				} else {
 					foreach my $p (split(' ', $keys{$section}{'packages'})) {
 						push @tmp, "$p:$frgn_arch";
+						push @req_arches, $frgn_arch;
 					}
 				}
 				if ($olddpkg == 0) {
@@ -1234,6 +1264,20 @@ sub cascade {
 			$keyrings{$section}=$keys{$section}{'keyring'} if (not exists $keyrings{$section});
 			push @extrapkgs, split (' ', lc($keys{$section}{'additional'}))
 				if (defined $keys{$section}{'additional'});
+		}
+	}
+	my %archchk=();
+	foreach my $farch (@foreignarches) {
+		$archchk{$farch}++;
+	}
+	foreach my $req (@req_arches) {
+		if (not exists $archchk{$req}) {
+			# Translators: %1 and %2 are the same value here - the erroneous architecture name
+			my $reqmsg = sprintf (_g("ERR: Misconfiguration in: 'architecture'. option. ".
+			"Packages of architecture=%1 requested but '%2' is not included in the multiarch=".
+			join (" ", @foreignarches) . " option.\n"), $req, $req);
+			warn $reqmsg;
+			die ("\n");
 		}
 	}
 	my %uniq=();

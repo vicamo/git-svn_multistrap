@@ -731,27 +731,27 @@ on a pastebin website and put the URL in your message.
 
 =head1 MultiArch support
 
-To enable multiarch inside a chroot, there is no need to set the second
-architecture in C<apt>, C<apt> will ask C<dpkg> which will look in
-F</etc/dpkg/dpkg.cfg> or F</etc/dpkg/dpkg.cfg.d/> and then retrieve the
-Packages data for each architecture specified using the option:
+Multiarch support is experimental - please report issues and file bugs
+with full details of your setup, the full multistrap config file and
+the errors reported.
 
- foreign-architecture armel
+C<multistrap> overrides the existing multiarch support of the external
+system so that a MultiArch aware system can still create a non-MultiArch
+chroot from repositories which do not support all of the architectures
+supported by the external dpkg.
 
-For multiple architectures, specify the option once for each
-architecture.
+If multiarch is enabled within the multistrap chroot, C<multistrap>
+writes out the list into F</var/lib/dpkg/arch> inside the chroot.
 
-Using the MultiArch option in the C<General> section of your C<multistrap>
-configuration file will create a file F</etc/dpkg/dpkg.cfg.d/multiarch>
-which will implement this support. This option can be repeated (for
-compatibility with how dpkg works) or as a space-delimited list of
-architectures on a single line.
+For multiple architectures, specify the option once and use a space
+separated list for the architecture list. Ensure you include what will
+be the host architecture of the chroot.
 
 See also http://wiki.debian.org/Multiarch/
 
  [General]
  ...
- MultiArch=armel armhf
+ multiarch=i386 armel armhf
 
 Each Section will install packages from the base architecture unless
 the C<Architecture> option is specified for particular sections.
@@ -765,6 +765,9 @@ the C<Architecture> option is specified for particular sections.
 
 In the C<--simulate> output, the architecture(s) specified in the
 MultiArch option will be listed under the "Foreign architectures"
-listing.
+listing. Packages for a specific architecture will be listed as the
+package name followed by a colon followed by the architecture.
+
+ libgcc1:armel libc6:armel
 
 =cut
