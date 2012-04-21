@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: multistrap\n"
 "Report-Msgid-Bugs-To: multistrap@packages.debian.org\n"
-"POT-Creation-Date: 2012-04-20 21:34+0100\n"
+"POT-Creation-Date: 2012-04-21 20:37+0100\n"
 "PO-Revision-Date: 2011-08-16 18:24+0100\n"
 "Last-Translator: Julien Patriarca <patriarcaj@gmail.com>\n"
 "Language-Team: French <debian-l10n-french@lists.debian.org>\n"
@@ -611,9 +611,10 @@ msgstr ""
 
 #. Translators: %1 and %2 are the same value here - the erroneous architecture name
 #: ../multistrap:1276
+#, perl-format
 msgid ""
 "ERR: Misconfiguration in: 'architecture'. option. Packages of architecture="
-"%1 requested but '%2' is not included in the multiarch="
+"%s requested but '%s' is not included in the multiarch="
 msgstr ""
 
 #: ../multistrap:1309
