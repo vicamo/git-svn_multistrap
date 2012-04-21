@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: multistrap\n"
 "Report-Msgid-Bugs-To: multistrap@packages.debian.org\n"
-"POT-Creation-Date: 2012-04-21 20:37+0100\n"
+"POT-Creation-Date: 2012-04-21 20:40+0100\n"
 "PO-Revision-Date: 2011-08-16 18:24+0100\n"
 "Last-Translator: Julien Patriarca <patriarcaj@gmail.com>\n"
 "Language-Team: French <debian-l10n-french@lists.debian.org>\n"
@@ -825,7 +825,8 @@ msgid "Packages will not be configured.\n"
 msgstr ""
 
 #: ../multistrap:1488
-msgid "Apt preferences file to use: '%1'\n"
+#, perl-format
+msgid "Apt preferences file to use: '%s'\n"
 msgstr ""
 
 #: ../multistrap:1490
