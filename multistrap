@@ -1138,8 +1138,8 @@ sub cascade {
 				if (defined $keys{$section}{'configscript'} and (not defined $configsh));
 			$tgzname = lc($keys{$section}{'tarballname'})
 				if (defined $keys{$section}{'tarballname'} and (not defined $tgzname));
-			chomp($tgzname);
-			undef $tgzname if ($tgzname eq '');
+			chomp($tgzname) if (defined $tgzname);
+			undef $tgzname if (defined $tgzname and $tgzname eq '');
 			undef $configsh if ((defined $configsh) and (not -x $configsh));
 			$setupsh = lc($keys{$section}{'setupscript'})
 				if (defined $keys{$section}{'setupscript'} and (not defined $setupsh));
@@ -1247,9 +1247,9 @@ sub cascade {
 				}
 			} else {
 				if (ref ($keys{$section}{'packages'}) eq 'ARRAY') {
-					$packages{$section}=join(' ', @{$keys{$section}{'packages'}}) if (not exists $packages{$section});
+					$packages{$section}=join(' ', @{$keys{$section}{'packages'}});
 				} else {
-					$packages{$section}=join(' ', $keys{$section}{'packages'}) if (exists $packages{$section});
+					$packages{$section}=join(' ', $keys{$section}{'packages'});
 				}
 			}
 			$suites{$section}=$keys{$section}{'suite'}
