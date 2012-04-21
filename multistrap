@@ -1273,7 +1273,7 @@ sub cascade {
 	foreach my $req (@req_arches) {
 		if (not exists $archchk{$req}) {
 			# Translators: %1 and %2 are the same value here - the erroneous architecture name
-			my $reqmsg = sprintf (_g("ERR: Misconfiguration in: 'architecture'. option. ".
+			my $reqmsg = sprintf (_g("ERR: Misconfiguration in: 'architecture' option. ".
 			"Packages of architecture=%s requested but '%s' is not included in the multiarch=".
 			join (" ", @foreignarches) . " option.\n"), $req, $req);
 			warn $reqmsg;
@@ -1485,7 +1485,7 @@ sub dump_config {
 		printf ("ignorenativearch:\t"._g("Packages will not be configured.\n"));
 	}
 	if (defined $preffile) {
-		printf ("aptpreferences:\t\t"._g("Apt preferences file to use: '%1'\n"), $preffile);
+		printf ("aptpreferences:\t\t"._g("Apt preferences file to use: '%s'\n"), $preffile);
 	} else {
 		printf ("aptpreferences:\t\t"._g("No apt preferences file. Default release: *\n"));
 	}
