@@ -1274,7 +1274,7 @@ sub cascade {
 		if (not exists $archchk{$req}) {
 			# Translators: %1 and %2 are the same value here - the erroneous architecture name
 			my $reqmsg = sprintf (_g("ERR: Misconfiguration in: 'architecture'. option. ".
-			"Packages of architecture=%1 requested but '%2' is not included in the multiarch=".
+			"Packages of architecture=%s requested but '%s' is not included in the multiarch=".
 			join (" ", @foreignarches) . " option.\n"), $req, $req);
 			warn $reqmsg;
 			die ("\n");
