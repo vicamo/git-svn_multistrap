@@ -1,3 +1,9 @@
+multistrap (2.1.20) experimental; urgency=low
+
+  * [INTL:da] Danish translation of multistrap (Closes: #669879)
+
+ -- Neil Williams <codehelp@debian.org>  Sat, 21 Apr 2012 20:37:57 +0100
+
 multistrap (2.1.19) experimental; urgency=low
 
   * Fix multiarch/unstable support for packages listings.

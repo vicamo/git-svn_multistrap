@@ -1,7 +1,7 @@
 # Danish translation multistrap.
-# Copyright (C) 2010 multistrap & Joe Hansen.
+# Copyright (C) 2012 multistrap & Joe Hansen.
 # This file is distributed under the same license as the multistrap package.
-# Joe Hansen <joedalton2@yahoo.dk>, 2010, 2011.
+# Joe Hansen <joedalton2@yahoo.dk>, 2010, 2011, 2012.
 #
 # suite -> programpakke
 #
@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: multistrap\n"
 "Report-Msgid-Bugs-To: multistrap@packages.debian.org\n"
-"POT-Creation-Date: 2012-04-20 21:34+0100\n"
-"PO-Revision-Date: 2011-08-14 17:30+01:00\n"
+"POT-Creation-Date: 2012-04-21 20:37+0100\n"
+"PO-Revision-Date: 2012-04-21 17:30+01:00\n"
 "Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"
 "Language-Team: Danish <debian-l10n-danish@lists.debian.org> \n"
 "Language: \n"
@@ -589,10 +589,13 @@ msgstr ""
 
 #. Translators: %1 and %2 are the same value here - the erroneous architecture name
 #: ../multistrap:1276
+#, perl-format
 msgid ""
 "ERR: Misconfiguration in: 'architecture'. option. Packages of architecture="
-"%1 requested but '%2' is not included in the multiarch="
+"%s requested but '%s' is not included in the multiarch="
 msgstr ""
+"FEJL: Fejlkonfiguration i tilvalg: »architecture« (arkitektur). Pakker for "
+"architecture=%s men »%s« er ikke inkluderet i multiarch="
 
 #: ../multistrap:1309
 #, perl-format
@@ -780,25 +783,24 @@ msgstr "Tarball-navn: »%s«\n"
 
 #: ../multistrap:1478 ../multistrap:1484
 msgid "Preinst scripts are not executed.\n"
-msgstr ""
+msgstr "Preinst-skripter køres ikke.\n"
 
 #: ../multistrap:1480
-#, fuzzy
 msgid "Preinst scripts are executed with the install argument.\n"
-msgstr "I: Kører preinst-skripter med argumentet »install«.\n"
+msgstr "Preinst-skripter køres med installationsargumentet.\n"
 
 #: ../multistrap:1482
 msgid "Packages will be configured.\n"
-msgstr ""
+msgstr "Pakker vil blive konfigureret.\n"
 
 #: ../multistrap:1485
 msgid "Packages will not be configured.\n"
-msgstr ""
+msgstr "Pakker vil ikke blive konfigureret.\n"
 
 #: ../multistrap:1488
 msgid "Apt preferences file to use: '%1'\n"
-msgstr ""
+msgstr "Apt-præferencefil der skal bruges: »%1«\n"
 
 #: ../multistrap:1490
 msgid "No apt preferences file. Default release: *\n"
-msgstr ""
+msgstr "Ingen apt-præferencefil. Standardudgivelse: *\n"
