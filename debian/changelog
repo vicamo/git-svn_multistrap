@@ -3,8 +3,6 @@ multistrap (2.1.20) experimental; urgency=low
   * [INTL:da] Danish translation of multistrap (Closes: #669879)
   * [INTL:pt] Updated Portuguese manpage translation.
     (Closes: #670402)
-  * [INTL:pt] Updated Portuguese translation multistrap.
-    (Closes: #670698)
   * Add an update-alternatives helper.
 
  -- Neil Williams <codehelp@debian.org>  Sat, 28 Apr 2012 12:41:23 +0100
