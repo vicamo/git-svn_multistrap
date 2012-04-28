@@ -675,6 +675,10 @@ sub force_unpack {
 		&guard_lib64 ($dir);
 	}
 	chdir ("$old");
+	# update-alternatives helper / preinst helper
+	if (not -d "${dir}usr/share/man/man1") {
+		&mkdir_fatal ("${dir}usr/share/man/man1");
+	}
 	print _g("I: Unpacking complete.\n");
 	foreach my $seed (@debconf) {
 		next if (not -f $seed);
