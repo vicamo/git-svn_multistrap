@@ -4,8 +4,9 @@ multistrap (2.1.20) experimental; urgency=low
   * [INTL:pt] Updated Portuguese manpage translation.
     (Closes: #670402)
   * Add an update-alternatives helper.
+  * [INTL:de] updated German translation (Closes: #670835)
 
- -- Neil Williams <codehelp@debian.org>  Sat, 28 Apr 2012 12:41:23 +0100
+ -- Neil Williams <codehelp@debian.org>  Sun, 29 Apr 2012 14:47:57 +0100
 
 multistrap (2.1.19) experimental; urgency=low
 

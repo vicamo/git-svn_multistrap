@@ -2,14 +2,14 @@
 # Copyright (C) 2001-2002 Erik Andersen, 2001-2006 Junichi Uekawa,
 #               2006-2007 Wookey, 2008 Hands.com Ltd, 2006-2010 Neil Williams.
 # This file is distributed under the same license as the multistrap package.
-# Translation by Chris Leick <c.leick@vollbio.de>, 2011
+# Translation by Chris Leick <c.leick@vollbio.de>, 2011, 2012
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: multistrap 2.1.16\n"
+"Project-Id-Version: multistrap 2.1.18\n"
 "Report-Msgid-Bugs-To: multistrap@packages.debian.org\n"
-"POT-Creation-Date: 2012-04-28 12:58+0100\n"
-"PO-Revision-Date: 2011-08-25 20:51+0200\n"
+"POT-Creation-Date: 2012-04-29 14:42+0100\n"
+"PO-Revision-Date: 2012-04-23 19:41+0200\n"
 "Last-Translator: Chris Leick <c.leick@vollbio.de>\n"
 "Language-Team: German <debian-l10n-german@lists.debian.org>\n"
 "Language: de\n"
@@ -418,7 +418,6 @@ msgstr "Verzeichnis %s kann nicht geöffnet werden. %s\n"
 msgid "cannot open apt sources list. %s"
 msgstr "Apt-Quellenliste kann nicht geöffnet werden. %s"
 
-# FIXME s/directory %s/directory. %s/
 #: ../multistrap:1030
 #, perl-format
 msgid "cannot open apt sources.list directory %s\n"
@@ -619,6 +618,8 @@ msgid ""
 "ERR: Misconfiguration in: 'architecture' option. Packages of architecture=%s "
 "requested but '%s' is not included in the multiarch="
 msgstr ""
+"FEHLER: Fehlerhafte Konfiguration in der Option »architecture«. architecture="
+"%s angefordert, aber »%s« ist nicht enthalten in der multiarch="
 
 #: ../multistrap:1313
 #, perl-format
@@ -700,27 +701,26 @@ msgid_plural "Debconf preseed files"
 msgstr[0] "Debconf-Voreinstellungsdatei"
 msgstr[1] "Debconf-Voreinstellungsdateien"
 
-# FIXME: Missing plural (3x)
 #. Translators: leaving the plural blank to keep the lines shorter.
 #: ../multistrap:1415
 msgid "Download hook: "
 msgid_plural ""
 msgstr[0] "Download-Hook: "
-msgstr[1] ""
+msgstr[1] "Download-Hooks: "
 
 #. Translators: leaving the plural blank to keep the lines shorter.
 #: ../multistrap:1420
 msgid "Native hook: "
 msgid_plural ""
 msgstr[0] "Nativer Hook: "
-msgstr[1] ""
+msgstr[1] "Native Hooks: "
 
 #. Translators: leaving the plural blank to keep the lines shorter.
 #: ../multistrap:1425
 msgid "Completion hook: "
 msgid_plural ""
 msgstr[0] "Komplettierungs-Hook: "
-msgstr[1] ""
+msgstr[1] "Komplettierungs-Hooks: "
 
 #: ../multistrap:1428
 msgid "Extra Package: "
@@ -814,23 +814,23 @@ msgid "Preinst scripts are not executed.\n"
 msgstr ""
 
 #: ../multistrap:1484
-#, fuzzy
 msgid "Preinst scripts are executed with the install argument.\n"
-msgstr "I: Preinst-Skript wird mit dem Argument »install« ausgeführt.\n"
+msgstr "Preinst-Skripte werden mit dem Argument »install« ausgeführt.\n"
 
 #: ../multistrap:1486
 msgid "Packages will be configured.\n"
-msgstr ""
+msgstr "Pakete werden konfiguriert sein.\n"
 
 #: ../multistrap:1489
 msgid "Packages will not be configured.\n"
-msgstr ""
+msgstr "Pakete werden nicht konfiguriert sein.\n"
 
+# Datei: /etc/preferences
 #: ../multistrap:1492
 #, perl-format
 msgid "Apt preferences file to use: '%s'\n"
-msgstr ""
+msgstr "zu benutzende APT-Preferences-Datei: »%s«\n"
 
 #: ../multistrap:1494
 msgid "No apt preferences file. Default release: *\n"
-msgstr ""
+msgstr "keine APT-Preferences-Datei. Standardveröffentlichung: *\n"
