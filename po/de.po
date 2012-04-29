@@ -811,7 +811,7 @@ msgstr "Name des Tarballs: »%s«\n"
 
 #: ../multistrap:1482 ../multistrap:1488
 msgid "Preinst scripts are not executed.\n"
-msgstr ""
+msgstr "Presinst-Skripte werden nicht ausgeführt.\n"
 
 #: ../multistrap:1484
 msgid "Preinst scripts are executed with the install argument.\n"
