@@ -32,7 +32,7 @@ use vars qw/ $progname $ourversion $dstrap $extra @aptsources
  $repo @dirs @touch %sources $section %keys $host $key $value $preffile
  $type $file $config $tidy $noauth $keyring %keyrings $deflist $cfgdir
  @extrapkgs @includes %source $setupsh $configsh $omitrequired $dryrun
- $omitpreinst @reinstall $tgzname %uniq %required $check @check %uniq
+ $omitpreinst @reinstall $tgzname %required $check @check
  $explicit_suite $allow_recommends %omitdebsrc @dsclist @sectoutput
  %flatfile %important $addimportant @debconf $hookdir %hooks
  $warn_count $use_shortcut @foreignarches $olddpkg $ignorenative
@@ -117,16 +117,8 @@ if (defined $omitrequired and defined $addimportant) {
 	}
 	exit (7);
 }
-%uniq=();
-foreach my $line (@debootstrap) {
-	$uniq{$line}++;
-}
-@debootstrap=sort keys %uniq;
-%uniq=();
-foreach my $line (@aptsources) {
-	$uniq{$line}++;
-}
-@aptsources=sort keys %uniq;
+uniq_sort (\@debootstrap);
+uniq_sort (\@aptsources);
 if (defined $dryrun) {
 	&dump_config;
 	exit 0;
@@ -397,12 +389,9 @@ foreach my $keystr (values %keyrings) {
 	$str .= " " . $keystr . " ";
 }
 chomp($str);
-%uniq=();
 @s = split (/ /, $str);
-foreach my $a (@s) {
-	$uniq{$a}++;
-}
-$str = join (' ', sort keys %uniq);
+uniq_sort (\@s);
+$str = join (' ', @s);
 print "apt-get -y $config_str install $str\n";
 $retval = 0;
 $retval = system ("apt-get -y $config_str install $str");
@@ -869,15 +858,12 @@ sub handle_source_packages {
 			}
 		}
 	}
-	my %uniqdsc=();
-	foreach my $a (@dsclist) {
-		$uniqdsc{$a}++;
-	}
+	uniq_sort (\@dsclist);
 	my $olddir = getcwd();
 	chdir ($sourcedir);
-	if (scalar keys %uniqdsc > 0) {
-		print "apt-get -d $config_str source " . join (" ", sort keys %uniqdsc) . "\n";
-		foreach my $srcpkg (sort keys %uniqdsc) {
+	if (scalar @dsclist > 0) {
+		print "apt-get -d $config_str source " . join (" ", @dsclist) . "\n";
+		foreach my $srcpkg (@dsclist) {
 			system ("apt-get -d $config_str source $srcpkg");
 		}
 	}
@@ -1284,17 +1270,8 @@ sub cascade {
 			die ("\n");
 		}
 	}
-	my %uniq=();
-	foreach my $listing (@reinstall) {
-		$uniq{$listing}++;
-	}
-	@reinstall=();
-	@reinstall=sort keys %uniq;
-	%uniq=();
-	foreach my $x (@extrapkgs) {
-		$uniq{$x}++;
-	}
-	@extrapkgs = keys %uniq;
+	uniq_sort (\@reinstall);
+	uniq_sort (\@extrapkgs);
 }
 
 # returns zero on success, non-zero on fail
@@ -1328,6 +1305,15 @@ sub _g {
 	return gettext(shift);
 }
 
+sub uniq_sort {
+	my $aryref = shift;
+	my %uniq = ();
+	foreach my $i (@$aryref) {
+		$uniq{$i}++;
+	}
+	@$aryref = sort keys %uniq;
+}
+
 sub dump_config {
 	if (not defined $dir or not defined $arch) {
 		my $msg = sprintf(_g("The supplied configuration file '%s'".
@@ -1336,12 +1322,9 @@ sub dump_config {
 	}
 	my $plural;
 	@check=();
-	%uniq=();
 	push @check, @debootstrap;
 	push @check, @aptsources;
-	foreach my $sect (@check) { $uniq{$sect}++; }
-	@check = sort keys %uniq;
-	%uniq=();
+	uniq_sort (\@check);
 	foreach my $sect (@check) {
 		if (not exists $keys{$sect}) {
 			$msg .= sprintf (_g("ERR: The '%s' section is not defined.\n"), $sect);
@@ -1363,12 +1346,7 @@ sub dump_config {
 		printf ("Section name:\t$sect_name\n");
 		print "\tsource:\t\t$sources{$sect_name}\n";
 		my @sorted = split(/ /, $packages{$sect_name});
-		%uniq=();
-		foreach my $pkg (@sorted) {
-			$uniq{$pkg}++;
-		}
-		@sorted = sort keys %uniq;
-		%uniq=();
+		uniq_sort (\@sorted);
 		print "\tsuite:\t\t$suites{$sect_name}\n" if (not exists $flatfile{$sect_name});
 		print "\tcomponents:\t$components{$sect_name}\n" if (not exists $flatfile{$sect_name});
 		# only list packages in a bootstrapping section
