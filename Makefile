@@ -16,6 +16,7 @@ clean:
 	$(RM) *~
 	$(MAKE) -C doc clean
 	$(MAKE) -C po clean
+	$(RM) po/*.gmo po/*.mo
 
 # adds the POT file to the source tarball
 native-dist: Makefile
