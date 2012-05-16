@@ -12,7 +12,7 @@ multistrap (2.1.20) unstable; urgency=low
   * [INTL:de] update German manpage translation (Closes: #671708)
   * Upload to unstable. 
 
- -- Neil Williams <codehelp@debian.org>  Sun, 06 May 2012 23:44:42 +0100
+ -- Neil Williams <codehelp@debian.org>  Wed, 16 May 2012 20:32:57 +0100
 
 multistrap (2.1.19) experimental; urgency=low
 
