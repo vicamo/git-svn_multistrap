@@ -1,4 +1,4 @@
-multistrap (2.1.20) experimental; urgency=low
+multistrap (2.1.20) unstable; urgency=low
 
   * [INTL:da] Danish translation of multistrap (Closes: #669879)
   * [INTL:pt] Updated Portuguese manpage translation.
@@ -10,6 +10,7 @@ multistrap (2.1.20) experimental; urgency=low
   * [INTL:da] Danish translation of multistrap manual
     (Closes: #671104)
   * [INTL:de] update German manpage translation (Closes: #671708)
+  * Upload to unstable. 
 
  -- Neil Williams <codehelp@debian.org>  Sun, 06 May 2012 23:44:42 +0100
 
