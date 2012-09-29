@@ -120,6 +120,15 @@ more information on getting specific packages from specific suites.
 'Architecture' and 'directory' can be overridden on the command line.
 Some other general options also have command line options.
 
+=head1 Online examples and documentation
+
+C<multistrap> supports a range of permutations, see the wiki and the
+emdebian website for more information and example configurations:
+
+http://wiki.debian.org/Multistrap
+
+http://www.emdebian.org/multistrap/
+
 =head1 Shortcuts
 
 In a similar manner to C<debootstrap>, C<multistrap> supports referring
@@ -256,7 +265,6 @@ be the suite, not the codename.
 
 Suites change from time to time: (oldstable, stable, testing, sid)
 The codename (etch, lenny, squeeze, sid) does not change.
-
 
 =head1 Secure Apt
 
@@ -448,6 +456,43 @@ be called in the variant configuration file (General section):
  setupscript=/path/to/setup.sh
  configscript=/path/to/config.sh
 
+Ensure that both the setupscript and the configscript are executable
+or C<multistrap> will ignore the script.
+
+=over 1 
+
+=item Example configscript.sh
+
+ #!/bin/sh
+ 
+ set -e
+ 
+ export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
+ export LC_ALL=C LANGUAGE=C LANG=C
+ /var/lib/dpkg/info/dash.preinst install
+ dpkg --configure -a
+ mount proc -t proc /proc
+ dpkg --configure -a
+ umount /proc
+
+For more information, see the Wiki:
+http://wiki.debian.org/Multistrap
+
+=item Mounting /dev and /proc for chroot configuration
+
+/proc can be mounted inside the chroot, as above:
+
+ mount proc -t proc /proc
+
+However, /dev should be mounted from outside the chroot, before
+running any C<configscript.sh> in the chroot:
+
+ cd /path/chroot/
+ sudo tar -xzf /path/multistrap.tgz
+ sudo mount /dev -o bind ./dev/
+ sudo chroot . ./configscript.sh || true
+
+=back
 
 =head1 Restricting package selection
 
@@ -647,7 +692,24 @@ the [General] section, separated by spaces:
 
 Files which do not exist or which cannot be opened will be silently
 ignored. Check the results of the parsing using the C<--simulate>
-option to C<multistrap>.
+option to C<multistrap>. The preseeding files will be copied to a
+preseed directory in /tmp inside the rootfs.
+
+To use the preseeding, add a section to the configscript.sh,
+prior to any calls to B<dpkg --configure -a>. e.g. :
+
+ #!/bin/sh
+ 
+ set -e
+ 
+ export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
+ export LC_ALL=C LANGUAGE=C LANG=C
+ if [ -d /tmp/preseeds/ ]; then
+    for file in `ls -1 /tmp/preseeds/*`; do
+    debconf-set-selections $file
+    done
+ fi
+ dpkg --configure -a
 
 =head1 Hooks
 
