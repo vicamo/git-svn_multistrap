@@ -189,7 +189,7 @@ foreach my $file (@touch) {
 	utime(time, time, "${dir}${dpkgdir}/$file") or (
 		open(F, ">${dir}${dpkgdir}/$file") && close F );
 }
-utime(time, time, "${dir}etc/shells") or 
+utime(time, time, "${dir}etc/shells") or
 	(open(F, ">${dir}etc/shells") && close F );
 
 if (not -d "${dir}etc/network") {
@@ -243,16 +243,16 @@ foreach $repo (sort keys %suites) {
 }
 foreach my $aptsrc (@debootstrap) {
 	if (defined $deflist) {
-		open (SOURCES, ">>${dir}etc/apt/sources.list.d/multistrap.sources.list") 
+		open (SOURCES, ">>${dir}etc/apt/sources.list.d/multistrap.sources.list")
 			or die _g("Cannot open sources list"). $!;
 		print SOURCES $deflist;
 		close SOURCES;
 	} elsif (-d "${dir}etc/apt/") {
-		open (SOURCES, ">>${dir}etc/apt/sources.list.d/multistrap-${aptsrc}.list") 
+		open (SOURCES, ">>${dir}etc/apt/sources.list.d/multistrap-${aptsrc}.list")
 			or die _g("Cannot open sources list"). $!;
 		my $mirror = $sources{$aptsrc};
 		my $suite = (exists $flatfile{$aptsrc}) ? "" : $suites{$aptsrc};
-		my $component = (exists $flatfile{$aptsrc}) ? "" 
+		my $component = (exists $flatfile{$aptsrc}) ? ""
 			: (defined $components{$aptsrc}) ? $components{$aptsrc} : "main";
 		if (defined $mirror and defined $suite) {
 			if ($olddpkg != 0) {
@@ -323,10 +323,10 @@ if ((defined $k) and (not defined $noauth)) {
 		system ("rm -rf ${xdir}");
 	}
 	if (-f "${dir}/etc/apt/trusted.gpg.d/multistrap.gpg") {
-		system_fatal ("cp ${dir}/etc/apt/trusted.gpg.d/multistrap.gpg ${dir}/etc/apt/trusted.gpg.d/trustdb.gpg"); 
-	} else { 
-		die (_g("Secure Apt handling failed - try without authentication.")."\n"); 
-	} 
+		system_fatal ("cp ${dir}/etc/apt/trusted.gpg.d/multistrap.gpg ${dir}/etc/apt/trusted.gpg.d/trustdb.gpg");
+	} else {
+		die (_g("Secure Apt handling failed - try without authentication.")."\n");
+	}
 }
 $config_str = '';
 $config_str .= " -o Apt::Architecture=$arch";
@@ -436,16 +436,16 @@ foreach my $filelist (@sources) {
 }
 foreach my $aptsrc (@aptsources) {
 	if (defined $deflist) {
-		open (SOURCES, ">>${dir}etc/apt/sources.list.d/multistrap.sources.list") 
+		open (SOURCES, ">>${dir}etc/apt/sources.list.d/multistrap.sources.list")
 			or die _g("Cannot open sources list"). $!;
 		print SOURCES $deflist;
 		close SOURCES;
 	} elsif (-d "${dir}etc/apt/") {
-		open (SOURCES, ">>${dir}etc/apt/sources.list.d/multistrap-${aptsrc}.list") 
+		open (SOURCES, ">>${dir}etc/apt/sources.list.d/multistrap-${aptsrc}.list")
 			or die _g("Cannot open sources list"). $!;
 		my $mirror = $sources{$aptsrc};
 		my $suite = (exists $flatfile{$aptsrc}) ? "" : $suites{$aptsrc};
-		my $component = (exists $flatfile{$aptsrc}) ? "" 
+		my $component = (exists $flatfile{$aptsrc}) ? ""
 			: (defined $components{$aptsrc}) ? $components{$aptsrc} : "main";
 		if (defined $mirror and defined $suite) {
 			if ($olddpkg != 0) {
@@ -1131,7 +1131,12 @@ sub cascade {
 				if (defined $keys{$section}{'tarballname'} and (not defined $tgzname));
 			chomp($tgzname) if (defined $tgzname);
 			undef $tgzname if (defined $tgzname and $tgzname eq '');
-			undef $configsh if ((defined $configsh) and (not -x $configsh));
+			if ((defined $configsh) and (not -x $configsh)) {
+				undef $configsh;
+				my $configmsg = sprintf (_g("INF: '%s' exists but is not executable - ignoring.\n"), $configsh);
+				warn $configmsg;
+				$warn_count++;
+			}
 			$setupsh = lc($keys{$section}{'setupscript'})
 				if (defined $keys{$section}{'setupscript'} and (not defined $setupsh));
 			undef $setupsh if ((defined $setupsh) and (not -x $setupsh));
@@ -1166,7 +1171,7 @@ sub cascade {
 				opendir (HOOKS, "$f") or next;
 				my @hookfiles=grep(!m:\.\.?$:, readdir HOOKS);
 				closedir(HOOKS);
-				foreach my $hf (@hookfiles) { 
+				foreach my $hf (@hookfiles) {
 					my $fl = realpath ("$f/$hf");
 					next if (($fl eq "") or (not -f $fl) or (not -x $fl));
 					push (@{$hooks{'A'}}, $fl) if ($hf =~ /^completion/);
@@ -1212,7 +1217,7 @@ sub cascade {
 			# don't set suite or component if URL is of apt-ftparchive trailing-slash form
 			# regexp is: optional string in '[]', string without '[' or ']', string ending in '/'
 			$flatfile{$section}++ if (($sources{$section} =~ /^(\[.*\] )*[^\[\]]+ .+\/$/));
-			if ((exists $keys{$section}{'architecture'}) and 
+			if ((exists $keys{$section}{'architecture'}) and
 				($keys{$section}{'architecture'} ne "")) {
 				my $frgn_arch = $keys{$section}{'architecture'};
 				my @tmp=();
