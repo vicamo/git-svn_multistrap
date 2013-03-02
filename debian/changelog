@@ -1,7 +1,14 @@
-multistrap (2.1.21) unstable; urgency=low
+multistrap (2.1.21) experimental; urgency=low
 
   * Add Foreign arch support to each cross-building configuration.
     (Closes: #688628). Drop some unused configuration files.
+  * Aim at experimental. 
+  * Add warning if the config script is not executable.
+  * Delete only sources lists created by multistrap.(Closes: #702033)
+  * [INTL:fr] French program (runtime) translation update
+    (Closes: #674771)
+  * [INTL:fr] French documentation (po4a) translation update
+    (Closes: #674772)
 
  -- Neil Williams <codehelp@debian.org>  Mon, 24 Sep 2012 13:39:56 +0100
 

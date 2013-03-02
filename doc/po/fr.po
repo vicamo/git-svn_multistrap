@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: multistrap 2.1.4\n"
-"POT-Creation-Date: 2012-09-29 19:16+0200\n"
-"PO-Revision-Date: 2011-12-22 08:18+0100\n"
+"POT-Creation-Date: 2013-03-02 17:16+0000\n"
+"PO-Revision-Date: 2012-04-24 13:32+0100\n"
 "Last-Translator: Julien Patriarca <patriarcaj@gmail.com>\n"
 "Language-Team: French <debian-l10n-french@lists.debian.org>\n"
 "Language: fr\n"
@@ -127,9 +127,9 @@ msgid ""
 "calculate the full list of source packages, including dependencies."
 msgstr ""
 "--source-dir RÉP - déplacer le contenu de var/cache/apt/archives/ de "
-"l'intérieur du chroot vers le répertoire extérieur spécifié, puis ajoute les "
-"sources des paquets Debian pour chaque binaire utilisé. Identique à "
-"retainsources=RÉP si le répertoire indiqué n'existe pas, rien ne sera fait. "
+"l'intérieur du chroot vers le répertoire extérieur spécifié, puis ajouter "
+"les sources des paquets Debian pour chaque binaire utilisé. Identique à "
+"retainsources=RÉP. Si le répertoire indiqué n'existe pas, rien ne sera fait. "
 "--tidy-up est requis pour calculer la liste complète des paquets source en "
 "incluant les dépendances."
 
@@ -211,14 +211,14 @@ msgstr ""
 " arch=armel\n"
 " directory=/opt/multistrap/\n"
 " # identique à l'option --tidy-up si définie à vrai\n"
-" nettoyage=true\n"
+" cleanup=true\n"
 " # identique à l'option --no-auth si définie à vrai\n"
 " # les paquets « keyring » indiqués dans chaque bootstrap seront\n"
 " # toujours installés.\n"
 " noauth=false\n"
 " # extraire toutes les archives téléchargées (vrai par défaut)\n"
 " unpack=true\n"
-" # ajouter la /suite à être explicite à propos de l'endroit où apt\n"
+" # ajouter ou non la /suite pour rendre explicite l'endroit où apt\n"
 " # doit chercher les paquets. (faux par défaut)\n"
 " explicitsuite=false\n"
 " # activer MultiArch pour les architectures indiquées\n"
@@ -280,9 +280,9 @@ msgid ""
 "names need to be listed in the bootstrap general option for the packages to "
 "be included in the bootstrap."
 msgstr ""
-"Indiquez plus de dépôts pour le bootstrap en ajoutant de nouvelles sections. "
-"Les noms de sections doivent figurer dans les options générales de boostrap "
-"pour les paquets à inclure dans le bootstrap."
+"Indiquez des dépôts supplémentaires pour le bootstrap en ajoutant de "
+"nouvelles sections. Les noms de sections doivent figurer dans les options "
+"générales de boostrap pour les paquets à inclure dans le bootstrap."
 
 #. type: textblock
 #: pod/multistrap:105
@@ -314,12 +314,12 @@ msgid ""
 msgstr ""
 "Toutes les dépendances sont résolues uniquement par apt, en utilisant tous "
 "les dépôts bootstrap, pour utiliser uniquement les dépendances les plus "
-"récentes et les plus appropriées. Notez que multistrap désactive "
-"Installation des paquets suggérés. Si le multistrap a besoin d'un paquet qui "
-"est seulement recommandé, ce paquet devra être indiqué explicitement à la "
-"ligne des paquets. Voir C<Spécifications explicites des versions de "
-"distributions> pour obtenir plus d'informations sur la façon d'obtenir des "
-"paquets spécifiques depuis des versions de distribution spécifiques."
+"récentes et les plus appropriées. Notez que multistrap désactive Install-"
+"Recommands. Si le multistrap a besoin d'un paquet qui est seulement "
+"recommandé, ce paquet devra donc être indiqué explicitement à la ligne des "
+"paquets. Voir C<Spécifications explicites des versions de distributions> "
+"pour obtenir plus d'informations sur la façon d'obtenir des paquets "
+"spécifiques depuis des versions de distribution spécifiques."
 
 #. type: textblock
 #: pod/multistrap:120
@@ -370,11 +370,11 @@ msgid ""
 "multistrap> and then F</etc/multistrap.d/>, appending a '.conf' suffix to "
 "the specified shortcut."
 msgstr ""
-"De la même manière que C<debootstrap>, C<multistrap> supporte de faire "
-"référence à des fichiers de configuration à des endroits connus par des "
-"raccourcis. Quand l'option C<--shortcut> est utilisée, C<multistrap> "
-"cherchera des fichiers dans F</usr/share/multistrap> puis dans F</etc/"
-"multistrap.d/>, ajoutant un suffixe « .conf » au raccourci indiqué."
+"De la même manière que C<debootstrap>, C<multistrap> gère la référence à des "
+"fichiers de configuration à des endroits connus par des raccourcis. Quand "
+"l'option C<--shortcut> est utilisée, C<multistrap> cherchera des fichiers "
+"dans F</usr/share/multistrap> puis dans F</etc/multistrap.d/>, ajoutant un "
+"suffixe « .conf » au raccourci indiqué."
 
 #. type: textblock
 #: pod/multistrap:140
@@ -416,10 +416,10 @@ msgid ""
 "internal or local sources which are not accessible to the installed root "
 "filesystem."
 msgstr ""
-"C<aptsources> liste les sections qui devraient être utilisées pour créer le "
-"F</etc/apt/sources.list.d/multistrap.list> apt sources du système final. "
+"C<aptsources> liste les sections qui devraient être utilisées pour créer les "
+"F</etc/apt/sources.list.d/multistrap.list> sources apt du système final. "
 "Tous les C<aptsources> ne doivent pas obligatoirement apparaître dans la "
-"section C<bootstrap> s'il y a des sources internes ou locales inaccessible "
+"section C<bootstrap> s'il y a des sources internes ou locales inaccessibles "
 "par le système de fichiers racine installé."
 
 #. type: textblock
@@ -430,7 +430,7 @@ msgid ""
 "by multistrap."
 msgstr ""
 "C<bootstrap> liste les sections qui seront utilisées pour créer le "
-"multistrap lui-même. Seul les paquets indiqués dans C<bootstrap> seront "
+"multistrap lui-même. Seuls les paquets indiqués dans C<bootstrap> seront "
 "téléchargés et dépaquetés par multistrap."
 
 #. type: textblock
@@ -514,7 +514,7 @@ msgstr ""
 #: pod/multistrap:185
 msgid "The order of section names in either list is not important."
 msgstr ""
-"L'ordre des noms de section dans n'importe quelle liste n'est pas important."
+"L'ordre des noms de section n'est pas important quelle que soit la liste."
 
 #. type: textblock
 #: pod/multistrap:187
@@ -534,10 +534,10 @@ msgid ""
 "supported by simple changes on the command line."
 msgstr ""
 "multistrap implémente également la gestion des variantes machines utilisée "
-"initialement dans Emdebian Crush, bien que l'implémentation est différente. "
+"initialement dans Emdebian Crush, bien que l'implémentation soit différente. "
 "Utiliser la gestion de configuration en cascade (« cascading "
-"configuration ») permet des combinaisons de variantes machine spécifiques "
-"gérées par de simple changements sur la ligne de commande."
+"configuration ») permet des combinaisons de variantes machines spécifiques "
+"gérées par de simples changements sur la ligne de commande."
 
 #. type: textblock
 #: pod/multistrap:195
@@ -661,8 +661,8 @@ msgid ""
 "section, one line for each. Other keys cannot be repeated in this manner."
 msgstr ""
 "Exceptionnellement, C<multistrap> prend aussi en charge plusieurs clés pour "
-"les paquets, une ligne chacune. Les autres clés ne pouvant être définies de "
-"la même manière."
+"les paquets, chacune sur une ligne. Les autres clés ne peuvent être définies "
+"de la même manière."
 
 #. type: verbatim
 #: pod/multistrap:246
@@ -761,7 +761,7 @@ msgid ""
 "downloaded from it."
 msgstr ""
 "Si ces paquets existent, indiquez-les dans l'option « keyring » pour chaque "
-"dépôt. multistrap vérifiera alors que apt a déjà installé ce paquet :  ainsi "
+"dépôt. multistrap vérifiera alors que apt a déjà installé ce paquet : ainsi "
 "le dépôt pourra être authentifié avant de télécharger des paquets."
 
 #. type: textblock
@@ -788,7 +788,7 @@ msgid ""
 msgstr ""
 "Les paquets de trousseau de clés seront également installés à l'intérieur de "
 "l'environnement du multistrap pour correspondre avec les sources apt "
-"installés du multistrap."
+"installées pour le multistrap."
 
 #. type: =head1
 #: pod/multistrap:294
@@ -855,7 +855,7 @@ msgid ""
 "multistrap/examples/device_table.txt>"
 msgstr ""
 "Tous les noeuds de périphériques doivent également être créés avec MAKEDEV "
-"or C<device-table.pl> - un script d'aide pouvant résoudre certains problèmes "
+"ou C<device-table.pl> - un script d'aide pouvant résoudre certains problèmes "
 "de MAKEDEV. F<device-table.pl> nécessite un fichier contenant une table de "
 "périphériques suivant les lignes de celui contenu dans les sources du paquet "
 "mtd-utils. Voir F</usr/share/doc/multistrap/examples/device_table.txt>"
@@ -1031,7 +1031,7 @@ msgid ""
 "    to silence nuisance perl warnings that obscure other errors\n"
 "\n"
 msgstr ""
-"1. copiez /etc/hosts dans le chroot\n"
+" 1. copiez /etc/hosts dans le chroot\n"
 " 2. nettoyez l'environnement pour détruire LANGUAGE, LC_ALL and LANG\n"
 "    pour passer sous silence les nuisances des avertissements cachant d'autres erreurs\n"
 "\n"
@@ -1048,10 +1048,6 @@ msgstr ""
 
 #. type: textblock
 #: pod/multistrap:381
-#, fuzzy
-#| msgid ""
-#| "A native multistrap can be used directly with chroot, so C<multistrap> "
-#| "runs C<dpkg --configure -a> at the end of the multistrap process."
 msgid ""
 "A native multistrap can be used directly with chroot, so C<multistrap> runs "
 "C<dpkg --configure -a> at the end of the multistrap process, unless the "
@@ -1060,7 +1056,8 @@ msgid ""
 msgstr ""
 "Un multistrap natif peut être directement utilisé avec chroot, ainsi "
 "C<multistrap> exécute C<dpkg --configure -a> à la fin du processus du "
-"multistrap."
+"multistrap à moins que l'option B<ignorenativearch> soit réglée sur true "
+"dans la section B<General> du fichier de configuration."
 
 #. type: =head1
 #: pod/multistrap:386
@@ -1129,10 +1126,9 @@ msgid ""
 msgstr ""
 "Pour assurer les multiples variantes d'une configuration de base, "
 "C<multistrap> permet d'inclure des fichiers de configuration (plus généraux) "
-"dans des fichiers de configuration. C'est-à-dire que le fichier de "
-"configuration le plus spécifique ou détaillé doit être indiqué à la ligne de "
-"commande et ce fichier inclut un fichier qui est partagé avec d'autres "
-"configurations."
+"dans des fichiers de configuration : le fichier de configuration le plus "
+"spécifique ou détaillé doit être indiqué à la ligne de commande et ce "
+"fichier inclut un fichier qui est partagé avec d'autres configurations."
 
 #. type: textblock
 #: pod/multistrap:409
@@ -1234,10 +1230,10 @@ msgstr ""
 "Une fois que C<multistrap> a dépaqueté les paquets téléchargés, C<setup.sh> "
 "peut être appelé, en passant l'emplacement et l'architecture du système de "
 "fichiers racine, pour que d'autre réglages fins puissent être effectués. À "
-"cette étape, toutes opérations à l'intérieur d'un système de fichiers racine "
-"étranger (rootfs) ne doivent pas tenter d'exécuter de binaires dans le "
-"rootfs. À la dernière étape du processus multistrap, C<config.sh> est copié "
-"vers le répertoire root du système de fichiers racine."
+"cette étape, aucune opération à l'intérieur d'un système de fichiers racine "
+"étranger (rootfs) ne doit tenter d'exécuter de binaires dans le rootfs. À la "
+"dernière étape du processus multistrap, C<config.sh> est copié vers le "
+"répertoire root du système de fichiers racine."
 
 #. type: textblock
 #: pod/multistrap:447
@@ -1246,8 +1242,8 @@ msgid ""
 "rootfilesystem can be managed by a single call to multistrap - this is "
 "useful when building root filesystems in userspace."
 msgstr ""
-"Un des avantages d'utiliser le support des variantes machines est que la "
-"totalité du système de fichiers racine peut être géré par un seul appel à "
+"Un des avantages d'utiliser la gestion des variantes machines est que la "
+"totalité du système de fichiers racine peut être gérée par un seul appel à "
 "multistrap - ceci est utile lors de la création de systèmes de fichiers "
 "racines dans l'espace utilisateur."
 
@@ -1414,7 +1410,7 @@ msgid ""
 "packages specified manually in the configuration files will be used in the "
 "calculations - dependencies of those packages will be added but no others."
 msgstr ""
-"Si l'option OmitRequired est définie à vraie, ces paquets ne seront pas "
+"Si l'option OmitRequired est définie à vrai, ces paquets ne seront pas "
 "ajoutés - bien qu'utile, cette option peut facilement conduire à un rootfs "
 "inutilisable. Seuls les paquets indiqués manuellement dans les fichiers de "
 "configuration seront utilisés dans les calculs - les dépendances de ces "
@@ -1471,8 +1467,8 @@ msgid ""
 "configuration results in addimportant and omitrequired both being set to "
 "true. (This includes the effects of including other configuration files.)"
 msgstr ""
-"Il est possible d'activer addimportant et omitrequired dans la même "
-"configuration. C<multistrap> sortira avec le code d'erreur 7 si il est "
+"Il n'est pas possible d'activer addimportant et omitrequired dans la même "
+"configuration. C<multistrap> s'arrêtera avec le code d'erreur 7 s'il est "
 "trouvé dans n'importe quelle configuration les options addimportant et "
 "omitrequired réglées sur vrai. (Ceci inclut les effets dûs à l'inclusion "
 "d'autres fichiers de configuration.)"
@@ -1528,6 +1524,10 @@ msgid ""
 "To counter this, C<multistrap> sets a wildcard for the Default Release "
 "within the bootstrap. See also: apt preferences."
 msgstr ""
+"Si le système indique une version par défaut pour apt, cela peut entraîner "
+"des problèmes lors de la création d'un bootstrap qui n'inclut pas la suite "
+"par défaut. Pour contrer cela, C<multistrap> met un joker pour la version "
+"par défaut au sein du bootstrap. Consultez également : B<Préférences apt>."
 
 #. type: =head1
 #: pod/multistrap:555
@@ -1580,11 +1580,11 @@ msgid ""
 "may require being explicit about some (not necessarily all) of the "
 "dependencies of that package as well."
 msgstr ""
-"Également, quand vous indiquez des paquets à prendre depuis une version "
-"spécifique de la distribution, apt essaiera de s'assurer que les dépendances "
+"De même, quand vous indiquez des paquets à prendre depuis une version "
+"spécifique de la distribution, apt essaie de s'assurer que les dépendances "
 "pour ce paquet viennent également de cette même version, ce qui peut "
 "occasionner des problèmes à apt pour résoudre l'ensemble de ces dépendances. "
-"Dans ce cas, indiquez explicitement un paquet peut entrainer le fait "
+"Dans ce cas, indiquer explicitement un paquet peut entrainer le fait "
 "d'indiquer quelques (pas nécessairement toutes) dépendances de ce paquet "
 "également."
 
@@ -1605,7 +1605,7 @@ msgstr ""
 #. type: textblock
 #: pod/multistrap:582
 msgid "To test, on Lenny, try:"
-msgstr "Pour tester, sur Lenny essayez :"
+msgstr "Pour tester sur Lenny, essayez :"
 
 #. type: verbatim
 #: pod/multistrap:584
@@ -1640,7 +1640,7 @@ msgid ""
 "is removed from the temporary suite (as with *-proposed-updates), multistrap "
 "will not be able to find the package."
 msgstr ""
-"Lors de l'utilisation de suite explicite, assurez vous d'utiliser stable-"
+"Lors de l'utilisation de suite explicite, assurez-vous d'utiliser stable-"
 "proposed-updates ou d'autres emplacements temporaires - si le paquet migre "
 "dans une autre suite et est supprimé de la suite temporaire (comme avec *-"
 "proposed-updates), multistrap ne pourra pas trouver le paquet."
@@ -1655,13 +1655,19 @@ msgid ""
 "versions to sort out problems, work with suites only. Apt preferences / "
 "pinning may be useful here, see Apt preferences."
 msgstr ""
+"La manipulation de suite explicite peut être difficile à faire fonctionner. "
+"En général, il vaut mieux créer un petit chroot bootstrap de l'architecture "
+"native, puis faire un chroot dedans, ajouter les bonnes sources apt pour "
+"trouver les commandes nécessaires et suffisantes pour obtenir le mélange de "
+"paquets adéquat. Évitez d'indiquer des versions explicites pour contourner "
+"les problèmes, travaillez avec les suites uniquement. L'épinglage avec "
+"l'utilisation d'un fichier de préférences apt peut être utile ici, consultez "
+"B<préférences apt>."
 
 #. type: =head1
 #: pod/multistrap:603
-#, fuzzy
-#| msgid "WWW references"
 msgid "Apt preferences"
-msgstr "références WWW"
+msgstr "Préférences apt"
 
 #. type: textblock
 #: pod/multistrap:605
@@ -1670,6 +1676,9 @@ msgid ""
 "B<General> section of the configuration file, this file will be copied into "
 "the apt preferences directory of the bootstrap before apt is first used."
 msgstr ""
+"Si un fichier adéquat est indiqué dans l'option B<aptpreferences> de la "
+"section B<General> du fichier de configuration, il sera copié dans le "
+"répertoire des préférences de apt du bootstrap avant d'utiliser apt."
 
 #. type: textblock
 #: pod/multistrap:610
@@ -1677,6 +1686,8 @@ msgid ""
 "When an apt preferences file B<is> provided, the C<Default-Release> "
 "behaviour of C<multistrap> is disabled."
 msgstr ""
+"Quand un fichier de préférences apt B<est> fourni, le comportement C<Default-"
+"Release> de C<multistrap> est désactivé."
 
 #. type: textblock
 #: pod/multistrap:613
@@ -1685,6 +1696,9 @@ msgid ""
 "file is beyond the scope of this manpage. C<multistrap> does not try to "
 "verify the supplied file other than ensuring that it can be read."
 msgstr ""
+"Comme avec d'autres scripts et fichiers extérieurs, le contenu du fichier de "
+"préférences apt sort du cadre de ce manuel. C<multistrap> ne tente pas de "
+"vérifier le fichier fourni mais s'assure juste qu'il peut être lu."
 
 #. type: =head1
 #: pod/multistrap:618
@@ -1741,7 +1755,7 @@ msgid ""
 msgstr ""
 "omitdebsrc est nécessaire en cas d'utilisation de paquets en provenance de "
 "debian-ports où les paquets n'ont pas de sources, à l'exception de « non-"
-"delivrée »."
+"délivrée »."
 
 #. type: =head1
 #: pod/multistrap:637
@@ -1761,7 +1775,7 @@ msgstr ""
 "(C<multistrap> est conçu pour en faire le maximum qu'il peut au sein d'un "
 "même appel pour faciliter cette tâche) mais le niveau de configuration qui "
 "est normalement appliqué avec une architecture bootstrap native requiert "
-"C<chroot> et C<chroot> en lui même ne fonctionnera pas sous C<fakeroot>."
+"C<chroot> et C<chroot> en lui-même ne fonctionnera pas sous C<fakeroot>."
 
 #. type: textblock
 #: pod/multistrap:645
@@ -1779,7 +1793,7 @@ msgid ""
 "installation of the keyring package on the host system is also skipped if "
 "fakeroot is detected."
 msgstr ""
-"Le même problème apparait sur C<apt-get install> et donc l'installation du "
+"Le même problème apparaît avec C<apt-get install> et donc l'installation du "
 "paquet trousseau sur le système hôte est également sauté si fakeroot est "
 "détecté."
 
@@ -1839,7 +1853,7 @@ msgid ""
 msgstr ""
 "Additional ajoute un second tour de C<apt-get install> au processus "
 "multistrap - après le dépaquetage initial. Le paquet additionnel sera alors "
-"téléchargé  et dépaqueté. Lancé nativement, le paquet additionnel est "
+"téléchargé et dépaqueté. Lancé nativement, le paquet additionnel est "
 "téléchargé, dépaqueté et configuré après que tout le reste des paquets aient "
 "été téléchargés, dépaquetés et configurés."
 
@@ -1851,7 +1865,7 @@ msgid ""
 "which require the use of these mechanisms (or the packages which would "
 "prevent the particular package from operating normally)."
 msgstr ""
-"Ni C<reinstall> ou C<additional> ne devraient pas être perçus plus que de "
+"Ni C<reinstall> ni C<additional> ne devraient être considérés mieux que de "
 "simples astuces et les bogues devant figurer sur la liste des souhaits "
 "devraient être remplis dans Debian pour des paquets qui nécessiteraient de "
 "tels mécanismes (ou les paquets qui empêcheraient le paquet en particulier "
@@ -1973,7 +1987,7 @@ msgid ""
 "been downloaded. Download hooks are executable scripts in the specified hook "
 "directory with a filename beginning with B<download>."
 msgstr ""
-"L'exécution avant le dépaquetage est démarré immédiatement après que les "
+"Exécutés avant le démarrage du dépaquetage, immédiatement après que les "
 "paquets aient été téléchargés. Les déclencheurs téléchargés sont des scripts "
 "exécutables dans le répertoire de déclencheurs indiqué, avec un nom de "
 "fichier commençant par B<download>."
@@ -2017,8 +2031,8 @@ msgid ""
 "Executed immediately before the tarball is created or C<multistrap> exits if "
 "not configured to create a tarball."
 msgstr ""
-"Exécuté juste avant, l'archive (« tarball ») est créée ou C<multistrap> "
-"quitte s'il n'est pas configuré pour la créer."
+"Exécutés juste avant que l'archive (« tarball ») soit créée ou que "
+"C<multistrap> quitte s'il n'est pas configuré pour la créer."
 
 #. type: textblock
 #: pod/multistrap:743
@@ -2037,7 +2051,9 @@ msgid ""
 "resolved using realpath or which are not executable will be ignored."
 msgstr ""
 "Les déclencheurs sont passés avec le chemin absolu dans le répertoire qui "
-"sera le niveau parent du chroot ou du système multistrap. "
+"sera le niveau parent du chroot ou du système multistrap. Les déclencheurs "
+"ne pouvant être résolus en utilisant realpath ou qui ne sont pas exécutables "
+"seront ignorés."
 
 #. type: textblock
 #: pod/multistrap:753
@@ -2057,7 +2073,7 @@ msgid ""
 "the operation."
 msgstr ""
 "Veuillez noter que C<multistrap> ne fait pas de retour arrière des effets "
-"des déclencheurs en cas d'erreur. Cependant, C<multistrap> rapportera les "
+"des déclencheurs en cas d'erreur. Cependant, C<multistrap> signalera les "
 "erreurs accumulées sous forme d'avertissement. Si un déclencheur quitte sur "
 "autre chose que zéro, la valeur de sortie est convertie vers un nombre "
 "positif et ajoutée à la somme totale des avertissements, affichée à la fin "
@@ -2076,7 +2092,7 @@ msgid ""
 "the same pattern, so it is simple to trim the combined C<multistrap> output "
 "to just the errors, if desired."
 msgstr ""
-"C<multistrap> peut produire beaucoup de sortie - les messages d'information "
+"C<multistrap> peut produire beaucoup de sorties - les messages d'information "
 "apparaissent sur STDOUT, les erreurs et les avertissement sur STDERR. Les "
 "appels vers C<apt> et C<dpkg> respectent le même modèle, pour qu'il soit "
 "simple d'ajuster la sortie combinée de C<multistrap> sur les erreurs "
@@ -2110,8 +2126,8 @@ msgid ""
 "with the latest version of C<multistrap> in Debian using the C<--simulate> "
 "option and include that report in your bug report."
 msgstr ""
-"Comme C<multistrap> devient plus compliqué, des bogues s'insinuent dans le "
-"paquet. Veuillez rapporter ces bogues sur le BTS Debian en utilisant l'outil "
+"Comme C<multistrap> devient plus complexe, des bogues s'insinuent dans le "
+"paquet. Veuillez signaler ces bogues sur le BTS Debian en utilisant l'outil "
 "C<reportbug> en incluant B<s'il vous plait> les fichiers de configuration. "
 "Si votre configuration nécessite d'accéder à des dépôts apt locaux ou "
 "privés, veuillez vérifier votre configuration avec les dernières versions de "
@@ -2144,12 +2160,12 @@ msgstr ""
 "debian.org et sur le canal IRC #emdebian sur irc.oftc.net peuvent également "
 "aider si votre fichier de configuration ne peut être parcouru correctement. "
 "Vous devrez alors poster la sortie de C<--simulate> sur un site Internet de "
-"copier et coller et indiquer l'adresse dans votre message."
+"copier-coller (« pastebin ») et indiquer l'adresse dans votre message."
 
 #. type: =head1
 #: pod/multistrap:794
 msgid "MultiArch support"
-msgstr "Support de MultiArch"
+msgstr "Prise en charge multiarchitecture"
 
 #. type: textblock
 #: pod/multistrap:796
@@ -2158,6 +2174,10 @@ msgid ""
 "full details of your setup, the full multistrap config file and the errors "
 "reported."
 msgstr ""
+"La prise en charge multiarchitecture est expérimentale — veuillez signaler "
+"les problèmes et soumettre des rapports de bogues avec tous les détails de "
+"votre installation, le fichier de configuration complet de multistrap et les "
+"erreurs signalées."
 
 #. type: textblock
 #: pod/multistrap:800
@@ -2167,6 +2187,10 @@ msgid ""
 "chroot from repositories which do not support all of the architectures "
 "supported by the external dpkg."
 msgstr ""
+"C<multistrap> outrepasse la prise en charge multiarchitecture du système "
+"externe pour qu'un système prêt pour le multiarchitecture puisse toujours "
+"créer un chroot non multiarchitecture depuis des dépôts qui ne permettent "
+"pas d'utiliser toutes les architectures compatibles avec le dpkg externe."
 
 #. type: textblock
 #: pod/multistrap:805
@@ -2174,6 +2198,8 @@ msgid ""
 "If multiarch is enabled within the multistrap chroot, C<multistrap> writes "
 "out the list into F</var/lib/dpkg/arch> inside the chroot."
 msgstr ""
+"Si multiarch est activé au sein du chroot multistrap, C<multistrap> écrit la "
+"liste dans F</var/lib/dpkg/arch> à l'intérieur du chroot."
 
 #. type: textblock
 #: pod/multistrap:808
@@ -2182,20 +2208,18 @@ msgid ""
 "separated list for the architecture list. Ensure you include what will be "
 "the host architecture of the chroot."
 msgstr ""
+"Pour les architectures multiples, veuillez indiquer l'option une fois et "
+"utilisez une liste séparée par des espaces pour la liste des architectures. "
+"Assurez-vous d'avoir inclus ce qui constituera l'architecture hôte du chroot."
 
 #. type: textblock
 #: pod/multistrap:812
 msgid "See also http://wiki.debian.org/Multiarch/"
-msgstr "Voir aussi : http://wiki.debian.org/Multiarch"
+msgstr "Consultez aussi : http://wiki.debian.org/Multiarch"
 
 #. type: verbatim
 #: pod/multistrap:814
-#, fuzzy, no-wrap
-#| msgid ""
-#| " [General]\n"
-#| " ...\n"
-#| " MultiArch=armel armhf\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " [General]\n"
 " ...\n"
@@ -2204,7 +2228,7 @@ msgid ""
 msgstr ""
 " [General]\n"
 " ...\n"
-" MultiArch=armel armhf\n"
+" multiarch=i386 armel armhf\n"
 "\n"
 
 #. type: textblock
@@ -2250,7 +2274,9 @@ msgid ""
 "colon followed by the architecture."
 msgstr ""
 "Dans la sortie de C<--simulate>, les architectures indiquées dans l'option "
-"MultiArch seront indiquées dans la liste « Architectures étrangères »"
+"MultiArch seront indiquées dans la liste « Foreign architectures ». Les "
+"paquets destinés à une architecture spécifique seront indiqués avec le nom "
+"du paquet suivi d'une virgule, suivie de l'architecture."
 
 #. type: verbatim
 #: pod/multistrap:833
@@ -2259,6 +2285,8 @@ msgid ""
 " libgcc1:armel libc6:armel\n"
 "\n"
 msgstr ""
+" libgcc1:armel libc6:armel\n"
+"\n"
 
 #. type: textblock
 #: device-table.pl:167
@@ -2286,7 +2314,7 @@ msgid ""
 "working directory. Use the directory option to write out elsewhere."
 msgstr ""
 "Par défaut, F<device-table.pl> écrit les nœuds de périphérique dans le "
-"répertoire de travail courant.  Utilisez l'option repertoire pour écrire "
+"répertoire de travail courant.  Utilisez l'option répertoire pour écrire "
 "ailleurs."
 
 #. type: textblock
@@ -2317,8 +2345,8 @@ msgstr ""
 "Les nœuds de périphérique nécessitent fakeroot ou un autre moyen pour "
 "utiliser l'accès superutilisateur. Si F<device-table.pl> est déjà en cours "
 "d'exécution sous fakeroot ou un équivalent, l'instance de fakeroot existante "
-"sera utilisée, alternativement utilisez l'option no-fakeroot pour empêcher "
-"l'utilisation interne de fakeroot."
+"sera utilisée. Utilisez l'option no-fakeroot pour empêcher l'utilisation "
+"interne de fakeroot."
 
 #. type: textblock
 #: device-table.pl:189
@@ -2345,7 +2373,7 @@ msgid ""
 msgstr ""
 "Les fichiers de tableau des périphériques sont des fichiers séparés par des "
 "tabulations (TSV). Toutes les lignes du fichier de tableau du périphérique "
-"doit contenir exactement 10 caractères, chacun séparé par une tabulation "
+"doivent contenir exactement 10 caractères, chacun séparé par une tabulation "
 "simple à l'exception des commentaires - qui doivent commencer par #"
 
 #. type: textblock
@@ -2383,11 +2411,11 @@ msgid ""
 msgstr ""
 " f Un fichier normal\n"
 " d Répertoire\n"
-" s lien symbolique\n"
-" h lien en dur\n"
-" c Fichier de caractères du périphérique spécial\n"
-" b Un fichier de périphérique bloc\n"
-" p Un tuyau nommé (« fifo »)\n"
+" s Lien symbolique\n"
+" h Lien en dur\n"
+" c Fichier de périphérique caractère\n"
+" b Fichier de périphérique bloc\n"
+" p Tuyau nommé (« fifo »)\n"
 
 #. type: textblock
 #: device-table.pl:213
@@ -2400,8 +2428,8 @@ msgstr ""
 "Les liens symboliques et les liens en dur sont des extensions du tableau du "
 "périphérique, juste pour F<device-table.pl>, les autres interpréteurs de "
 "tableau de périphérique ne devraient pas gérer ces types. Le premier champ "
-"de la commande de lien symbolique  est la cible existante du lien, le "
-"troisième champ et le chemin complet du lien symbolique en lui même. Par "
+"de la commande de lien symbolique est la cible existante du lien, le "
+"troisième champ et le chemin complet du lien symbolique en lui-même. Par "
 "exemple :"
 
 #. type: verbatim
