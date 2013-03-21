@@ -2,6 +2,7 @@ multistrap (2.1.22) experimental; urgency=low
 
   * Support marking dependencies as auto-installed using apt-mark.
     (Closes: #702036)
+  * Fix filehandle typo when configuring multiarch (Closes: #695843)
 
  -- Neil Williams <codehelp@debian.org>  Thu, 21 Mar 2013 19:21:56 +0000
 

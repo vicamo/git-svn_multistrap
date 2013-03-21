@@ -210,9 +210,9 @@ if (($olddpkg == 0) and (scalar (@foreignarches) > 0)) {
 		}
 		close (MA);
 		open (VMA, ">${dir}${dpkgdir}arch");
-		print MA "$host\n";
+		print VMA "$host\n";
 		foreach my $farch (@foreignarches) {
-			print MA "$farch\n";
+			print VMA "$farch\n";
 		}
 		close (VMA);
 	}
