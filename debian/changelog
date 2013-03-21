@@ -1,3 +1,10 @@
+multistrap (2.1.22) experimental; urgency=low
+
+  * Support marking dependencies as auto-installed using apt-mark.
+    (Closes: #702036)
+
+ -- Neil Williams <codehelp@debian.org>  Thu, 21 Mar 2013 19:21:56 +0000
+
 multistrap (2.1.21) experimental; urgency=low
 
   * Add Foreign arch support to each cross-building configuration.

@@ -26,7 +26,7 @@ use POSIX qw(locale_h);
 use Locale::gettext;
 
 use vars qw/ $progname $ourversion $dstrap $extra @aptsources
- @archives $deb $cachedir $config_str %packages $retval $str $retries
+ $deb $cachedir $config_str %packages $retval $str $retries
  $dir $include $arch $foreign $url $unpack $sourcedir $msg $etcdir
  @e $sourcesname $libdir $dpkgdir @debootstrap %suites %components $chk
  $repo @dirs @touch %sources $section %keys $host $key $value $preffile
@@ -36,7 +36,7 @@ use vars qw/ $progname $ourversion $dstrap $extra @aptsources
  $explicit_suite $allow_recommends %omitdebsrc @dsclist @sectoutput
  %flatfile %important $addimportant @debconf $hookdir %hooks
  $warn_count $use_shortcut @foreignarches $olddpkg $ignorenative
- %foreignpkgs /;
+ %foreignpkgs $markauto /;
 
 setlocale(LC_MESSAGES, "");
 textdomain("multistrap");
@@ -400,6 +400,7 @@ $retval >>= 8;
 die (sprintf (_g("apt download failed. Exit value: %d\n"),$retval))
 	if ($retval != 0);
 &force_unpack if ($unpack eq "true");
+&mark_manual_install ($str) if (defined $markauto);
 system ("touch ${dir}${libdir}lists/lock");
 if ((defined $setupsh) and (-x $setupsh)) {
 	$retval = 0;
@@ -518,13 +519,31 @@ sub add_extra_packages {
 	}
 }
 
+sub mark_manual_install {
+	my @manual = split(/ +/, $_[0]);
+	printf (_g("Marking automatically installed packages... please wait\n"));
+	opendir (DEBS, "${dir}${cachedir}archives/")
+		or die (_g("Cannot read apt archives directory.\n"));
+	my @archives=grep(/.*\.deb$/, readdir DEBS);
+	closedir (DEBS);
+	my @all = map {
+		`LC_ALL=C dpkg -f ${dir}${cachedir}archives/$_ Package`; 
+	} @archives; 
+	chomp (@all);
+	my @auto = grep {my $pkg = $_; ! grep /$pkg/, @manual} @all;
+	printf(ngettext ("Found %d package to mark.\n",
+		"Found %d packages to mark.\n", scalar @auto), scalar @auto);
+	system ("apt-mark $config_str auto " . join (" ", sort @auto)) if (scalar @auto > 0);
+	printf (_g("Marking automatically installed packages completed.\n"));
+}
+
 sub force_unpack {
 	my (@limits) = @_;
 	my %unpack=();
 	my %filter = ();
 	opendir (DEBS, "${dir}${cachedir}archives/")
 		or die (_g("Cannot read apt archives directory.\n"));
-	@archives=grep(/.*\.deb$/, readdir DEBS);
+	my @archives=grep(/.*\.deb$/, readdir DEBS);
 	closedir (DEBS);
 	if (@limits) {
 		foreach my $l (@limits) {
@@ -1125,6 +1144,7 @@ sub cascade {
 			# support the original value but replace by new value.
 			$unpack = "false" if (defined $keys{$section}{'forceunpack'} and (lc($keys{$section}{'forceunpack'}) ne "true"));
 			$unpack = "false" if (defined $keys{$section}{'unpack'} and (lc($keys{$section}{'unpack'} ne "true")));
+			$markauto++ if ((defined $keys{$section}{'markauto'}) and (lc($keys{$section}{'markauto'}) eq "true"));
 			$configsh = lc($keys{$section}{'configscript'})
 				if (defined $keys{$section}{'configscript'} and (not defined $configsh));
 			$tgzname = lc($keys{$section}{'tarballname'})
@@ -1391,6 +1411,9 @@ sub dump_config {
 		printf("allowrecommends:\t"._g("Recommended packages are added to the selection.\n"));
 	} else {
 		printf("allowrecommends:\t"._g("Recommended packages are ignored.\n"));
+	}
+	if (defined $markauto) {
+		printf("markauto:\t\t"._g("Marking dependency packages as auto-installed.\n"));
 	}
 	$plural = ngettext("Debconf preseed file", "Debconf preseed files", scalar @debconf);
 	printf("%s:\t%s\n", $plural, join(" ", sort @debconf)) if (scalar @debconf > 0);

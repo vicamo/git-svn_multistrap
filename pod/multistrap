@@ -184,6 +184,12 @@ the C<bootstrap> list under General.
 
 The order of section names in either list is not important.
 
+If C<markauto> is set to true, C<multistrap> will request apt to mark
+all packages specified in the combined C<packages> list as manually
+installed and all dependencies not explicitly listed as automatically
+installed in the APT extended state database. C<markauto> can be used
+independently of C<unpack>.
+
 As with debootstrap, multistrap will continue after errors, as long
 as the configuration file can be correctly parsed.
 
