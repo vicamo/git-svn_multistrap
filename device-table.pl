@@ -33,7 +33,7 @@ textdomain("multistrap");
 $progname = basename($0);
 $ourversion = &our_version();
 # default file from mtd-utils.
-$file = "/usr/share/multistrap/device-table.txt";
+$file = "/usr/share/doc/multistrap/examples/device_table.txt";
 $dir = `pwd`;
 chomp ($dir);
 $dir .= "/tmp/";
@@ -177,7 +177,7 @@ By default, F<device-table.pl> writes out the device nodes in the current
 working directory. Use the directory option to write out elsewhere.
 
 multistrap contains a default device-table file, use the file option
-to override the default F</usr/share/multistrap/device-table.txt>
+to override the default F</usr/share/doc/multistrap/examples/device_table.txt>
 
 Use the dry-run option to see the commands that would be run.
 
