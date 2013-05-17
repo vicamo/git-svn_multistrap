@@ -1,3 +1,9 @@
+multistrap (2.1.23) unstable; urgency=low
+
+  * Carry changes from experimental into unstable.
+
+ -- Neil Williams <codehelp@debian.org>  Fri, 17 May 2013 21:31:57 +0100
+
 multistrap (2.1.22) experimental; urgency=low
 
   * Support marking dependencies as auto-installed using apt-mark.
