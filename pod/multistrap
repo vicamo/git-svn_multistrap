@@ -719,7 +719,7 @@ prior to any calls to B<dpkg --configure -a>. e.g. :
 
 =head1 Hooks
 
-If a hook directory is specified in the General section of the
+If a hook directory (hookdir=) is specified in the General section of the
 C<multistrap> configuration file, the hook scripts which are executable
 will be run from outside the multistrap directory at the following stages:
 
@@ -747,7 +747,7 @@ Executed immediately before the tarball is created or C<multistrap> exits
 if not configured to create a tarball.
 
 Completion scripts are executable scripts in the specified hook directory
-with a filename beginning with C<completion>.
+with a filename beginning with B<completion>.
 
 =back
 
