@@ -733,6 +733,7 @@ sub run_native_hooks_start {
 		my $hookret = system ("$hookscript $dir start");
 		$hookret >>= 8;
 		if ($hookret != 0) {
+			printf (_g("I: run-native hook start '%s' reported an error: %d\n"), basename($hookscript), $hookret);
 			$warn_count += abs($hookret);
 		}
 	}
@@ -750,6 +751,7 @@ sub run_native_hooks_end {
 		my $hookret = system ("$hookscript $dir end");
 		$hookret >>= 8;
 		if ($hookret != 0) {
+			printf (_g("I: run-native hook end '%s' reported an error: %d\n"), basename($hookscript), $hookret);
 			$warn_count += abs($hookret);
 		}
 	}
@@ -767,6 +769,7 @@ sub run_completion_hooks {
 		my $hookret = system ("$hookscript $dir");
 		$hookret >>= 8;
 		if ($hookret != 0) {
+			printf (_g("I: run-completion hook '%s' reported an error: %d\n"), basename($hookscript), $hookret);
 			$warn_count += abs($hookret);
 		}
 	}
