@@ -3,7 +3,7 @@
 set -e
 
 # The script is called with the following arguments:
-# $1 = $DIR  - the top directory of the debootstrapped system
+# $1 = $DIR  - the top directory of the bootstrapped system
 # $2 = $ARCH - the specified architecture, already checked with dpkg-architecture.
 # setup.sh needs to be executable.
 
