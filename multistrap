@@ -1151,9 +1151,12 @@ sub cascade {
 				if (defined $keys{$section}{'tarballname'} and (not defined $tgzname));
 			chomp($tgzname) if (defined $tgzname);
 			undef $tgzname if (defined $tgzname and $tgzname eq '');
+			if ((defined $configsh) and ($configsh eq '')) {
+				undef $configsh
+			}
 			if ((defined $configsh) and (not -x $configsh)) {
-				undef $configsh;
 				my $configmsg = sprintf (_g("INF: '%s' exists but is not executable - ignoring.\n"), $configsh);
+				undef $configsh;
 				warn $configmsg;
 				$warn_count++;
 			}
