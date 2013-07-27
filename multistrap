@@ -1424,6 +1424,9 @@ sub dump_config {
 	} else {
 		printf("allowrecommends:\t"._g("Recommended packages are ignored.\n"));
 	}
+	if ($default_release ne "*") {
+		printf("aptdefaultrelease:\t"."APT::Default-Release: ".$default_release."\n");
+	}
 	if (defined $markauto) {
 		printf("markauto:\t\t"._g("Marking dependency packages as auto-installed.\n"));
 	}
