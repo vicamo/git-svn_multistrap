@@ -36,12 +36,13 @@ use vars qw/ $progname $ourversion $dstrap $extra @aptsources
  $explicit_suite $allow_recommends %omitdebsrc @dsclist @sectoutput
  %flatfile %important $addimportant @debconf $hookdir %hooks
  $warn_count $use_shortcut @foreignarches $olddpkg $ignorenative
- %foreignpkgs $markauto /;
+ %foreignpkgs $markauto $default_release /;
 
 setlocale(LC_MESSAGES, "");
 textdomain("multistrap");
 $progname = basename($0);
 $ourversion = &our_version();
+$default_release = "*";
 $unpack = "true";
 %omitdebsrc=();
 %foreignpkgs=();
@@ -338,8 +339,11 @@ $config_str .= " -o Apt::Get::Download-Only=true";
 $config_str .= " -o Apt::Install-Recommends=false"
 	if (not defined $allow_recommends);
 $config_str .= " -o Dir=$dir";
-$config_str .= " -o Dir::Etc=${dir}${etcdir} -o APT::Default-Release=*"
-	if (not defined $preffile);
+$config_str .= " -o Dir::Etc=${dir}${etcdir}";
+$config_str .= " -o Dir::Etc::Parts=${dir}${etcdir}apt.conf.d/";
+$config_str .= " -o Dir::Etc::PreferencesParts=${dir}${etcdir}preferences.d/";
+$config_str .= " -o APT::Default-Release=$default_release";
+#	if (not defined $preffile);
 if (defined $deflist) {
 	$sourcesname = "sources.list.d/multistrap.sources.list";
 	$config_str .= " -o Dir::Etc::SourceList=${dir}${etcdir}$sourcesname";
@@ -1182,6 +1186,8 @@ sub cascade {
 				($keys{$section}{'explicitsuite'} eq "true"));
 			$allow_recommends++ if ((defined $keys{$section}{'allowrecommends'}) and
 				($keys{$section}{'allowrecommends'} eq "true"));
+			$default_release = lc($keys{$section}{'aptdefaultrelease'})
+				if (defined $keys{$section}{'aptdefaultrelease'});
 			my @p = split(' ', lc($keys{$section}{'debconfseed'}))
 				if (defined $keys{$section}{'debconfseed'});
 			foreach my $f (@p) {

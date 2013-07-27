@@ -129,6 +129,9 @@ http://wiki.debian.org/Multistrap
 
 http://www.emdebian.org/multistrap/
 
+C<multistrap> includes an example configuration file with a full list
+of all supported config file options: F</usr/share/doc/multistrap/examples/full.conf>
+
 =head1 Shortcuts
 
 In a similar manner to C<debootstrap>, C<multistrap> supports referring
@@ -553,10 +556,33 @@ to use typical Debian behaviour.
 
 =head1 Default release
 
-If your system specifies a default-release for apt, this can cause
-problems when trying to create a bootstrap which does not include
-the default suite. To counter this, C<multistrap> sets a wildcard for
-the Default Release within the bootstrap. See also: apt preferences.
+C<multistrap> supports an option to explicitly set the default release
+to use with apt: C<aptdefaultrelease>. This determines which release apt
+will use for the base system packages and is not the same as pinning
+(which relates to the use of apt after installation). Multistrap sets
+the default-release to the wildcard * unless a release is named in the
+C<aptdefaultrelease> field. Any release specified here must also be
+defined in a stanza referenced in the bootstrap list or apt will fail.
+
+To install a specific version of a package from a newer release than
+the one specified as default, C<explicitsuite> must also be set to true
+if the package exists at any version in the default release. Also, any
+packages upon which that package has a strict dependency (i.e. = rather
+than >=) must also be explicitly added to the packages line in the
+stanza for the desired version, even though that package does not need
+to be listed to get it from the default release. This is typical apt
+behaviour and is not a bug in multistrap.
+
+The combination of default release, explicit suite and apt preferences
+can quickly become complex and bugs can be very hard to identify.
+C<multistrap> always outputs the complete apt command line, so test
+this command yourself (using the files written out by C<multistrap>) to
+see what is going on. Remember that all dependency resolution and all
+the logic to determine which version of a specific package gets installed
+in your C<multistrap> chroot is entirely down to apt and all C<multistrap>
+can do is pass files and command line options to apt.
+
+See also: apt preferences.
 
 =head1 Explicit suite specification
 

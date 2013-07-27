@@ -1,3 +1,13 @@
+multistrap (2.2.0) unstable; urgency=low
+
+  * Add option to specify the apt default release directly and
+    change the manpage content to advise on how this further
+    complicates the permutations of apt configuration. Add
+    commands to direct apt at the apt.conf.d and preferences.d
+    directories within the chroot. (Closes: #717886)
+
+ -- Neil Williams <codehelp@debian.org>  Sat, 27 Jul 2013 15:50:01 +0100
+
 multistrap (2.1.23) unstable; urgency=low
 
   * Carry changes from experimental into unstable.
