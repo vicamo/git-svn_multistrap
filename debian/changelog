@@ -6,7 +6,7 @@ multistrap (2.2.0) unstable; urgency=low
     commands to direct apt at the apt.conf.d and preferences.d
     directories within the chroot. (Closes: #717886)
 
- -- Neil Williams <codehelp@debian.org>  Sat, 27 Jul 2013 15:50:01 +0100
+ -- Neil Williams <codehelp@debian.org>  Sun, 11 Aug 2013 14:20:40 +0100
 
 multistrap (2.1.23) unstable; urgency=low
 
